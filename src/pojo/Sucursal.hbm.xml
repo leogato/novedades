@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 25/09/2013 22:35:04 by Hibernate Tools 3.2.1.GA -->
+<!-- Generated 27/09/2013 11:51:18 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="pojo.Sucursal" table="sucursal" catalog="novedades">
         <id name="codSuc" type="int">
@@ -19,7 +19,7 @@
         </property>
         <set name="empleados" inverse="true">
             <key>
-                <column name="COD_SUC" not-null="true" />
+                <column name="COD_SUC" />
             </key>
             <one-to-many class="pojo.Empleado" />
         </set>

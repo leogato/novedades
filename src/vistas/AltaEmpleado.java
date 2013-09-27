@@ -23,10 +23,10 @@ public class AltaEmpleado extends javax.swing.JDialog {
     
     
    
-    byte[] imgByte;
-    private String pathFoto;
+//    byte[] imgByte;
+//    private String pathFoto;
     int resp;// respuesta  si agrego o no una foto el empleado,  
-    private boolean seleccionofoto=false;
+//    private boolean seleccionofoto=false;
     private int legajo=0;
     private boolean BotonGuardarSelecciono=false;
     private String nombredelarchivo;
@@ -352,7 +352,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 if (validarEmpleadoActulizado()) {
                     //obtengos los datos y creo el empelado
                     Empleado e = getDatosEmpleado();
-                    if (legajo!=Integer.parseInt(txtLegajo.getText().trim())) {
+                    if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
                         Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
                         List<Concepto> lista =new ConceptoDaoImp().listarConcepto(o);
                         new EmpleadoDaoImp().addEmpleado(e);
@@ -520,7 +520,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
         empleado.setApellido(txtApellido.getText());
         empleado.setNombre(txtNombre.getText());
-        empleado.setCuit(Integer.parseInt(txtCuit.getText()));
+        empleado.setCuit(txtCuit.getText());
         empleado.setConvenio(txtConvenio.getText());
         empleado.setTarea(txtTarea.getText());
         return empleado;

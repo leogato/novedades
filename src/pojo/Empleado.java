@@ -1,5 +1,5 @@
 package pojo;
-// Generated 25/09/2013 22:35:02 by Hibernate Tools 3.2.1.GA
+// Generated 27/09/2013 11:51:17 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -16,27 +16,25 @@ public class Empleado  implements java.io.Serializable {
      private Empresa empresa;
      private String apellido;
      private String nombre;
-     private int cuit;
+     private String cuit;
      private String convenio;
      private String tarea;
-     private Set<Usuario> usuarios = new HashSet<Usuario>(0);
-     private Set<Novedad> novedads = new HashSet<Novedad>(0);
-     private Set<Sucursal> sucursals = new HashSet<Sucursal>(0);
+     private Set usuarios = new HashSet(0);
+     private Set novedads = new HashSet(0);
+     private Set sucursals = new HashSet(0);
 
     public Empleado() {
     }
 
 	
-    public Empleado(Sucursal sucursal, Empresa empresa, String apellido, String nombre, int cuit, String convenio, String tarea) {
-        this.sucursal = sucursal;
-        this.empresa = empresa;
+    public Empleado(String apellido, String nombre, String cuit, String convenio, String tarea) {
         this.apellido = apellido;
         this.nombre = nombre;
         this.cuit = cuit;
         this.convenio = convenio;
         this.tarea = tarea;
     }
-    public Empleado(Sucursal sucursal, Empresa empresa, String apellido, String nombre, int cuit, String convenio, String tarea, Set<Usuario> usuarios, Set<Novedad> novedads, Set<Sucursal> sucursals) {
+    public Empleado(Sucursal sucursal, Empresa empresa, String apellido, String nombre, String cuit, String convenio, String tarea, Set usuarios, Set novedads, Set sucursals) {
        this.sucursal = sucursal;
        this.empresa = empresa;
        this.apellido = apellido;
@@ -84,11 +82,11 @@ public class Empleado  implements java.io.Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public int getCuit() {
+    public String getCuit() {
         return this.cuit;
     }
     
-    public void setCuit(int cuit) {
+    public void setCuit(String cuit) {
         this.cuit = cuit;
     }
     public String getConvenio() {
@@ -105,25 +103,25 @@ public class Empleado  implements java.io.Serializable {
     public void setTarea(String tarea) {
         this.tarea = tarea;
     }
-    public Set<Usuario> getUsuarios() {
+    public Set getUsuarios() {
         return this.usuarios;
     }
     
-    public void setUsuarios(Set<Usuario> usuarios) {
+    public void setUsuarios(Set usuarios) {
         this.usuarios = usuarios;
     }
-    public Set<Novedad> getNovedads() {
+    public Set getNovedads() {
         return this.novedads;
     }
     
-    public void setNovedads(Set<Novedad> novedads) {
+    public void setNovedads(Set novedads) {
         this.novedads = novedads;
     }
-    public Set<Sucursal> getSucursals() {
+    public Set getSucursals() {
         return this.sucursals;
     }
     
-    public void setSucursals(Set<Sucursal> sucursals) {
+    public void setSucursals(Set sucursals) {
         this.sucursals = sucursals;
     }
 
