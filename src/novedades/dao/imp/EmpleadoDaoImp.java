@@ -52,10 +52,10 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
     }
 
     @Override
-    public Empleado getEmpleado(int idEmpleado) {
+    public Empleado getEmpleado(int legajo) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        Empleado a = (Empleado) session.get(Empleado.class, idEmpleado);
+        Empleado a = (Empleado) session.get(Empleado.class, legajo);
         session.getTransaction().commit();
         session.close();
         return a;

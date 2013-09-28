@@ -1,5 +1,5 @@
 package pojo;
-// Generated 27/09/2013 11:51:17 by Hibernate Tools 3.2.1.GA
+// Generated 28/09/2013 10:39:40 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class Empleado  implements java.io.Serializable {
 
 
-     private Integer legajo;
+     private int legajo;
      private Sucursal sucursal;
      private Empresa empresa;
      private String apellido;
@@ -19,22 +19,24 @@ public class Empleado  implements java.io.Serializable {
      private String cuit;
      private String convenio;
      private String tarea;
-     private Set usuarios = new HashSet(0);
-     private Set novedads = new HashSet(0);
-     private Set sucursals = new HashSet(0);
+     private Set<Usuario> usuarios = new HashSet<Usuario>(0);
+     private Set<Novedad> novedads = new HashSet<Novedad>(0);
+     private Set<Sucursal> sucursals = new HashSet<Sucursal>(0);
 
     public Empleado() {
     }
 
 	
-    public Empleado(String apellido, String nombre, String cuit, String convenio, String tarea) {
+    public Empleado(int legajo, String apellido, String nombre, String cuit, String convenio, String tarea) {
+        this.legajo = legajo;
         this.apellido = apellido;
         this.nombre = nombre;
         this.cuit = cuit;
         this.convenio = convenio;
         this.tarea = tarea;
     }
-    public Empleado(Sucursal sucursal, Empresa empresa, String apellido, String nombre, String cuit, String convenio, String tarea, Set usuarios, Set novedads, Set sucursals) {
+    public Empleado(int legajo, Sucursal sucursal, Empresa empresa, String apellido, String nombre, String cuit, String convenio, String tarea, Set<Usuario> usuarios, Set<Novedad> novedads, Set<Sucursal> sucursals) {
+       this.legajo = legajo;
        this.sucursal = sucursal;
        this.empresa = empresa;
        this.apellido = apellido;
@@ -47,11 +49,11 @@ public class Empleado  implements java.io.Serializable {
        this.sucursals = sucursals;
     }
    
-    public Integer getLegajo() {
+    public int getLegajo() {
         return this.legajo;
     }
     
-    public void setLegajo(Integer legajo) {
+    public void setLegajo(int legajo) {
         this.legajo = legajo;
     }
     public Sucursal getSucursal() {
@@ -103,25 +105,25 @@ public class Empleado  implements java.io.Serializable {
     public void setTarea(String tarea) {
         this.tarea = tarea;
     }
-    public Set getUsuarios() {
+    public Set<Usuario> getUsuarios() {
         return this.usuarios;
     }
     
-    public void setUsuarios(Set usuarios) {
+    public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
-    public Set getNovedads() {
+    public Set<Novedad> getNovedads() {
         return this.novedads;
     }
     
-    public void setNovedads(Set novedads) {
+    public void setNovedads(Set<Novedad> novedads) {
         this.novedads = novedads;
     }
-    public Set getSucursals() {
+    public Set<Sucursal> getSucursals() {
         return this.sucursals;
     }
     
-    public void setSucursals(Set sucursals) {
+    public void setSucursals(Set<Sucursal> sucursals) {
         this.sucursals = sucursals;
     }
 

@@ -81,7 +81,7 @@ public class TablaUtil {
         tablaOrdendelDia.getColumnModel().getColumn(0).setPreferredWidth(0);
 }
   public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
-    String[] titulos = {"LEGAJO","DNI","APELLIDO","NOMBRE","INGRESO"};
+    String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CUIT","CONVENIO","TAREA"};
     modelo= new DefaultTableModel(null,titulos){
     @Override// impleamento este metodo para que la tabla sea no editable
         public boolean isCellEditable(int row, int column) {

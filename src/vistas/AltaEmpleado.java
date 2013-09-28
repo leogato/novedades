@@ -97,9 +97,10 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EMPELADO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EMPLEADO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
         pnlPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
+        btnGuardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
         btnGuardar.setText("GUARDAR");
         btnGuardar.setAnimacion(false);
@@ -128,27 +129,48 @@ public class AltaEmpleado extends javax.swing.JDialog {
             }
         });
 
+        txtTarea.setBackground(new java.awt.Color(102, 102, 102));
+        txtTarea.setBorder(null);
+        txtTarea.setForeground(new java.awt.Color(102, 102, 102));
         txtTarea.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTarea.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtTarea.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         labelMetric15.setText("TAREA");
 
         labelMetric13.setText("CONVENIO");
 
+        txtConvenio.setBackground(new java.awt.Color(102, 102, 102));
+        txtConvenio.setBorder(null);
+        txtConvenio.setForeground(new java.awt.Color(102, 102, 102));
         txtConvenio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtConvenio.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtConvenio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
+        txtCuit.setBackground(new java.awt.Color(102, 102, 102));
+        txtCuit.setBorder(null);
+        txtCuit.setForeground(new java.awt.Color(102, 102, 102));
         txtCuit.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCuit.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtCuit.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         labelMetric12.setText("CUIT");
 
         labelMetric11.setText("NOMBRE");
 
+        txtNombre.setBackground(new java.awt.Color(102, 102, 102));
+        txtNombre.setBorder(null);
+        txtNombre.setForeground(new java.awt.Color(102, 102, 102));
         txtNombre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtNombre.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtNombre.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
+        txtApellido.setBackground(new java.awt.Color(102, 102, 102));
+        txtApellido.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtApellido.setForeground(new java.awt.Color(102, 102, 102));
         txtApellido.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtApellido.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtApellido.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtApellido.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         labelMetric10.setText("APELLIDO");
@@ -157,6 +179,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
         txtLegajo.setBackground(new java.awt.Color(255, 255, 0));
         txtLegajo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtLegajo.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtLegajo.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         txtLegajo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -498,7 +521,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
          boolean todoOk=false;
          try{
          Empleado empLeg = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText().trim()));
-         
+         System.out.println("Variable empLeg: "+empLeg);
              //actualizar
              
              if (empLeg ==null){
