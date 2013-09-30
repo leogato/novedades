@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package vistas;
+package vistas.usuario;
 
+import vistas.empleado.*;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
 import java.awt.event.KeyEvent;
@@ -11,12 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import novedades.dao.imp.UsuarioDaoImp;
+import pojo.Usuario;
 
 /**
  *
  * @author Joel
  */
-public class GestorEmpleado extends javax.swing.JDialog {
+public class GestorUsuario extends javax.swing.JDialog {
     public static final int VENTANA_GESTOR_ASISTENCIA=1;
     public static final int MENU=2;
     public   boolean isModificar = false;// paramentro global uso: para ver si se presiono un boton agregar o moficar
@@ -24,32 +27,32 @@ public class GestorEmpleado extends javax.swing.JDialog {
     
     
     private DefaultTableModel modelo;
-    private List<Empleado> listaEmpleado;
+    private List<Usuario> listaUsuario;
     private boolean seleccionado;
     private int legajo;
     int quienloyamo;
     java.awt.Frame parent;// indica quien es el padre. me sirve para pasar el icono de la aplcacion
   //  EmpleadoDao empleados ;
    
-    public GestorEmpleado(java.awt.Frame parent, boolean modal) {
+    public GestorUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.parent = parent;
         initComponents();
         
         
         initComponentesVentana();    
-        this.setTitle("MODIFICACION DE EMPLEADO");
+        this.setTitle("MODIFICACION DE USUARIOS");
         setLocationRelativeTo(this);
         setVisible(true);
         
         
     }
-    public GestorEmpleado(java.awt.Frame parent, boolean modal,int quienloyamo) {
+    public GestorUsuario(java.awt.Frame parent, boolean modal,int quienloyamo) {
         super(parent, modal);
         this.parent = parent;
         this.quienloyamo = quienloyamo;
         initComponents();
-        this.setTitle("ALTA DE EMPLEADO");
+        this.setTitle("ALTA DE USUARIOS");
         if (MENU== quienloyamo) {
             //boton seleccionar no debe aparecer
             btnSeleccion2.setVisible(false);
@@ -92,8 +95,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        elegirFoto = new javax.swing.JFileChooser();
-        btnSeleccion = new org.edisoncor.gui.button.ButtonIpod();
         panel1 = new org.edisoncor.gui.panel.Panel();
         btnModificar = new org.edisoncor.gui.button.ButtonIpod();
         btnNuevo = new org.edisoncor.gui.button.ButtonIpod();
@@ -105,15 +106,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
         btnSeleccion2 = new org.edisoncor.gui.button.ButtonIpod();
         btnCancelarOperacion = new org.edisoncor.gui.button.ButtonIpod();
         btnReporte = new org.edisoncor.gui.button.ButtonIpod();
-
-        btnSeleccion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/freelancersteam/www/java/tomafoto/images/OK.jpg"))); // NOI18N
-        btnSeleccion.setText("SELECT");
-        btnSeleccion.setAnimacion(false);
-        btnSeleccion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSeleccionActionPerformed(evt);
-            }
-        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -380,10 +372,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
          
     }//GEN-LAST:event_btnNuevoActionPerformed
 
-    // private void btnSeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionActionPerformed
-      
-    // }//GEN-LAST:event_btnSeleccionActionPerformed
-
     private void btnSeleccion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccion2ActionPerformed
             
         int fila = tblEmpleado.getSelectedRow();
@@ -459,10 +447,8 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private org.edisoncor.gui.button.ButtonIpod btnModificar;
     private org.edisoncor.gui.button.ButtonIpod btnNuevo;
     private org.edisoncor.gui.button.ButtonIpod btnReporte;
-    private org.edisoncor.gui.button.ButtonIpod btnSeleccion;
     private org.edisoncor.gui.button.ButtonIpod btnSeleccion2;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbFiltro;
-    private javax.swing.JFileChooser elegirFoto;
     private javax.swing.JScrollPane jScrollPane2;
     private org.edisoncor.gui.label.LabelMetric labelMetric1;
     private org.edisoncor.gui.panel.Panel panel1;
@@ -473,11 +459,11 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     /**
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
-        private void cargarTablaConEmpleado() {
+        private void cargarTablaConUsuario() {
 
-       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
+       listaUsuario =new UsuarioDaoImp().listarUsuario();
        util.TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
-       util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
+       util.TablaUtil.cargarModeloUsuario(modelo, listaUsuario, tblEmpleado);
     }
 
     private List<Empleado> filtrarPorNombreEmpleado(List<Empleado> listaEmpleado, String text) {

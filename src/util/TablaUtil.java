@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import pojo.Empleado;
 import pojo.Novedad;
+import pojo.Usuario;
 
 /**
  *
@@ -99,6 +100,18 @@ public class TablaUtil {
             tablaEmpleado.getColumnModel().getColumn(0).setMaxWidth(0);
             tablaEmpleado.getColumnModel().getColumn(0).setMinWidth(0);
             tablaEmpleado.getColumnModel().getColumn(0).setPreferredWidth(0);
+           
+           }
+    }
+ public static void cargarModeloUsuario(DefaultTableModel modelo,List<Usuario>listaUsuario,JTable tablaUsuario){
+    modelo =(DefaultTableModel) tablaUsuario.getModel();
+        for ( Usuario a : listaUsuario) {
+            Object[] filaEmpleado = {a.getId(),a.getEmpleado().getApellido(), a.getEmpleado().getNombre(),a.getDescripcion(), a.getTipo()}; 
+            modelo.addRow(filaEmpleado);
+           // hago que la columna 0 no sea visible
+            tablaUsuario.getColumnModel().getColumn(0).setMaxWidth(0);
+            tablaUsuario.getColumnModel().getColumn(0).setMinWidth(0);
+            tablaUsuario.getColumnModel().getColumn(0).setPreferredWidth(0);
            
            }
     }

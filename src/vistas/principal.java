@@ -4,6 +4,9 @@
  */
 package vistas;
 
+import vistas.usuario.abmUsuario;
+import vistas.empleado.AltaEmpleado;
+import vistas.empleado.GestorEmpleado;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

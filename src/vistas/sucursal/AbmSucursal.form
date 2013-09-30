@@ -52,9 +52,6 @@
           <Image iconType="3" name="/imagenes/textura-metallica-2.jpg"/>
         </Property>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="ALTA, BAJA Y MODIFICACION DE SUCURSALES"/>
-      </AccessibilityProperties>
 
       <Layout>
         <DimensionLayout dim="0">

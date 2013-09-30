@@ -2,18 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package vistas;
+package vistas.empresa;
 
 /**
  *
  * @author usuario
  */
-public class AbmSucursal extends javax.swing.JDialog {
+public class abmEmpresa extends javax.swing.JDialog {
 
     /**
-     * Creates new form AbmSucursal
+     * Creates new form abmEmpresa
      */
-    public AbmSucursal(java.awt.Frame parent, boolean modal) {
+    public abmEmpresa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -30,8 +30,12 @@ public class AbmSucursal extends javax.swing.JDialog {
         panel1 = new org.edisoncor.gui.panel.Panel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtNombre = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtCodSucursal = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtEmpresa = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtCodEmpresa = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtGerente = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtEmailGerente = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         panelShadow1 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
         btnAceptar = new org.edisoncor.gui.button.ButtonIpod();
@@ -41,32 +45,56 @@ public class AbmSucursal extends javax.swing.JDialog {
         btnNuevo = new org.edisoncor.gui.button.ButtonIpod();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Altas, bajas y modificacions de Empresas");
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "ALTA, BAJA Y MODIFICACION DE SUCURSALES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "ALTA, BAJA Y MODIFICACION DE EMPRESAS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("CODIGO SUCURSAL");
+        jLabel1.setText("CODIGO EMPRESA");
 
         jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("NOMBRE");
+        jLabel2.setText("EMPRESA");
 
-        txtNombre.setBackground(new java.awt.Color(102, 102, 102));
-        txtNombre.setBorder(null);
-        txtNombre.setForeground(new java.awt.Color(255, 255, 255));
-        txtNombre.setCaretColor(new java.awt.Color(102, 102, 102));
-        txtNombre.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtNombre.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("GERENTE");
 
-        txtCodSucursal.setBackground(new java.awt.Color(102, 102, 102));
-        txtCodSucursal.setBorder(null);
-        txtCodSucursal.setForeground(new java.awt.Color(255, 255, 255));
-        txtCodSucursal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCodSucursal.setCaretColor(new java.awt.Color(102, 102, 102));
-        txtCodSucursal.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtCodSucursal.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("EMAIL GERENTE");
+
+        txtEmpresa.setBackground(new java.awt.Color(102, 102, 102));
+        txtEmpresa.setBorder(null);
+        txtEmpresa.setForeground(new java.awt.Color(255, 255, 255));
+        txtEmpresa.setCaretColor(new java.awt.Color(102, 102, 102));
+        txtEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtEmpresa.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
+
+        txtCodEmpresa.setBackground(new java.awt.Color(102, 102, 102));
+        txtCodEmpresa.setBorder(null);
+        txtCodEmpresa.setForeground(new java.awt.Color(255, 255, 255));
+        txtCodEmpresa.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCodEmpresa.setCaretColor(new java.awt.Color(102, 102, 102));
+        txtCodEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtCodEmpresa.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
+
+        txtGerente.setBackground(new java.awt.Color(102, 102, 102));
+        txtGerente.setBorder(null);
+        txtGerente.setForeground(new java.awt.Color(255, 255, 255));
+        txtGerente.setCaretColor(new java.awt.Color(102, 102, 102));
+        txtGerente.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtGerente.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
+
+        txtEmailGerente.setBackground(new java.awt.Color(102, 102, 102));
+        txtEmailGerente.setBorder(null);
+        txtEmailGerente.setForeground(new java.awt.Color(255, 255, 255));
+        txtEmailGerente.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtEmailGerente.setCaretColor(new java.awt.Color(102, 102, 102));
+        txtEmailGerente.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtEmailGerente.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
 
         panelShadow1.setDistance(10);
 
@@ -131,7 +159,7 @@ public class AbmSucursal extends javax.swing.JDialog {
             .addGroup(panelShadow1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         panelShadow1Layout.setVerticalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,13 +175,26 @@ public class AbmSucursal extends javax.swing.JDialog {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCodSucursal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(179, 179, 179)
+                                .addComponent(txtGerente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtEmailGerente, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(23, 23, 23))
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCodEmpresa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmpresa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(33, 33, 33))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelShadow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -165,15 +206,23 @@ public class AbmSucursal extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtCodSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCodEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2))
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(48, 48, 48)
+                        .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(21, 21, 21)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtGerente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtEmailGerente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
                 .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -188,8 +237,6 @@ public class AbmSucursal extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
-        panel1.getAccessibleContext().setAccessibleName("ALTA, BAJA Y MODIFICACION DE SUCURSALES");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -215,20 +262,20 @@ public class AbmSucursal extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AbmSucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AbmSucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AbmSucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AbmSucursal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AbmSucursal dialog = new AbmSucursal(new javax.swing.JFrame(), true);
+                abmEmpresa dialog = new abmEmpresa(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -247,10 +294,14 @@ public class AbmSucursal extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonIpod buttonIpod1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private org.edisoncor.gui.panel.Panel panel1;
     private org.edisoncor.gui.panel.PanelShadow panelShadow1;
     private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete1;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtCodSucursal;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtNombre;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtCodEmpresa;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmailGerente;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmpresa;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtGerente;
     // End of variables declaration//GEN-END:variables
 }
