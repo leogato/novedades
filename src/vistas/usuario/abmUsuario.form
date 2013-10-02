@@ -359,9 +359,9 @@
                         <PropertyBean type="org.edisoncor.gui.util.DropShadowBorder"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/imagenes/cancelar.png"/>
+                      <Image iconType="3" name="/imagenes/atras.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Cancelar"/>
+                    <Property name="text" type="java.lang.String" value="Atras"/>
                   </Properties>
                 </Component>
                 <Component class="org.edisoncor.gui.button.ButtonIpod" name="btnModificar">

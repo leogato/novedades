@@ -30,6 +30,7 @@ public class GestorUsuario extends javax.swing.JDialog {
     private List<Usuario> listaUsuario;
     private boolean seleccionado;
     private int legajo;
+    private Usuario usuario;
     int quienloyamo;
     java.awt.Frame parent;// indica quien es el padre. me sirve para pasar el icono de la aplcacion
   //  EmpleadoDao empleados ;
@@ -80,7 +81,7 @@ public class GestorUsuario extends javax.swing.JDialog {
      */
     public void initComponentesVentana(){
         //empleados = new EmpleadoDaoImp();
-        cargarTablaConEmpleado();
+        cargarTablaConUsuario();
                 
         btnModificar.setEnabled(false);
        
@@ -282,19 +283,19 @@ public class GestorUsuario extends javax.swing.JDialog {
         // filtrar las coincidencias con el contenido de la caja de texto
         
             
-             listaEmpleado = new EmpleadoDaoImp().listarEmpleado();
+             listaUsuario = new UsuarioDaoImp().listarUsuario();
         if ( txtEmpleado.getText().trim().isEmpty()) {
-          listaEmpleado = filtrarPorNombreEmpleado(listaEmpleado,txtEmpleado.getText()); 
+          listaUsuario = filtrarPorNombreEmpleado(listaUsuario,txtEmpleado.getText()); 
 
         }else{
             if (cmbFiltro.getSelectedIndex()==0) {
                 // POR  NOMBRE
-                 listaEmpleado = filtrarPorNombreEmpleado(listaEmpleado,txtEmpleado.getText()); 
+                 listaUsuario = filtrarPorNombreEmpleado(listaUsuario,txtEmpleado.getText()); 
 
         }
          else {
             // FILTRO POR LEGAJO
-             listaEmpleado = filtrarPorLegajoEmpleado(listaEmpleado,txtEmpleado.getText()); 
+             listaUsuario = filtrarPorLegajoEmpleado(listaUsuario,txtEmpleado.getText()); 
         }
         }
 //       TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
@@ -353,8 +354,8 @@ public class GestorUsuario extends javax.swing.JDialog {
         if (fila!= -1) {
             legajo = (Integer) tblEmpleado.getModel().getValueAt(tblEmpleado.getSelectedRow(), 0);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
-            AltaEmpleado ventanaEditEmpleado = new AltaEmpleado(parent, true,legajo);
-            cargarTablaConEmpleado();    
+            abmUsuario ventanaEditUsuario = new abmUsuario(parent, true, usuario);
+            cargarTablaConUsuario();    
         }else{
             JOptionPane.showMessageDialog(null, "Debes seleccionar un Empleado de la Tabla");
         }
@@ -362,9 +363,9 @@ public class GestorUsuario extends javax.swing.JDialog {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
-        AltaEmpleado ventanaNuevoEmpleado = new AltaEmpleado(parent, true);
+        abmUsuario ventanaNuevoUsuario = new abmUsuario(parent, true);
 //        if (ventanaNuevoEmpleado.isBotonGuardarSelecciono()) {
-            cargarTablaConEmpleado();
+            cargarTablaConUsuario();
 //            ventanaNuevoEmpleado.dispose();
 //            
 //        }
@@ -466,20 +467,20 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
        util.TablaUtil.cargarModeloUsuario(modelo, listaUsuario, tblEmpleado);
     }
 
-    private List<Empleado> filtrarPorNombreEmpleado(List<Empleado> listaEmpleado, String text) {
-         List<Empleado> list = new ArrayList<Empleado>();
-         for (Empleado empleado : listaEmpleado) {
-             if (empleado.getApellido().contains(text)||empleado.getNombre().contains(text)) {
-                 list.add(empleado);
+    private List<Usuario> filtrarPorNombreEmpleado(List<Usuario> listaUsuarios, String text) {
+         List<Usuario> list = new ArrayList<Usuario>();
+         for (Usuario usuario : listaUsuarios) {
+             if (usuario.getEmpleado().getApellido().contains(text)||usuario.getEmpleado().getNombre().contains(text)) {
+                 list.add(usuario);
              }
         }
          return list;
     }
-    private List<Empleado> filtrarPorLegajoEmpleado(List<Empleado> listaEmpleado, String text) {
-         List<Empleado> list = new ArrayList<Empleado>();
-         for (Empleado empleado : listaEmpleado) {
-             if (String.valueOf(empleado.getLegajo()).contains(text)) {
-                 list.add(empleado);
+    private List<Usuario> filtrarPorLegajoEmpleado(List<Usuario> listaUsuario, String text) {
+         List<Usuario> list = new ArrayList<Usuario>();
+         for (Usuario usuario : listaUsuario) {
+             if (String.valueOf(usuario.getEmpleado().getLegajo()).contains(text)) {
+                 list.add(usuario);
              }
         }
          return list;

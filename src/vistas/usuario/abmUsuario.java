@@ -15,9 +15,10 @@ import pojo.Usuario;
  */
 public class abmUsuario extends javax.swing.JDialog {
 
-   Usuario usuario; //  este objeto contien los datos del usuario que llenas en el formulario  para crear o modificar 
-   boolean agregado= false;   // se pone en true: si se presiono el boton guardar para registrar la operacion . y False en otro caso
-   boolean nuevo; // se encarga de chequear si esta pantalla se usa para agregar un nuevo usuario .. true: nuevo ..false:modificar
+    public static final int GESTOR_EMPLEADO =1;
+    Usuario usuario; //  este objeto contien los datos del usuario que llenas en el formulario  para crear o modificar 
+    boolean agregado= false;   // se pone en true: si se presiono el boton guardar para registrar la operacion . y False en otro caso
+    boolean nuevo; // se encarga de chequear si esta pantalla se usa para agregar un nuevo usuario .. true: nuevo ..false:modificar
    
    
    /**  Este constructo lo ussas para cargar un usuario nuevo
@@ -158,8 +159,8 @@ public class abmUsuario extends javax.swing.JDialog {
         btnNuevo.setText("Nuevo");
 
         btnCancelar.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
+        btnCancelar.setText("Atras");
 
         btnModificar.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N

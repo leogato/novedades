@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JMenuBar;
+import vistas.usuario.GestorUsuario;
 
 /**
  *
@@ -72,6 +73,7 @@ public class principal extends javax.swing.JFrame {
         mnuAltaEmpleados = new javax.swing.JMenuItem();
         mnuGestorEmpleados = new javax.swing.JMenuItem();
         mnuABMUsuario = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         mnuEmpresas = new javax.swing.JMenuItem();
         mnuABMNovedades = new javax.swing.JMenuItem();
 
@@ -187,13 +189,21 @@ public class principal extends javax.swing.JFrame {
         });
         mnuABM.add(mnuGestorEmpleados);
 
-        mnuABMUsuario.setText("ABMUsuarios");
+        mnuABMUsuario.setText("Alta de Usuarios");
         mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuABMUsuarioActionPerformed(evt);
             }
         });
         mnuABM.add(mnuABMUsuario);
+
+        jMenuItem1.setText("Gestor de Empleados");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnuABM.add(jMenuItem1);
 
         mnuEmpresas.setText("ABMEmpresas");
         mnuEmpresas.addActionListener(new java.awt.event.ActionListener() {
@@ -252,6 +262,10 @@ public class principal extends javax.swing.JFrame {
         new GestorEmpleado(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuGestorEmpleadosActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new GestorUsuario(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -292,6 +306,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu mnuABM;
     private javax.swing.JMenuItem mnuABMNovedades;
     private javax.swing.JMenuItem mnuABMUsuario;

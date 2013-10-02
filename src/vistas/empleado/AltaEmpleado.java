@@ -25,7 +25,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
    
 //    byte[] imgByte;
 //    private String pathFoto;
-    int resp;// respuesta  si agrego o no una foto el empleado,  
+//    int resp;// respuesta  si agrego o no una foto el empleado,  
 //    private boolean seleccionofoto=false;
     private int legajo=0;
     private boolean BotonGuardarSelecciono=false;
@@ -94,6 +94,10 @@ public class AltaEmpleado extends javax.swing.JDialog {
         labelMetric10 = new org.edisoncor.gui.label.LabelMetric();
         labelMetric9 = new org.edisoncor.gui.label.LabelMetric();
         txtLegajo = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        labelMetric14 = new org.edisoncor.gui.label.LabelMetric();
+        txtApellido1 = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        labelMetric16 = new org.edisoncor.gui.label.LabelMetric();
+        txtNombre1 = new org.edisoncor.gui.textField.TextFieldRoundIcon();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -200,6 +204,25 @@ public class AltaEmpleado extends javax.swing.JDialog {
             }
         });
 
+        labelMetric14.setText("EMPRESA");
+
+        txtApellido1.setBackground(new java.awt.Color(102, 102, 102));
+        txtApellido1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtApellido1.setForeground(new java.awt.Color(102, 102, 102));
+        txtApellido1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtApellido1.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtApellido1.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtApellido1.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+
+        labelMetric16.setText("SUCURSAL");
+
+        txtNombre1.setBackground(new java.awt.Color(102, 102, 102));
+        txtNombre1.setBorder(null);
+        txtNombre1.setForeground(new java.awt.Color(102, 102, 102));
+        txtNombre1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtNombre1.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtNombre1.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
         pnlPrincipalLayout.setHorizontalGroup(
@@ -241,8 +264,17 @@ public class AltaEmpleado extends javax.swing.JDialog {
                         .addGap(135, 135, 135)
                         .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtConvenio, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTarea, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                            .addComponent(txtTarea, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(134, 134, 134)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtApellido1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,6 +291,14 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtApellido1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -470,14 +510,18 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private org.edisoncor.gui.label.LabelMetric labelMetric11;
     private org.edisoncor.gui.label.LabelMetric labelMetric12;
     private org.edisoncor.gui.label.LabelMetric labelMetric13;
+    private org.edisoncor.gui.label.LabelMetric labelMetric14;
     private org.edisoncor.gui.label.LabelMetric labelMetric15;
+    private org.edisoncor.gui.label.LabelMetric labelMetric16;
     private org.edisoncor.gui.label.LabelMetric labelMetric9;
     private org.edisoncor.gui.panel.Panel pnlPrincipal;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtApellido;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtApellido1;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtConvenio;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtCuit;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtLegajo;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtNombre;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtNombre1;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtTarea;
     // End of variables declaration//GEN-END:variables
 
