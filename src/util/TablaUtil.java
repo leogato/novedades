@@ -39,6 +39,7 @@ public class TablaUtil {
        tablaAsistencia.setModel(modelo);
     }
     
+    
     /**
      * Carga todos registros en la tabla Asamblea 
      * @param modelo  modelos de la tabla asamblea
@@ -91,6 +92,17 @@ public class TablaUtil {
     };
     tablaEmpleado.setModel(modelo);
  }  
+ public static void prepararTablaUsuario(DefaultTableModel modelo, JTable tablaEmpleado){
+        
+        String[] titulos = {"ID","USUARIO","DESCRIPCION","CLAVE","TIPO"};
+       modelo= new DefaultTableModel(null,titulos){
+                	@Override// impleamento este metodo para que la tabla sea no editable
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+       };
+       tablaEmpleado.setModel(modelo);
+    } 
  public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
     modelo =(DefaultTableModel) tablaEmpleado.getModel();
         for ( Empleado a : listaEmpleado) {
@@ -103,10 +115,10 @@ public class TablaUtil {
            
            }
     }
- public static void cargarModeloUsuario(DefaultTableModel modelo,List<Usuario>listaUsuario,JTable tablaUsuario){
+ public static void cargarModeloUsuario(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaUsuario){
     modelo =(DefaultTableModel) tablaUsuario.getModel();
-        for ( Usuario a : listaUsuario) {
-            Object[] filaEmpleado = {a.getId(),a.getEmpleado().getApellido(), a.getEmpleado().getNombre(),a.getDescripcion(), a.getTipo()}; 
+        for ( Empleado a : listaEmpleado) {
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido()+" "+a.getNombre(),a.getDescripcion(), a.getTipo()}; 
             modelo.addRow(filaEmpleado);
            // hago que la columna 0 no sea visible
             tablaUsuario.getColumnModel().getColumn(0).setMaxWidth(0);

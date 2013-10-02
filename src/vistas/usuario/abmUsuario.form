@@ -37,7 +37,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder justification="2" title="ALTA, BAJA Y MODIFICACION DE USUARIOS">
+            <TitledBorder justification="2" title="USUARIOS">
               <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder roundedCorners="true" thickness="2">
                   <Color PropertyName="color" blue="0" green="66" red="ff" type="rgb"/>
@@ -56,10 +56,11 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -71,14 +72,15 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="txtDescripcion" alignment="1" min="-2" pref="373" max="-2" attributes="0"/>
                               <Component id="txtUsuario" min="-2" pref="283" max="-2" attributes="0"/>
-                              <Component id="txtContraseña" alignment="1" min="-2" pref="192" max="-2" attributes="0"/>
+                              <Component id="txtContrasenia" alignment="1" min="-2" pref="192" max="-2" attributes="0"/>
                               <Component id="txtTipo" min="-2" pref="172" max="-2" attributes="0"/>
                               <Component id="txtId" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="0" pref="1" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="panelShadow1" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelShadow1" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -106,14 +108,14 @@
                   <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtContraseña" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtContrasenia" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtTipo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="37" max="32767" attributes="0"/>
+                  <EmptySpace pref="34" max="32767" attributes="0"/>
                   <Component id="panelShadow1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -264,8 +266,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panelTranslucidoComplete1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="panelTranslucidoComplete1" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -297,15 +299,11 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="buttonIpod2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Component id="btnModificar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="25" max="32767" attributes="0"/>
-                          <Component id="btnNuevo" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                          <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="buttonIpod2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
+                          <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -315,11 +313,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btnAceptar" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnNuevo" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnModificar" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="buttonIpod2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -327,31 +323,20 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="org.edisoncor.gui.button.ButtonIpod" name="btnAceptar">
+                <Component class="org.edisoncor.gui.button.ButtonIpod" name="btnGuardar">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                         <PropertyBean type="org.edisoncor.gui.util.DropShadowBorder"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/imagenes/Tick (1).png"/>
+                      <Image iconType="3" name="/imagenes/GUARDAR.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Aceptar"/>
+                    <Property name="text" type="java.lang.String" value="Guardar"/>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAceptarActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarActionPerformed"/>
                   </Events>
-                </Component>
-                <Component class="org.edisoncor.gui.button.ButtonIpod" name="btnNuevo">
-                  <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                        <PropertyBean type="org.edisoncor.gui.util.DropShadowBorder"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/imagenes/adduser.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Nuevo"/>
-                  </Properties>
                 </Component>
                 <Component class="org.edisoncor.gui.button.ButtonIpod" name="btnCancelar">
                   <Properties>
@@ -362,17 +347,6 @@
                       <Image iconType="3" name="/imagenes/atras.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Atras"/>
-                  </Properties>
-                </Component>
-                <Component class="org.edisoncor.gui.button.ButtonIpod" name="btnModificar">
-                  <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                        <PropertyBean type="org.edisoncor.gui.util.DropShadowBorder"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/imagenes/Editar.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Modificar"/>
                   </Properties>
                 </Component>
                 <Component class="org.edisoncor.gui.button.ButtonIpod" name="buttonIpod2">
@@ -387,7 +361,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="org.edisoncor.gui.passwordField.PasswordFieldRoundIcon" name="txtContrase&#xf1;a">
+        <Component class="org.edisoncor.gui.passwordField.PasswordFieldRoundIcon" name="txtContrasenia">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="66" green="66" red="66" type="rgb"/>

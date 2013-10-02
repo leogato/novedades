@@ -28,6 +28,7 @@ public class GestorUsuario extends javax.swing.JDialog {
     
     private DefaultTableModel modelo;
     private List<Usuario> listaUsuario;
+    private List<Empleado> listaEmpleado;
     private boolean seleccionado;
     private int legajo;
     private Usuario usuario;
@@ -110,7 +111,7 @@ public class GestorUsuario extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE EMPLEADOS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE USUARIOS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
@@ -285,12 +286,12 @@ public class GestorUsuario extends javax.swing.JDialog {
             
              listaUsuario = new UsuarioDaoImp().listarUsuario();
         if ( txtEmpleado.getText().trim().isEmpty()) {
-          listaUsuario = filtrarPorNombreEmpleado(listaUsuario,txtEmpleado.getText()); 
+          listaUsuario = filtrarPorNombreUsuario(listaUsuario,txtEmpleado.getText()); 
 
         }else{
             if (cmbFiltro.getSelectedIndex()==0) {
                 // POR  NOMBRE
-                 listaUsuario = filtrarPorNombreEmpleado(listaUsuario,txtEmpleado.getText()); 
+                 listaUsuario = filtrarPorNombreUsuario(listaUsuario,txtEmpleado.getText()); 
 
         }
          else {
@@ -463,11 +464,11 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         private void cargarTablaConUsuario() {
 
        listaUsuario =new UsuarioDaoImp().listarUsuario();
-       util.TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
+       util.TablaUtil.prepararTablaUsuario(modelo, tblEmpleado);
        util.TablaUtil.cargarModeloUsuario(modelo, listaUsuario, tblEmpleado);
     }
 
-    private List<Usuario> filtrarPorNombreEmpleado(List<Usuario> listaUsuarios, String text) {
+    private List<Usuario> filtrarPorNombreUsuario(List<Usuario> listaUsuarios, String text) {
          List<Usuario> list = new ArrayList<Usuario>();
          for (Usuario usuario : listaUsuarios) {
              if (usuario.getEmpleado().getApellido().contains(text)||usuario.getEmpleado().getNombre().contains(text)) {

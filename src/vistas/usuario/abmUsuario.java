@@ -80,16 +80,14 @@ public class abmUsuario extends javax.swing.JDialog {
         txtTipo = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         panelShadow1 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
-        btnAceptar = new org.edisoncor.gui.button.ButtonIpod();
-        btnNuevo = new org.edisoncor.gui.button.ButtonIpod();
+        btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
         btnCancelar = new org.edisoncor.gui.button.ButtonIpod();
-        btnModificar = new org.edisoncor.gui.button.ButtonIpod();
         buttonIpod2 = new org.edisoncor.gui.button.ButtonIpod();
-        txtContraseña = new org.edisoncor.gui.passwordField.PasswordFieldRoundIcon();
+        txtContrasenia = new org.edisoncor.gui.passwordField.PasswordFieldRoundIcon();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "ALTA, BAJA Y MODIFICACION DE USUARIOS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "USUARIOS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
@@ -144,27 +142,19 @@ public class abmUsuario extends javax.swing.JDialog {
         panelTranslucidoComplete1.setColorPrimario(new java.awt.Color(102, 102, 102));
         panelTranslucidoComplete1.setOpaque(false);
 
-        btnAceptar.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Tick (1).png"))); // NOI18N
-        btnAceptar.setText("Aceptar");
-        btnAceptar.setToolTipText("");
-        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setToolTipText("");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAceptarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
-
-        btnNuevo.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
-        btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/adduser.png"))); // NOI18N
-        btnNuevo.setText("Nuevo");
 
         btnCancelar.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
         btnCancelar.setText("Atras");
-
-        btnModificar.setBorder(new org.edisoncor.gui.util.DropShadowBorder());
-        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
-        btnModificar.setText("Modificar");
 
         buttonIpod2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
         buttonIpod2.setText("Eliminar");
@@ -175,15 +165,11 @@ public class abmUsuario extends javax.swing.JDialog {
             panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buttonIpod2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonIpod2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(133, 133, 133)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelTranslucidoComplete1Layout.setVerticalGroup(
@@ -191,11 +177,9 @@ public class abmUsuario extends javax.swing.JDialog {
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonIpod2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonIpod2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -205,8 +189,8 @@ public class abmUsuario extends javax.swing.JDialog {
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelShadow1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         panelShadow1Layout.setVerticalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,18 +199,19 @@ public class abmUsuario extends javax.swing.JDialog {
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
-        txtContraseña.setBackground(new java.awt.Color(102, 102, 102));
-        txtContraseña.setForeground(new java.awt.Color(255, 255, 255));
-        txtContraseña.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtContrasenia.setBackground(new java.awt.Color(102, 102, 102));
+        txtContrasenia.setForeground(new java.awt.Color(255, 255, 255));
+        txtContrasenia.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel3)
@@ -237,11 +222,12 @@ public class abmUsuario extends javax.swing.JDialog {
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 1, Short.MAX_VALUE))
+                    .addComponent(panelShadow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,12 +249,12 @@ public class abmUsuario extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -287,11 +273,11 @@ public class abmUsuario extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
          // guarda un usuario
               
         //le pasamos los datos objeto usuario para q contenga los datos de usuario
-        usuario.setClave(txtContraseña.getText());
+        usuario.setClave(txtContrasenia.getText());
         usuario.setDescripcion(txtDescripcion.getText());
         usuario.setTipo(txtTipo.getText());
         usuario.setUsuario(txtUsuario.getText());
@@ -308,7 +294,7 @@ public class abmUsuario extends javax.swing.JDialog {
         agregado= true;
         // mensajito que indica todo ok
         JOptionPane.showMessageDialog(null, "Se cargo correctamente...");
-    }//GEN-LAST:event_btnAceptarActionPerformed
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,10 +338,8 @@ public class abmUsuario extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonIpod btnAceptar;
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
-    private org.edisoncor.gui.button.ButtonIpod btnModificar;
-    private org.edisoncor.gui.button.ButtonIpod btnNuevo;
+    private org.edisoncor.gui.button.ButtonIpod btnGuardar;
     private org.edisoncor.gui.button.ButtonIpod buttonIpod2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -365,7 +349,7 @@ public class abmUsuario extends javax.swing.JDialog {
     private org.edisoncor.gui.panel.Panel panel1;
     private org.edisoncor.gui.panel.PanelShadow panelShadow1;
     private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete1;
-    private org.edisoncor.gui.passwordField.PasswordFieldRoundIcon txtContraseña;
+    private org.edisoncor.gui.passwordField.PasswordFieldRoundIcon txtContrasenia;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtDescripcion;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtId;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtTipo;
