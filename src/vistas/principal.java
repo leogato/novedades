@@ -197,7 +197,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuABM.add(mnuABMUsuario);
 
-        jMenuItem1.setText("Gestor de Empleados");
+        jMenuItem1.setText("Gestor Usuarios");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);

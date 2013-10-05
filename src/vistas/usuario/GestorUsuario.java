@@ -101,7 +101,7 @@ public class GestorUsuario extends javax.swing.JDialog {
         btnModificar = new org.edisoncor.gui.button.ButtonIpod();
         btnNuevo = new org.edisoncor.gui.button.ButtonIpod();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblEmpleado = new javax.swing.JTable();
+        tblUsuario = new javax.swing.JTable();
         labelMetric1 = new org.edisoncor.gui.label.LabelMetric();
         cmbFiltro = new org.edisoncor.gui.comboBox.ComboBoxRound();
         txtEmpleado = new org.edisoncor.gui.textField.TextFieldRoundIcon();
@@ -132,35 +132,27 @@ public class GestorUsuario extends javax.swing.JDialog {
             }
         });
 
-        tblEmpleado.setBackground(new java.awt.Color(204, 204, 204));
-        tblEmpleado.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        tblEmpleado.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsuario.setBackground(new java.awt.Color(204, 204, 204));
+        tblUsuario.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "LEGAJO", "APELLIDO", "NOMBRE", "CUIT", "CONVENIO", "TAREA"
+                "ID", "USUARIO", "CLAVE", "DESCRIPCION", "TIPO"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
+        ));
+        tblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblEmpleadoMouseClicked(evt);
+                tblUsuarioMouseClicked(evt);
             }
         });
-        tblEmpleado.addKeyListener(new java.awt.event.KeyAdapter() {
+        tblUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                tblEmpleadoKeyPressed(evt);
+                tblUsuarioKeyPressed(evt);
             }
         });
-        jScrollPane2.setViewportView(tblEmpleado);
+        jScrollPane2.setViewportView(tblUsuario);
 
         labelMetric1.setText("FILTRO");
 
@@ -319,15 +311,15 @@ public class GestorUsuario extends javax.swing.JDialog {
         
     }//GEN-LAST:event_btnCancelarOperacionActionPerformed
 
-    private void tblEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmpleadoMouseClicked
-           int fila = tblEmpleado.getSelectedRow();
+    private void tblUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuarioMouseClicked
+           int fila = tblUsuario.getSelectedRow();
         if (fila!= -1) {
             btnModificar.setEnabled(true);  
             System.out.println("selecciono con el mouse");
         }
-    }//GEN-LAST:event_tblEmpleadoMouseClicked
+    }//GEN-LAST:event_tblUsuarioMouseClicked
 
-    private void tblEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblEmpleadoKeyPressed
+    private void tblUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblUsuarioKeyPressed
 //        if (!isModificar) {
 //           if (evt.getKeyCode()==KeyEvent.VK_ENTER){
 //        int fila = tblEmpleado.getSelectedRow();
@@ -346,14 +338,14 @@ public class GestorUsuario extends javax.swing.JDialog {
 //        }
         
         
-    }//GEN-LAST:event_tblEmpleadoKeyPressed
+    }//GEN-LAST:event_tblUsuarioKeyPressed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         
 //        isModificar= true;
-        int fila = tblEmpleado.getSelectedRow();
+        int fila = tblUsuario.getSelectedRow();
         if (fila!= -1) {
-            legajo = (Integer) tblEmpleado.getModel().getValueAt(tblEmpleado.getSelectedRow(), 0);
+            legajo = (Integer) tblUsuario.getModel().getValueAt(tblUsuario.getSelectedRow(), 0);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
             abmUsuario ventanaEditUsuario = new abmUsuario(parent, true, usuario);
             cargarTablaConUsuario();    
@@ -364,7 +356,7 @@ public class GestorUsuario extends javax.swing.JDialog {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
-        abmUsuario ventanaNuevoUsuario = new abmUsuario(parent, true);
+        AltaUsuario ventanaNuevoUsuario = new AltaUsuario(parent, true, legajo);
 //        if (ventanaNuevoEmpleado.isBotonGuardarSelecciono()) {
             cargarTablaConUsuario();
 //            ventanaNuevoEmpleado.dispose();
@@ -376,13 +368,13 @@ public class GestorUsuario extends javax.swing.JDialog {
 
     private void btnSeleccion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccion2ActionPerformed
             
-        int fila = tblEmpleado.getSelectedRow();
+        int fila = tblUsuario.getSelectedRow();
         if (fila== -1) {
             // no se selecciono ninguna fila de la lista
             JOptionPane.showMessageDialog(null, "debes seleccionar un Empleado ", "Informacion",JOptionPane.INFORMATION_MESSAGE);
         } else {
             seleccionado = true;
-            modelo = (DefaultTableModel)tblEmpleado.getModel();
+            modelo = (DefaultTableModel)tblUsuario.getModel();
             legajo = Integer.parseInt(modelo.getValueAt(fila, 0).toString());
             this.dispose();
         }
@@ -454,7 +446,7 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JScrollPane jScrollPane2;
     private org.edisoncor.gui.label.LabelMetric labelMetric1;
     private org.edisoncor.gui.panel.Panel panel1;
-    private javax.swing.JTable tblEmpleado;
+    private javax.swing.JTable tblUsuario;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmpleado;
     // End of variables declaration//GEN-END:variables
 
@@ -463,9 +455,9 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
      */
         private void cargarTablaConUsuario() {
 
-       listaUsuario =new UsuarioDaoImp().listarUsuario();
-       util.TablaUtil.prepararTablaUsuario(modelo, tblEmpleado);
-       util.TablaUtil.cargarModeloUsuario(modelo, listaUsuario, tblEmpleado);
+       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
+       util.TablaUtil.prepararTablaUsuario(modelo, tblUsuario);
+       util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblUsuario);
     }
 
     private List<Usuario> filtrarPorNombreUsuario(List<Usuario> listaUsuarios, String text) {

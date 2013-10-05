@@ -8,6 +8,7 @@ package util;
 
 import hibernateUtil.Conexion;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import pojo.Empleado;
@@ -83,7 +84,7 @@ public class TablaUtil {
         tablaOrdendelDia.getColumnModel().getColumn(0).setPreferredWidth(0);
 }
   public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
-    String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CUIT","CONVENIO","TAREA"};
+    String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
     modelo= new DefaultTableModel(null,titulos){
     @Override// impleamento este metodo para que la tabla sea no editable
         public boolean isCellEditable(int row, int column) {
@@ -92,7 +93,7 @@ public class TablaUtil {
     };
     tablaEmpleado.setModel(modelo);
  }  
- public static void prepararTablaUsuario(DefaultTableModel modelo, JTable tablaEmpleado){
+ public static void prepararTablaUsuario(DefaultTableModel modelo, JTable tablaUsuario){
         
         String[] titulos = {"ID","USUARIO","DESCRIPCION","CLAVE","TIPO"};
        modelo= new DefaultTableModel(null,titulos){
@@ -101,12 +102,14 @@ public class TablaUtil {
 				return false;
 			}
        };
-       tablaEmpleado.setModel(modelo);
+       tablaUsuario.setModel(modelo);
     } 
  public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
     modelo =(DefaultTableModel) tablaEmpleado.getModel();
+    if (listaEmpleado == null)
+        JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo usuario");
         for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido() , a.getNombre(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido()+" "+a.getNombre(),a.getEmpresa(), a.getSucursal(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
             modelo.addRow(filaEmpleado);
            // hago que la columna 0 no sea visible
             tablaEmpleado.getColumnModel().getColumn(0).setMaxWidth(0);
@@ -118,7 +121,7 @@ public class TablaUtil {
  public static void cargarModeloUsuario(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaUsuario){
     modelo =(DefaultTableModel) tablaUsuario.getModel();
         for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido()+" "+a.getNombre(),a.getDescripcion(), a.getTipo()}; 
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido()+" "+a.getNombre()};//,a.getDescripcion(), a.getTipo()}; 
             modelo.addRow(filaEmpleado);
            // hago que la columna 0 no sea visible
             tablaUsuario.getColumnModel().getColumn(0).setMaxWidth(0);

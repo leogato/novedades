@@ -350,7 +350,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
         if (fila!= -1) {
             legajo = (Integer) tblEmpleado.getModel().getValueAt(tblEmpleado.getSelectedRow(), 0);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
-            AltaEmpleado ventanaEditEmpleado = new AltaEmpleado(parent, true,legajo);
+            AltaEmpleado ventanaEditEmpleado = new AltaEmpleado(parent, true, legajo);
             cargarTablaConEmpleado();    
         }else{
             JOptionPane.showMessageDialog(null, "Debes seleccionar un Empleado de la Tabla");

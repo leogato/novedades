@@ -5,6 +5,7 @@
 package vistas.usuario;
 
 import javax.swing.JOptionPane;
+import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
 import pojo.Empleado;
 import pojo.Usuario;
@@ -19,6 +20,7 @@ public class abmUsuario extends javax.swing.JDialog {
     Usuario usuario; //  este objeto contien los datos del usuario que llenas en el formulario  para crear o modificar 
     boolean agregado= false;   // se pone en true: si se presiono el boton guardar para registrar la operacion . y False en otro caso
     boolean nuevo; // se encarga de chequear si esta pantalla se usa para agregar un nuevo usuario .. true: nuevo ..false:modificar
+    private int legajo=0;
    
    
    /**  Este constructo lo ussas para cargar un usuario nuevo
@@ -53,7 +55,7 @@ public class abmUsuario extends javax.swing.JDialog {
         this.usuario = usuario; 
         // indica que este formualrio se usara para editar un usuario
         nuevo= false;
-        
+        configurarParaEditar();
         //  centro y muesttro la pantalla
         this.setTitle("MODIFICACION DE USUARIO");
         this.setLocationRelativeTo(null);
@@ -355,4 +357,14 @@ public class abmUsuario extends javax.swing.JDialog {
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtTipo;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtUsuario;
     // End of variables declaration//GEN-END:variables
+private void configurarParaEditar() {
+        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+        txtId.setText(String.valueOf(e.getLegajo()));
+        txtUsuario.setText(e.getApellido()+" "+e.getNombre());
+        txtDescripcion.setText(txtDescripcion.getText());
+        txtContrasenia.setText(String.valueOf(txtContrasenia.getText()));
+//        c
+    }
+    
 }
+

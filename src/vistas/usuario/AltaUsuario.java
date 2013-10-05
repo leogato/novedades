@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package vistas.empleado;
+package vistas.usuario;
 
+import vistas.empleado.*;
 import pojo.Concepto;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
@@ -11,15 +12,15 @@ import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.ConceptoDaoImp;
-import pojo.Empresa;
+import novedades.dao.imp.UsuarioDaoImp;
 import pojo.Novedad;
-import pojo.Sucursal;
+import pojo.Usuario;
 
 /**
  *
  * @author Leo
  */
-public class AltaEmpleado extends javax.swing.JDialog {
+public class AltaUsuario extends javax.swing.JDialog {
 //    public static final int MENU =1;
     public static final int GESTOR_EMPLEADO =1;
     
@@ -31,7 +32,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
 //    private boolean seleccionofoto=false;
     private int legajo=0;
     private boolean BotonGuardarSelecciono=false;
-    private String nombredelarchivo;
+//    private String nombredelarchivo;
 
     public boolean isBotonGuardarSelecciono() {
         return BotonGuardarSelecciono;
@@ -41,12 +42,12 @@ public class AltaEmpleado extends javax.swing.JDialog {
      */
     
     
-    public AltaEmpleado(java.awt.Frame parent, boolean modal) {
+    public AltaUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         btneEliminar.setVisible(false);
         btneEliminar.setEnabled(false);
-        this.setTitle("NUEVO EMPLEADO");
+        this.setTitle("NUEVO USUARIO");
         setLocationRelativeTo(this);
         setVisible(true);
         // no se realizara la carga de foto
@@ -55,7 +56,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         
     }
     
-    public AltaEmpleado(java.awt.Frame parent, boolean modal,int legajo) {
+    public AltaUsuario(java.awt.Frame parent, boolean modal,int legajo) {
         super(parent, modal);
         initComponents();
         this.legajo = legajo;
@@ -84,26 +85,20 @@ public class AltaEmpleado extends javax.swing.JDialog {
         btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
         btneEliminar = new org.edisoncor.gui.button.ButtonIpod();
         btnCancelar = new org.edisoncor.gui.button.ButtonIpod();
-        txtTarea = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        labelMetric15 = new org.edisoncor.gui.label.LabelMetric();
-        labelMetric13 = new org.edisoncor.gui.label.LabelMetric();
-        txtConvenio = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtCuit = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        labelMetric12 = new org.edisoncor.gui.label.LabelMetric();
         labelMetric11 = new org.edisoncor.gui.label.LabelMetric();
-        txtNombre = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtApellido = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtDescripcion = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtUsuario = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric10 = new org.edisoncor.gui.label.LabelMetric();
         labelMetric9 = new org.edisoncor.gui.label.LabelMetric();
         txtLegajo = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric14 = new org.edisoncor.gui.label.LabelMetric();
-        txtEmpresa = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric16 = new org.edisoncor.gui.label.LabelMetric();
-        txtSucursal = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtContrasenia = new org.edisoncor.gui.passwordField.PasswordFieldRoundIcon();
+        cmbTipo = new org.edisoncor.gui.comboBox.ComboBoxRound();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EMPLEADO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "USUARIO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
         pnlPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         btnGuardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
@@ -135,51 +130,24 @@ public class AltaEmpleado extends javax.swing.JDialog {
             }
         });
 
-        txtTarea.setBackground(new java.awt.Color(102, 102, 102));
-        txtTarea.setBorder(null);
-        txtTarea.setForeground(new java.awt.Color(255, 255, 255));
-        txtTarea.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtTarea.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtTarea.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        labelMetric11.setText("DESCRIPCION");
 
-        labelMetric15.setText("TAREA");
+        txtDescripcion.setBackground(new java.awt.Color(102, 102, 102));
+        txtDescripcion.setBorder(null);
+        txtDescripcion.setForeground(new java.awt.Color(102, 102, 102));
+        txtDescripcion.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDescripcion.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtDescripcion.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
-        labelMetric13.setText("CONVENIO");
+        txtUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtUsuario.setForeground(new java.awt.Color(102, 102, 102));
+        txtUsuario.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtUsuario.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtUsuario.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtUsuario.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
-        txtConvenio.setBackground(new java.awt.Color(102, 102, 102));
-        txtConvenio.setBorder(null);
-        txtConvenio.setForeground(new java.awt.Color(255, 255, 255));
-        txtConvenio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtConvenio.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtConvenio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-
-        txtCuit.setBackground(new java.awt.Color(102, 102, 102));
-        txtCuit.setBorder(null);
-        txtCuit.setForeground(new java.awt.Color(255, 255, 255));
-        txtCuit.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCuit.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtCuit.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-
-        labelMetric12.setText("CUIT");
-
-        labelMetric11.setText("NOMBRE");
-
-        txtNombre.setBackground(new java.awt.Color(102, 102, 102));
-        txtNombre.setBorder(null);
-        txtNombre.setForeground(new java.awt.Color(255, 255, 255));
-        txtNombre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtNombre.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtNombre.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-
-        txtApellido.setBackground(new java.awt.Color(102, 102, 102));
-        txtApellido.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        txtApellido.setForeground(new java.awt.Color(255, 255, 255));
-        txtApellido.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtApellido.setCaretColor(new java.awt.Color(255, 102, 0));
-        txtApellido.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtApellido.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-
-        labelMetric10.setText("APELLIDO");
+        labelMetric10.setText("USUARIO");
 
         labelMetric9.setText("LEGAJO");
 
@@ -206,24 +174,19 @@ public class AltaEmpleado extends javax.swing.JDialog {
             }
         });
 
-        labelMetric14.setText("EMPRESA");
+        labelMetric14.setText("CLAVE");
 
-        txtEmpresa.setBackground(new java.awt.Color(102, 102, 102));
-        txtEmpresa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        txtEmpresa.setForeground(new java.awt.Color(255, 255, 255));
-        txtEmpresa.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtEmpresa.setCaretColor(new java.awt.Color(255, 102, 0));
-        txtEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtEmpresa.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        labelMetric16.setText("TIPO");
 
-        labelMetric16.setText("SUCURSAL");
+        txtContrasenia.setBackground(new java.awt.Color(102, 102, 102));
+        txtContrasenia.setForeground(new java.awt.Color(255, 255, 255));
+        txtContrasenia.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
-        txtSucursal.setBackground(new java.awt.Color(102, 102, 102));
-        txtSucursal.setBorder(null);
-        txtSucursal.setForeground(new java.awt.Color(255, 255, 255));
-        txtSucursal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSucursal.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtSucursal.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        cmbTipo.setBackground(new java.awt.Color(102, 102, 102));
+        cmbTipo.setForeground(new java.awt.Color(255, 255, 255));
+        cmbTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "ADMINISTRADOR", "COMUN" }));
+        cmbTipo.setAnchoDeBorde(2.0F);
+        cmbTipo.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -232,51 +195,40 @@ public class AltaEmpleado extends javax.swing.JDialog {
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(labelMetric9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(236, 236, 236)
-                        .addComponent(txtLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(141, 141, 141)
-                        .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(146, 146, 146)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
                         .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(labelMetric12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(177, 177, 177)
-                        .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 5, Short.MAX_VALUE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelMetric15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelMetric13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(135, 135, 135)
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtConvenio, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTarea, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(134, 134, 134)
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(labelMetric9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(64, 64, 64)
+                                .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPrincipalLayout.createSequentialGroup()
+                                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                        .addGap(115, 115, 115)
+                                        .addComponent(cmbTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                .addGap(15, 15, 15))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,32 +240,20 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelMetric12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelMetric13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtConvenio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelMetric15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTarea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,7 +267,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 5, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,7 +323,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private void btneEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneEliminarActionPerformed
         //        limpiarVenanaEmpleado();
         //        setEnableVentanaInformacionEmpleado(true);
-        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtApellido.getText()+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
+        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtUsuario.getText()+txtDescripcion.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
             Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
             new EmpleadoDaoImp().deleteEmpleado(e);
@@ -507,33 +447,24 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
     private org.edisoncor.gui.button.ButtonIpod btnGuardar;
     private org.edisoncor.gui.button.ButtonIpod btneEliminar;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbTipo;
     private javax.swing.JFileChooser elegirFichero;
     private org.edisoncor.gui.label.LabelMetric labelMetric10;
     private org.edisoncor.gui.label.LabelMetric labelMetric11;
-    private org.edisoncor.gui.label.LabelMetric labelMetric12;
-    private org.edisoncor.gui.label.LabelMetric labelMetric13;
     private org.edisoncor.gui.label.LabelMetric labelMetric14;
-    private org.edisoncor.gui.label.LabelMetric labelMetric15;
     private org.edisoncor.gui.label.LabelMetric labelMetric16;
     private org.edisoncor.gui.label.LabelMetric labelMetric9;
     private org.edisoncor.gui.panel.Panel pnlPrincipal;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtApellido;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtConvenio;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtCuit;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmpresa;
+    private org.edisoncor.gui.passwordField.PasswordFieldRoundIcon txtContrasenia;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtDescripcion;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtLegajo;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtNombre;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtSucursal;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtTarea;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtUsuario;
     // End of variables declaration//GEN-END:variables
 
      private void limpiarVenanaEmpleado() {
-       txtApellido.setText("");
-       txtCuit.setText("");
+       txtUsuario.setText("");
        txtLegajo.setText("");
-       txtConvenio.setText("");
-       txtNombre.setText("");
-       txtTarea.setText("");
+       txtDescripcion.setText("");
        //BOTON
       // btnGuardar.setEnabled(true);
        btneEliminar.setEnabled(false);
@@ -585,17 +516,14 @@ public class AltaEmpleado extends javax.swing.JDialog {
      }
      public Empleado getDatosEmpleado(){
         Empleado empleado = new Empleado();
-        Empresa empresa = new Empresa();
-        Sucursal sucursal = new Sucursal();
-        empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
-        empleado.setApellido(txtApellido.getText());
-        empleado.setNombre(txtNombre.getText());
-        empresa.setNombre(txtEmpresa.getText());
-        sucursal.setNombre(txtSucursal.getText());
-        empleado.setCuit(txtCuit.getText());
-        empleado.setConvenio(txtConvenio.getText());
-        empleado.setTarea(txtTarea.getText());
-        
+        Class c = empleado.getClass();
+        Usuario usuario = new Usuario();
+        usuario.setClave(txtLegajo.getText());
+//        usuario.setEmpleado().setLegajo(Integer.parseInt(txtLegajo.getText()));
+        usuario.setUsuario(txtUsuario.getText());
+        usuario.setDescripcion(txtDescripcion.getText());
+        usuario.setClave(txtContrasenia.getText());
+        usuario.setTipo(cmbTipo.getSelectedItem().toString());
         return empleado;
      }
      
@@ -603,11 +531,10 @@ public class AltaEmpleado extends javax.swing.JDialog {
         // editable la ventana configuarcion
         // cajas de texto
         txtLegajo.setEditable(logico);
-        txtApellido.setEditable(logico);
-        txtNombre.setEditable(logico);
-        txtCuit.setEditable(logico);
-        txtConvenio.setEditable(logico);
-        txtTarea.setEditable(logico);
+        txtUsuario.setEditable(logico);
+        txtDescripcion.setEditable(logico);
+        txtContrasenia.setEditable(logico);
+        cmbTipo.setEditable(logico);
         btnGuardar.setEnabled(logico);
         btneEliminar.setEnabled(logico);
         //foco
@@ -620,27 +547,24 @@ public class AltaEmpleado extends javax.swing.JDialog {
         // editable la ventana configuarcion
         // cajas de texto
         txtLegajo.setEnabled(logico);
-        txtApellido.setEnabled(logico);
-        txtNombre.setEnabled(logico);
-        txtCuit.setEnabled(logico);
-        txtConvenio.setEnabled(logico);
-        txtTarea.setEnabled(logico);
+        txtUsuario.setEnabled(logico);
+        txtDescripcion.setEnabled(logico);
+        txtContrasenia.setEnabled(logico);
+        cmbTipo.setEnabled(logico);
         btnCancelar.setEnabled(logico);
         btnGuardar.setEnabled(logico);
         btneEliminar.setEnabled(logico);
         //foco
         txtLegajo.requestFocus();
-       
-       
-    }
+
+      }
 
     private void configurarParaEditar() {
         Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
         txtLegajo.setText(String.valueOf(e.getLegajo()));
-        txtApellido.setText(e.getApellido());
-        txtNombre.setText(e.getNombre());
-        txtCuit.setText(String.valueOf(e.getCuit()));
-        txtConvenio.setText(e.getConvenio());
-        txtTarea.setText(e.getTarea());
+        txtUsuario.setText(e.getApellido()+" "+e.getNombre());
+        txtDescripcion.setText(txtDescripcion.getText());
+        txtContrasenia.setText(txtContrasenia.getText());
+        cmbTipo.setSelectedItem(cmbTipo.getSelectedItem());
     }
 }
