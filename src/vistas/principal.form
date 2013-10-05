@@ -2,6 +2,12 @@
 
 <Form version="1.3" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
+    <Container class="javax.swing.JPopupMenu" name="jPopupMenu1">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+    </Container>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="mnuArchivo">
@@ -42,7 +48,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuABM">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ABM"/>
+            <Property name="text" type="java.lang.String" value="Empleados"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuAltaEmpleados">
@@ -55,12 +61,24 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuGestorEmpleados">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gestor Empleados"/>
+                <Property name="text" type="java.lang.String" value="Gestor de Empleados"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuGestorEmpleadosActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mnuABMNovedades">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="ABMConceptos"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Usuarios"/>
+          </Properties>
+          <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuABMUsuario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Alta de Usuarios"/>
@@ -71,24 +89,26 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gestor Usuarios"/>
+                <Property name="text" type="java.lang.String" value="Gestor de Usuarios"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
               </Events>
             </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Empresas"/>
+          </Properties>
+          <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuEmpresas">
               <Properties>
-                <Property name="text" type="java.lang.String" value="ABMEmpresas"/>
+                <Property name="text" type="java.lang.String" value="Alta de Empresas"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuEmpresasActionPerformed"/>
               </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuABMNovedades">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="ABMConceptos"/>
-              </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>

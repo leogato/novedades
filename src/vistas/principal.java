@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JMenuBar;
+import vistas.empresa.AltaEmpresa;
 import vistas.usuario.GestorUsuario;
 
 /**
@@ -57,6 +58,7 @@ public class principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         panel1 = new org.edisoncor.gui.panel.Panel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -72,10 +74,12 @@ public class principal extends javax.swing.JFrame {
         mnuABM = new javax.swing.JMenu();
         mnuAltaEmpleados = new javax.swing.JMenuItem();
         mnuGestorEmpleados = new javax.swing.JMenuItem();
+        mnuABMNovedades = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
         mnuABMUsuario = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
         mnuEmpresas = new javax.swing.JMenuItem();
-        mnuABMNovedades = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -171,7 +175,7 @@ public class principal extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuNovedades);
 
-        mnuABM.setText("ABM");
+        mnuABM.setText("Empleados");
 
         mnuAltaEmpleados.setText("Alta de Empleados");
         mnuAltaEmpleados.addActionListener(new java.awt.event.ActionListener() {
@@ -181,7 +185,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuABM.add(mnuAltaEmpleados);
 
-        mnuGestorEmpleados.setText("Gestor Empleados");
+        mnuGestorEmpleados.setText("Gestor de Empleados");
         mnuGestorEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuGestorEmpleadosActionPerformed(evt);
@@ -189,34 +193,42 @@ public class principal extends javax.swing.JFrame {
         });
         mnuABM.add(mnuGestorEmpleados);
 
+        mnuABMNovedades.setText("ABMConceptos");
+        mnuABM.add(mnuABMNovedades);
+
+        jMenuBar1.add(mnuABM);
+
+        jMenu1.setText("Usuarios");
+
         mnuABMUsuario.setText("Alta de Usuarios");
         mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuABMUsuarioActionPerformed(evt);
             }
         });
-        mnuABM.add(mnuABMUsuario);
+        jMenu1.add(mnuABMUsuario);
 
-        jMenuItem1.setText("Gestor Usuarios");
+        jMenuItem1.setText("Gestor de Usuarios");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
-        mnuABM.add(jMenuItem1);
+        jMenu1.add(jMenuItem1);
 
-        mnuEmpresas.setText("ABMEmpresas");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Empresas");
+
+        mnuEmpresas.setText("Alta de Empresas");
         mnuEmpresas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuEmpresasActionPerformed(evt);
             }
         });
-        mnuABM.add(mnuEmpresas);
+        jMenu2.add(mnuEmpresas);
 
-        mnuABMNovedades.setText("ABMConceptos");
-        mnuABM.add(mnuABMNovedades);
-
-        jMenuBar1.add(mnuABM);
+        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -247,7 +259,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuCargaNovedadesActionPerformed
 
     private void mnuEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEmpresasActionPerformed
-        // TODO add your handling code here:
+        new AltaEmpresa(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuEmpresasActionPerformed
 
     private void mnuABMUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuABMUsuarioActionPerformed
@@ -305,8 +317,11 @@ public class principal extends javax.swing.JFrame {
     private org.edisoncor.gui.varios.ClockDigital clkHora;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JMenu mnuABM;
     private javax.swing.JMenuItem mnuABMNovedades;
     private javax.swing.JMenuItem mnuABMUsuario;

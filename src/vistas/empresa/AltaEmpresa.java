@@ -4,18 +4,37 @@
  */
 package vistas.empresa;
 
+import java.util.List;
+import pojo.Empresa;
+import novedades.dao.imp.EmpresaDaoImp;
+
 /**
  *
  * @author usuario
  */
-public class abmEmpresa extends javax.swing.JDialog {
-
+public class AltaEmpresa extends javax.swing.JDialog {
+    Empresa e = null;
     /**
-     * Creates new form abmEmpresa
+     * Creates new form AltaEmpresa
      */
-    public abmEmpresa(java.awt.Frame parent, boolean modal) {
+    public AltaEmpresa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        List<Empresa> lista = new EmpresaDaoImp().listarEmpresa();
+        if (!lista.isEmpty()) {
+            e = lista.get(0);
+            System.out.println(e.getCodEmp());
+            txtCodEmpresa.setText(Integer.toString(e.getCodEmp()));
+            txtEmpresa.setText(e.getNombre());
+            txtGerente.setText(e.getGerente());
+//            txtFecIni.setText(e.getFechaInicio());
+            txtEmailGerente.setText(e.getMailGerente());
+            
+        }
+        this.setTitle("ALTA DE EMPRESAS");
+        this.setLocationRelativeTo(this);
+        this.setVisible(true);
     }
 
     /**
@@ -38,7 +57,7 @@ public class abmEmpresa extends javax.swing.JDialog {
         txtEmailGerente = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         panelShadow1 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
-        btnAceptar = new org.edisoncor.gui.button.ButtonIpod();
+        btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
         btnCancelar = new org.edisoncor.gui.button.ButtonIpod();
         btnModificar = new org.edisoncor.gui.button.ButtonIpod();
         buttonIpod1 = new org.edisoncor.gui.button.ButtonIpod();
@@ -101,12 +120,22 @@ public class abmEmpresa extends javax.swing.JDialog {
         panelTranslucidoComplete1.setColorPrimario(new java.awt.Color(102, 102, 102));
         panelTranslucidoComplete1.setOpaque(false);
 
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Tick (1).png"))); // NOI18N
-        btnAceptar.setText("Aceptar");
-        btnAceptar.setToolTipText("");
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setToolTipText("");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
         btnModificar.setText("Modificar");
@@ -134,7 +163,7 @@ public class abmEmpresa extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
-                .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -144,7 +173,7 @@ public class abmEmpresa extends javax.swing.JDialog {
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonIpod1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -245,6 +274,33 @@ public class abmEmpresa extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNuevoActionPerformed
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (e==null) {
+        System.out.println("entro nuevo");
+        e= new Empresa();
+        e.setCodEmp(Integer.parseInt(txtCodEmpresa.getText()));
+        e.setNombre(txtEmpresa.getText());
+        e.setGerente(txtGerente.getText());
+        e.setMailGerente(txtEmailGerente.getText());
+        //    e.setFechaInicio(null);
+        //    e.setImagen(imagen);
+        new EmpresaDaoImp().addEmpresa(e);
+    } else {
+         System.out.println("entro a modificar");
+
+        e.setCodEmp(Integer.parseInt(txtCodEmpresa.getText()));
+        e.setNombre(txtEmpresa.getText());
+        e.setGerente(txtGerente.getText());
+        e.setMailGerente(txtEmailGerente.getText());
+        new EmpresaDaoImp().upDateEmpresa(e);
+        }
+        this.dispose();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -262,20 +318,20 @@ public class abmEmpresa extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(abmEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                abmEmpresa dialog = new abmEmpresa(new javax.swing.JFrame(), true);
+                AltaEmpresa dialog = new AltaEmpresa(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -287,8 +343,8 @@ public class abmEmpresa extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonIpod btnAceptar;
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
+    private org.edisoncor.gui.button.ButtonIpod btnGuardar;
     private org.edisoncor.gui.button.ButtonIpod btnModificar;
     private org.edisoncor.gui.button.ButtonIpod btnNuevo;
     private org.edisoncor.gui.button.ButtonIpod buttonIpod1;
