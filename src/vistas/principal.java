@@ -12,6 +12,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JMenuBar;
 import vistas.empresa.AltaEmpresa;
+import vistas.empresa.AltaEmpresa2;
 import vistas.usuario.GestorUsuario;
 
 /**
@@ -259,7 +260,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuCargaNovedadesActionPerformed
 
     private void mnuEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEmpresasActionPerformed
-        new AltaEmpresa(this, rootPaneCheckingEnabled);
+        new AltaEmpresa2(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuEmpresasActionPerformed
 
     private void mnuABMUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuABMUsuarioActionPerformed
