@@ -134,14 +134,14 @@ public class AltaUsuario extends javax.swing.JDialog {
 
         txtDescripcion.setBackground(new java.awt.Color(102, 102, 102));
         txtDescripcion.setBorder(null);
-        txtDescripcion.setForeground(new java.awt.Color(102, 102, 102));
+        txtDescripcion.setForeground(new java.awt.Color(255, 255, 255));
         txtDescripcion.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtDescripcion.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtDescripcion.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         txtUsuario.setBackground(new java.awt.Color(102, 102, 102));
         txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        txtUsuario.setForeground(new java.awt.Color(102, 102, 102));
+        txtUsuario.setForeground(new java.awt.Color(255, 255, 255));
         txtUsuario.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtUsuario.setCaretColor(new java.awt.Color(255, 102, 0));
         txtUsuario.setColorDeBorde(new java.awt.Color(255, 102, 0));
@@ -333,21 +333,22 @@ public class AltaUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_btneEliminarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
         //               try{
             //obtengos los datos ingresados
-
             if (legajo==0) {
                 System.out.println("entro en nuevo");
                 // nuevo empleado
                 if(validarEmpleadoNuevo()){
                     System.out.println(validarEmpleadoNuevo());
                     Empleado e = getDatosEmpleado();
+//                    Usuario e = getDatosEmpleado();
+                    
                     // agrego los datos que faltan
                     //                       e.setAdministrador(false);
                     //                       e.setClave("");
                     //                       e.setFechaIngreso(null);
                     new EmpleadoDaoImp().addEmpleado(e);
+//                    new UsuarioDaoImp().addUsuario(e);
                     //                       mensajero.mensajeInformacionAltaOK(this);
                     this.dispose();
                 }
@@ -357,18 +358,20 @@ public class AltaUsuario extends javax.swing.JDialog {
                 if (validarEmpleadoActulizado()) {
                     //obtengos los datos y creo el empelado
                     Empleado e = getDatosEmpleado();
+//                    Usuario e = getDatosEmpleado();
                     if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
                         Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
                         List<Concepto> lista =new ConceptoDaoImp().listarConcepto(o);
                         new EmpleadoDaoImp().addEmpleado(e);
+//                        new UsuarioDaoImp().addUsuario(e);
                         // aqui va borrar el empleado o   porque se modiico la clave primario
 
                         new EmpleadoDaoImp().deleteEmpleado(o);
-                        Empleado emplUp = new EmpleadoDaoImp().getEmpleado(e.getLegajo());
+                        Empleado emplUp = new EmpleadoDaoImp().getEmpleado(o.getLegajo());
 
                     }else{
                         new EmpleadoDaoImp().upDateEmpleado(e);
-
+//                        new UsuarioDaoImp().upDateUsuario(e);
                     }
                     // agregar todas la asistencia
 
@@ -515,8 +518,7 @@ public class AltaUsuario extends javax.swing.JDialog {
          return todoOk;
      }
      public Empleado getDatosEmpleado(){
-        Empleado empleado = new Empleado();
-        Class c = empleado.getClass();
+        Empleado empleado = new EmpleadoDaoImp().getEmpleado(legajo);
         Usuario usuario = new Usuario();
         usuario.setClave(txtLegajo.getText());
 //        usuario.setEmpleado().setLegajo(Integer.parseInt(txtLegajo.getText()));
@@ -526,7 +528,15 @@ public class AltaUsuario extends javax.swing.JDialog {
         usuario.setTipo(cmbTipo.getSelectedItem().toString());
         return empleado;
      }
-     
+     public Usuario getDatosUsuario(){
+         Usuario usuario = new Usuario();
+         usuario.setId(Integer.parseInt(txtLegajo.getText()));
+         usuario.setUsuario(txtUsuario.getText());
+         usuario.setDescripcion(txtDescripcion.getText());
+         usuario.setClave(txtContrasenia.getText());
+         usuario.setTipo(cmbTipo.getSelectedItem().toString());
+         return usuario;
+     }
       private void setEditableVentanaInformacionEmpleado(boolean logico) {
         // editable la ventana configuarcion
         // cajas de texto

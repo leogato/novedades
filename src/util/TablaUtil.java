@@ -121,7 +121,7 @@ public class TablaUtil {
  public static void cargarModeloUsuario(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaUsuario){
     modelo =(DefaultTableModel) tablaUsuario.getModel();
         for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido()+" "+a.getNombre()};//,a.getDescripcion(), a.getTipo()}; 
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido()+" "+a.getNombre()};//,a.getDescripcion(), a.getClave, a.getTipo()}; 
             modelo.addRow(filaEmpleado);
            // hago que la columna 0 no sea visible
             tablaUsuario.getColumnModel().getColumn(0).setMaxWidth(0);

@@ -347,7 +347,7 @@ public class GestorUsuario extends javax.swing.JDialog {
         if (fila!= -1) {
             legajo = (Integer) tblUsuario.getModel().getValueAt(tblUsuario.getSelectedRow(), 0);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
-            abmUsuario ventanaEditUsuario = new abmUsuario(parent, true, usuario);
+            AltaUsuario ventanaEditUsuario = new AltaUsuario(parent, true, legajo);
             cargarTablaConUsuario();    
         }else{
             JOptionPane.showMessageDialog(null, "Debes seleccionar un Empleado de la Tabla");
@@ -457,7 +457,7 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
        listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
        util.TablaUtil.prepararTablaUsuario(modelo, tblUsuario);
-       util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblUsuario);
+       util.TablaUtil.cargarModeloUsuario(modelo, listaEmpleado, tblUsuario);
     }
 
     private List<Usuario> filtrarPorNombreUsuario(List<Usuario> listaUsuarios, String text) {
