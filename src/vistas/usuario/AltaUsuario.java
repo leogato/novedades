@@ -95,10 +95,11 @@ public class AltaUsuario extends javax.swing.JDialog {
         labelMetric16 = new org.edisoncor.gui.label.LabelMetric();
         txtContrasenia = new org.edisoncor.gui.passwordField.PasswordFieldRoundIcon();
         cmbTipo = new org.edisoncor.gui.comboBox.ComboBoxRound();
+        buttonIcon1 = new org.edisoncor.gui.button.ButtonIcon();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "USUARIO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "USUARIO", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
         pnlPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         btnGuardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
@@ -188,6 +189,9 @@ public class AltaUsuario extends javax.swing.JDialog {
         cmbTipo.setAnchoDeBorde(2.0F);
         cmbTipo.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
+        buttonIcon1.setBackground(new java.awt.Color(102, 102, 102));
+        buttonIcon1.setText("buttonIcon1");
+
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
         pnlPrincipalLayout.setHorizontalGroup(
@@ -201,7 +205,7 @@ public class AltaUsuario extends javax.swing.JDialog {
                         .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 5, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,19 +232,24 @@ public class AltaUsuario extends javax.swing.JDialog {
                                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
                                         .addGap(115, 115, 115)
                                         .addComponent(cmbTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
-                .addGap(15, 15, 15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonIcon1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelMetric9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMetric9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(buttonIcon1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,7 +276,7 @@ public class AltaUsuario extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 5, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -340,14 +349,14 @@ public class AltaUsuario extends javax.swing.JDialog {
                 // nuevo empleado
                 if(validarEmpleadoNuevo()){
                     System.out.println(validarEmpleadoNuevo());
-                    Empleado e = getDatosEmpleado();
+                    Usuario e = getDatosUsuario();
 //                    Usuario e = getDatosEmpleado();
                     
                     // agrego los datos que faltan
                     //                       e.setAdministrador(false);
                     //                       e.setClave("");
                     //                       e.setFechaIngreso(null);
-                    new EmpleadoDaoImp().addEmpleado(e);
+                    new UsuarioDaoImp().addUsuario(e);
 //                    new UsuarioDaoImp().addUsuario(e);
                     //                       mensajero.mensajeInformacionAltaOK(this);
                     this.dispose();
@@ -450,6 +459,7 @@ public class AltaUsuario extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
     private org.edisoncor.gui.button.ButtonIpod btnGuardar;
     private org.edisoncor.gui.button.ButtonIpod btneEliminar;
+    private org.edisoncor.gui.button.ButtonIcon buttonIcon1;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbTipo;
     private javax.swing.JFileChooser elegirFichero;
     private org.edisoncor.gui.label.LabelMetric labelMetric10;
@@ -571,8 +581,9 @@ public class AltaUsuario extends javax.swing.JDialog {
 
     private void configurarParaEditar() {
         Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
-        txtLegajo.setText(String.valueOf(e.getLegajo()));
-        txtUsuario.setText(e.getApellido()+" "+e.getNombre());
+        Usuario u = new UsuarioDaoImp().getUsuario(legajo);
+        txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
+        txtUsuario.setText(u.getEmpleado().getApellido()+" "+u.getEmpleado().getNombre());
         txtDescripcion.setText(txtDescripcion.getText());
         txtContrasenia.setText(txtContrasenia.getText());
         cmbTipo.setSelectedItem(cmbTipo.getSelectedItem());
