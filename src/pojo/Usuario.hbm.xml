@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/09/2013 10:39:41 by Hibernate Tools 3.2.1.GA -->
+<!-- Generated 10/10/2013 14:26:23 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="pojo.Usuario" table="usuario" catalog="novedades">
         <id name="id" type="int">
@@ -9,7 +9,7 @@
             <generator class="assigned" />
         </id>
         <many-to-one name="empleado" class="pojo.Empleado" fetch="select">
-            <column name="LEGAJO" not-null="true" />
+            <column name="LEGAJO" />
         </many-to-one>
         <property name="usuario" type="string">
             <column name="USUARIO" length="10" not-null="true" />
@@ -22,6 +22,9 @@
         </property>
         <property name="tipo" type="string">
             <column name="TIPO" length="13" not-null="true" />
+        </property>
+        <property name="estado" type="java.lang.Boolean">
+            <column name="ESTADO" />
         </property>
     </class>
 </hibernate-mapping>

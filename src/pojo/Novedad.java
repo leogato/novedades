@@ -1,5 +1,5 @@
 package pojo;
-// Generated 28/09/2013 10:39:40 by Hibernate Tools 3.2.1.GA
+// Generated 10/10/2013 14:26:22 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.Date;
@@ -15,16 +15,24 @@ public class Novedad  implements java.io.Serializable {
      private Concepto concepto;
      private int cantidad;
      private String observacion;
+     private Boolean estado;
 
     public Novedad() {
     }
 
-    public Novedad(Date fecha, Empleado empleado, Concepto concepto, int cantidad, String observacion) {
+	
+    public Novedad(Date fecha, int cantidad, String observacion) {
+        this.fecha = fecha;
+        this.cantidad = cantidad;
+        this.observacion = observacion;
+    }
+    public Novedad(Date fecha, Empleado empleado, Concepto concepto, int cantidad, String observacion, Boolean estado) {
        this.fecha = fecha;
        this.empleado = empleado;
        this.concepto = concepto;
        this.cantidad = cantidad;
        this.observacion = observacion;
+       this.estado = estado;
     }
    
     public Date getFecha() {
@@ -61,6 +69,13 @@ public class Novedad  implements java.io.Serializable {
     
     public void setObservacion(String observacion) {
         this.observacion = observacion;
+    }
+    public Boolean getEstado() {
+        return this.estado;
+    }
+    
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 
 

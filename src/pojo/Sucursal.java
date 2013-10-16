@@ -1,5 +1,5 @@
 package pojo;
-// Generated 28/09/2013 10:39:40 by Hibernate Tools 3.2.1.GA
+// Generated 10/10/2013 14:26:22 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -12,26 +12,25 @@ public class Sucursal  implements java.io.Serializable {
 
 
      private int codSuc;
-     private Empleado empleado;
      private Empresa empresa;
      private String nombre;
+     private Boolean estado;
      private Set<Empleado> empleados = new HashSet<Empleado>(0);
 
     public Sucursal() {
     }
 
 	
-    public Sucursal(int codSuc, Empleado empleado, Empresa empresa, String nombre) {
+    public Sucursal(int codSuc, Empresa empresa, String nombre) {
         this.codSuc = codSuc;
-        this.empleado = empleado;
         this.empresa = empresa;
         this.nombre = nombre;
     }
-    public Sucursal(int codSuc, Empleado empleado, Empresa empresa, String nombre, Set<Empleado> empleados) {
+    public Sucursal(int codSuc, Empresa empresa, String nombre, Boolean estado, Set<Empleado> empleados) {
        this.codSuc = codSuc;
-       this.empleado = empleado;
        this.empresa = empresa;
        this.nombre = nombre;
+       this.estado = estado;
        this.empleados = empleados;
     }
    
@@ -41,13 +40,6 @@ public class Sucursal  implements java.io.Serializable {
     
     public void setCodSuc(int codSuc) {
         this.codSuc = codSuc;
-    }
-    public Empleado getEmpleado() {
-        return this.empleado;
-    }
-    
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
     }
     public Empresa getEmpresa() {
         return this.empresa;
@@ -62,6 +54,13 @@ public class Sucursal  implements java.io.Serializable {
     
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+    public Boolean getEstado() {
+        return this.estado;
+    }
+    
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
     public Set<Empleado> getEmpleados() {
         return this.empleados;

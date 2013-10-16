@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/09/2013 10:39:41 by Hibernate Tools 3.2.1.GA -->
+<!-- Generated 10/10/2013 14:26:23 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="pojo.Novedad" table="novedad" catalog="novedades">
         <id name="fecha" type="date">
@@ -9,16 +9,19 @@
             <generator class="assigned" />
         </id>
         <many-to-one name="empleado" class="pojo.Empleado" fetch="select">
-            <column name="legajo" not-null="true" />
+            <column name="legajo" />
         </many-to-one>
         <many-to-one name="concepto" class="pojo.Concepto" fetch="select">
-            <column name="cod_con" not-null="true" />
+            <column name="cod_con" />
         </many-to-one>
         <property name="cantidad" type="int">
             <column name="cantidad" not-null="true" />
         </property>
         <property name="observacion" type="string">
             <column name="observacion" length="40" not-null="true" />
+        </property>
+        <property name="estado" type="java.lang.Boolean">
+            <column name="estado" />
         </property>
     </class>
 </hibernate-mapping>

@@ -60,10 +60,10 @@ public class AltaEmpleado extends javax.swing.JDialog {
         initComponents();
         this.legajo = legajo;
         btneEliminar.setVisible(true);
-         this.setTitle("EDITAR EMPLEADO");
-         configurarParaEditar();
-         setLocationRelativeTo(this); 
-         setVisible(true);
+        this.setTitle("EDITAR EMPLEADO");
+        configurarParaEditar();
+        setLocationRelativeTo(this); 
+        setVisible(true);
         // no se realizara la carga de foto
        
         
@@ -587,6 +587,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         Empleado empleado = new Empleado();
         Empresa empresa = new Empresa();
         Sucursal sucursal = new Sucursal();
+        System.out.println("Legajo "+Integer.parseInt(txtLegajo.getText()));
         empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
         empleado.setApellido(txtApellido.getText());
         empleado.setNombre(txtNombre.getText());

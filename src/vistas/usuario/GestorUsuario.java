@@ -40,8 +40,6 @@ public class GestorUsuario extends javax.swing.JDialog {
         super(parent, modal);
         this.parent = parent;
         initComponents();
-        
-        
         initComponentesVentana();    
         this.setTitle("MODIFICACION DE USUARIOS");
         setLocationRelativeTo(this);
@@ -344,19 +342,21 @@ public class GestorUsuario extends javax.swing.JDialog {
         
 //        isModificar= true;
         int fila = tblUsuario.getSelectedRow();
+        System.out.println("Fila seleccionada "+tblUsuario.getSelectedRow());
         if (fila!= -1) {
             legajo = (Integer) tblUsuario.getModel().getValueAt(tblUsuario.getSelectedRow(), 0);
+            System.out.println("Legajo "+legajo);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
             AltaUsuario ventanaEditUsuario = new AltaUsuario(parent, true, legajo);
             cargarTablaConUsuario();    
         }else{
-            JOptionPane.showMessageDialog(null, "Debes seleccionar un Empleado de la Tabla");
+            JOptionPane.showMessageDialog(null, "Debes seleccionar un Usuario de la Tabla");
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
-        AltaUsuario ventanaNuevoUsuario = new AltaUsuario(parent, true, legajo);
+        AltaUsuario ventanaNuevoUsuario = new AltaUsuario(parent, true);
 //        if (ventanaNuevoEmpleado.isBotonGuardarSelecciono()) {
             cargarTablaConUsuario();
 //            ventanaNuevoEmpleado.dispose();
@@ -453,11 +453,11 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     /**
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
-        private void cargarTablaConUsuario() {
-
+    private void cargarTablaConUsuario() {
        listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
+       listaUsuario = new UsuarioDaoImp().listarUsuario();
        util.TablaUtil.prepararTablaUsuario(modelo, tblUsuario);
-       util.TablaUtil.cargarModeloUsuario(modelo, listaEmpleado, tblUsuario);
+       util.TablaUtil.cargarModeloUsuario(modelo, listaEmpleado, listaUsuario, tblUsuario);
     }
 
     private List<Usuario> filtrarPorNombreUsuario(List<Usuario> listaUsuarios, String text) {

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/09/2013 10:39:41 by Hibernate Tools 3.2.1.GA -->
+<!-- Generated 10/10/2013 14:26:23 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="pojo.Empresa" table="empresa" catalog="novedades">
         <id name="codEmp" type="java.lang.Integer">
@@ -12,22 +12,19 @@
             <column name="NOMBRE" length="30" />
         </property>
         <property name="gerente" type="string">
-            <column name="GERENTE" length="50" not-null="true" />
+            <column name="GERENTE" length="50" />
         </property>
         <property name="mailGerente" type="string">
-            <column name="MAIL_GERENTE" length="20" not-null="true" />
+            <column name="MAIL_GERENTE" length="50" />
+        </property>
+        <property name="estado" type="java.lang.Boolean">
+            <column name="estado" />
         </property>
         <set name="sucursals" inverse="true">
             <key>
                 <column name="cod_emp" not-null="true" />
             </key>
             <one-to-many class="pojo.Sucursal" />
-        </set>
-        <set name="empleados" inverse="true">
-            <key>
-                <column name="COD_EMP" />
-            </key>
-            <one-to-many class="pojo.Empleado" />
         </set>
     </class>
 </hibernate-mapping>

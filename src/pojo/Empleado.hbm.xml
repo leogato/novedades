@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/09/2013 10:39:41 by Hibernate Tools 3.2.1.GA -->
+<!-- Generated 10/10/2013 14:26:23 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="pojo.Empleado" table="empleado" catalog="novedades">
         <id name="legajo" type="int">
@@ -11,9 +11,6 @@
         <many-to-one name="sucursal" class="pojo.Sucursal" fetch="select">
             <column name="COD_SUC" />
         </many-to-one>
-        <many-to-one name="empresa" class="pojo.Empresa" fetch="select">
-            <column name="COD_EMP" />
-        </many-to-one>
         <property name="apellido" type="string">
             <column name="APELLIDO" length="30" not-null="true" />
         </property>
@@ -21,7 +18,10 @@
             <column name="NOMBRE" length="30" not-null="true" />
         </property>
         <property name="cuit" type="string">
-            <column name="CUIT" length="13" not-null="true" />
+            <column name="CUIT" length="14" not-null="true" />
+        </property>
+        <property name="codEmp" type="java.lang.Integer">
+            <column name="COD_EMP" />
         </property>
         <property name="convenio" type="string">
             <column name="convenio" length="30" not-null="true" />
@@ -29,23 +29,20 @@
         <property name="tarea" type="string">
             <column name="tarea" length="30" not-null="true" />
         </property>
+        <property name="estado" type="java.lang.Boolean">
+            <column name="estado" />
+        </property>
         <set name="usuarios" inverse="true">
             <key>
-                <column name="LEGAJO" not-null="true" />
+                <column name="LEGAJO" />
             </key>
             <one-to-many class="pojo.Usuario" />
         </set>
         <set name="novedads" inverse="true">
             <key>
-                <column name="legajo" not-null="true" />
+                <column name="legajo" />
             </key>
             <one-to-many class="pojo.Novedad" />
-        </set>
-        <set name="sucursals" inverse="true">
-            <key>
-                <column name="legajo" not-null="true" />
-            </key>
-            <one-to-many class="pojo.Sucursal" />
         </set>
     </class>
 </hibernate-mapping>

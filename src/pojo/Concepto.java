@@ -1,5 +1,5 @@
 package pojo;
-// Generated 28/09/2013 10:39:40 by Hibernate Tools 3.2.1.GA
+// Generated 10/10/2013 14:26:22 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -13,25 +13,23 @@ public class Concepto  implements java.io.Serializable {
 
      private int codCon;
      private String descripcion;
-     private boolean cargaUsuario;
-     private boolean tipo;
+     private String tipo;
+     private Boolean estado;
      private Set<Novedad> novedads = new HashSet<Novedad>(0);
 
     public Concepto() {
     }
 
 	
-    public Concepto(int codCon, String descripcion, boolean cargaUsuario, boolean tipo) {
+    public Concepto(int codCon, String descripcion) {
         this.codCon = codCon;
         this.descripcion = descripcion;
-        this.cargaUsuario = cargaUsuario;
-        this.tipo = tipo;
     }
-    public Concepto(int codCon, String descripcion, boolean cargaUsuario, boolean tipo, Set<Novedad> novedads) {
+    public Concepto(int codCon, String descripcion, String tipo, Boolean estado, Set<Novedad> novedads) {
        this.codCon = codCon;
        this.descripcion = descripcion;
-       this.cargaUsuario = cargaUsuario;
        this.tipo = tipo;
+       this.estado = estado;
        this.novedads = novedads;
     }
    
@@ -49,19 +47,19 @@ public class Concepto  implements java.io.Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    public boolean isCargaUsuario() {
-        return this.cargaUsuario;
-    }
-    
-    public void setCargaUsuario(boolean cargaUsuario) {
-        this.cargaUsuario = cargaUsuario;
-    }
-    public boolean isTipo() {
+    public String getTipo() {
         return this.tipo;
     }
     
-    public void setTipo(boolean tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+    public Boolean getEstado() {
+        return this.estado;
+    }
+    
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
     public Set<Novedad> getNovedads() {
         return this.novedads;
