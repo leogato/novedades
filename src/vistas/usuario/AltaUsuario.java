@@ -61,17 +61,21 @@ public class AltaUsuario extends javax.swing.JDialog {
     public AltaUsuario(java.awt.Frame parent, boolean modal,int legajo) {
         super(parent, modal);
         initComponents();
-        this.legajo = legajo;
+        this.setTitle("EDITAR EMPLEADO");
+//        this.legajo = legajo;
         btneEliminar.setVisible(true);
         btnBuscar.setVisible(false);
-        this.setTitle("EDITAR EMPLEADO");
-        configurarParaEditar();
+        Empleado e = new Empleado();
+        Usuario u = new UsuarioDaoImp().getUsuario(legajo);
+        u.setEmpleado(e);
+        txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
+        txtUsuario.setText(u.getUsuario());
+        txtDescripcion.setText(u.getDescripcion());
+        txtContrasenia.setText(u.getClave());
+        cmbTipo.setSelectedItem(u.getTipo());
+//        configurarParaEditar();
         setLocationRelativeTo(this); 
         setVisible(true);
-        // no se realizara la carga de foto
-       
-        
-        
     }
      
     /**
@@ -353,15 +357,29 @@ public class AltaUsuario extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {                                           
         //               try{
             //obtengos los datos ingresados
+        if (legajo==0){
             Usuario u = new Usuario();
             Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
             u.setEmpleado(e);
-            u.setUsuario(txtUsuario.getText().trim());
-            u.setClave(txtContrasenia.getText().trim());
-            u.setDescripcion(txtDescripcion.getText().trim());
-            u.setTipo(cmbTipo.getSelectedItem().toString());
+            u = getDatosUsuario();
+//            u.setUsuario(txtUsuario.getText().trim());
+//            u.setClave(txtContrasenia.getText().trim());
+//            u.setDescripcion(txtDescripcion.getText().trim());
+//            u.setTipo(cmbTipo.getSelectedItem().toString());
+            new UsuarioDaoImp().addUsuario(u);
+            this.dispose();
+        }else{
+            Usuario u = new Usuario();
+            Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
+            u.setEmpleado(e);
+            u = getDatosUsuario();
+//            u.setUsuario(txtUsuario.getText().trim());
+//            u.setClave(txtContrasenia.getText().trim());
+//            u.setDescripcion(txtDescripcion.getText().trim());
+//            u.setTipo(cmbTipo.getSelectedItem().toString());
             new UsuarioDaoImp().upDateUsuario(u);
             this.dispose();
+        }
 //            if (legajo==0) {
 //                System.out.println("entro en nuevo");
 //                // nuevo empleado
@@ -570,7 +588,9 @@ public class AltaUsuario extends javax.swing.JDialog {
      
      public Usuario getDatosUsuario(){
          Usuario usuario = new Usuario();
-//         usuario.setId(Integer.parseInt(txtLegajo.getText()));
+         Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
+         usuario.setEmpleado(e);
+         usuario.setId(Integer.parseInt(txtLegajo.getText()));
          usuario.setUsuario(txtUsuario.getText());
          usuario.setDescripcion(txtDescripcion.getText());
          usuario.setClave(txtContrasenia.getText());

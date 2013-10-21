@@ -1,5 +1,5 @@
 package pojo;
-// Generated 10/10/2013 14:26:22 by Hibernate Tools 3.2.1.GA
+// Generated 18/10/2013 16:57:56 by Hibernate Tools 3.2.1.GA
 
 
 
@@ -9,7 +9,7 @@ package pojo;
 public class Usuario  implements java.io.Serializable {
 
 
-     private int id;
+     private Integer id;
      private Empleado empleado;
      private String usuario;
      private String clave;
@@ -21,15 +21,13 @@ public class Usuario  implements java.io.Serializable {
     }
 
 	
-    public Usuario(int id, String usuario, String clave, String descripcion, String tipo) {
-        this.id = id;
+    public Usuario(String usuario, String clave, String descripcion, String tipo) {
         this.usuario = usuario;
         this.clave = clave;
         this.descripcion = descripcion;
         this.tipo = tipo;
     }
-    public Usuario(int id, Empleado empleado, String usuario, String clave, String descripcion, String tipo, Boolean estado) {
-       this.id = id;
+    public Usuario(Empleado empleado, String usuario, String clave, String descripcion, String tipo, Boolean estado) {
        this.empleado = empleado;
        this.usuario = usuario;
        this.clave = clave;
@@ -38,11 +36,11 @@ public class Usuario  implements java.io.Serializable {
        this.estado = estado;
     }
    
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
     
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public Empleado getEmpleado() {
@@ -52,7 +50,6 @@ public class Usuario  implements java.io.Serializable {
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
     }
-  
     public String getUsuario() {
         return this.usuario;
     }
@@ -60,7 +57,6 @@ public class Usuario  implements java.io.Serializable {
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
-    
     public String getClave() {
         return this.clave;
     }
@@ -68,7 +64,6 @@ public class Usuario  implements java.io.Serializable {
     public void setClave(String clave) {
         this.clave = clave;
     }
-    
     public String getDescripcion() {
         return this.descripcion;
     }
@@ -76,7 +71,6 @@ public class Usuario  implements java.io.Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
     public String getTipo() {
         return this.tipo;
     }
@@ -84,7 +78,6 @@ public class Usuario  implements java.io.Serializable {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-    
     public Boolean getEstado() {
         return this.estado;
     }

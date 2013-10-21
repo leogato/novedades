@@ -108,26 +108,26 @@ public class TablaUtil {
  public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
     modelo =(DefaultTableModel) tablaEmpleado.getModel();
     if (listaEmpleado == null)
-        JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo usuario");
+        JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo Empleado");
         for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getEmpresa(),a.getSucursal(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getCodEmp(),a.getSucursal(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
             modelo.addRow(filaEmpleado);
            // hago que la columna 0 no sea visible
-            tablaEmpleado.getColumnModel().getColumn(0).setMaxWidth(0);
-            tablaEmpleado.getColumnModel().getColumn(0).setMinWidth(0);
-            tablaEmpleado.getColumnModel().getColumn(0).setPreferredWidth(0);
+//            tablaEmpleado.getColumnModel().getColumn(0).setMaxWidth(0);
+//            tablaEmpleado.getColumnModel().getColumn(0).setMinWidth(0);
+//            tablaEmpleado.getColumnModel().getColumn(0).setPreferredWidth(0);
            
            }
     }
- public static void cargarModeloUsuario(DefaultTableModel modelo,List<Empleado> listaEmpleado, List<Usuario> listaUsuario, JTable tablaUsuario){
+ public static void cargarModeloUsuario(DefaultTableModel modelo, List<Usuario> listaUsuario, JTable tablaUsuario){
     modelo =(DefaultTableModel) tablaUsuario.getModel();
             for (Usuario u : listaUsuario) {
-                Object[] filaEmpleado = {u.getId(),u.getUsuario(),u.getDescripcion(),u.getClave(),u.getTipo()};
-                modelo.addRow(filaEmpleado);
+                Object[] filaUsuario = {u.getEmpleado().getLegajo(),u.getUsuario(),u.getDescripcion(),u.getClave(),u.getTipo()};
+                modelo.addRow(filaUsuario);
                // hago que la columna 0 no sea visible
-                tablaUsuario.getColumnModel().getColumn(0).setMaxWidth(0);
-                tablaUsuario.getColumnModel().getColumn(0).setMinWidth(0);
-                tablaUsuario.getColumnModel().getColumn(0).setPreferredWidth(0);
+//                tablaUsuario.getColumnModel().getColumn(0).setMaxWidth(0);
+//                tablaUsuario.getColumnModel().getColumn(0).setMinWidth(0);
+//                tablaUsuario.getColumnModel().getColumn(0).setPreferredWidth(0);
 
            }
         

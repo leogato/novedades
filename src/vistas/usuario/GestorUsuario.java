@@ -109,7 +109,7 @@ public class GestorUsuario extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE USUARIOS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE USUARIOS", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
@@ -137,7 +137,7 @@ public class GestorUsuario extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ID", "USUARIO", "CLAVE", "DESCRIPCION", "TIPO"
+                "LEGAJO", "USUARIO", "CLAVE", "DESCRIPCION", "TIPO"
             }
         ));
         tblUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -454,10 +454,10 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
     private void cargarTablaConUsuario() {
-       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
+//       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
        listaUsuario = new UsuarioDaoImp().listarUsuario();
        util.TablaUtil.prepararTablaUsuario(modelo, tblUsuario);
-       util.TablaUtil.cargarModeloUsuario(modelo, listaEmpleado, listaUsuario, tblUsuario);
+       util.TablaUtil.cargarModeloUsuario(modelo, listaUsuario, tblUsuario);
     }
 
     private List<Usuario> filtrarPorNombreUsuario(List<Usuario> listaUsuarios, String text) {

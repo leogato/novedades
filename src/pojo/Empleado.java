@@ -1,5 +1,5 @@
 package pojo;
-// Generated 10/10/2013 14:26:22 by Hibernate Tools 3.2.1.GA
+// Generated 18/10/2013 16:57:56 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -22,23 +22,21 @@ public class Empleado  implements java.io.Serializable {
      private Boolean estado;
      private Set<Usuario> usuarios = new HashSet<Usuario>(0);
      private Set<Novedad> novedads = new HashSet<Novedad>(0);
-    private Empresa empresa;
 
     public Empleado() {
     }
 
 	
-//    public Empleado(int legajo, String apellido, String nombre, String cuit, String convenio, String tarea) {
-//        this.legajo = legajo;
-//        this.apellido = apellido;
-//        this.nombre = nombre;
-//        this.cuit = cuit;
-//        this.convenio = convenio;
-//        this.tarea = tarea;
-//    }
-    public Empleado(int legajo, Empresa empresa, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String convenio, String tarea, Boolean estado, Set<Usuario> usuarios, Set<Novedad> novedads) {
+    public Empleado(int legajo, String apellido, String nombre, String cuit, String convenio, String tarea) {
+        this.legajo = legajo;
+        this.apellido = apellido;
+        this.nombre = nombre;
+        this.cuit = cuit;
+        this.convenio = convenio;
+        this.tarea = tarea;
+    }
+    public Empleado(int legajo, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String convenio, String tarea, Boolean estado, Set<Usuario> usuarios, Set<Novedad> novedads) {
        this.legajo = legajo;
-       this.empresa = empresa;
        this.sucursal = sucursal;
        this.apellido = apellido;
        this.nombre = nombre;
@@ -65,15 +63,6 @@ public class Empleado  implements java.io.Serializable {
     public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
     }
-    
-    public Empresa getEmpresa(){
-        return this.empresa;
-    }
-    
-    public void setEmpresa (Empresa empresa){
-        this.empresa = empresa;
-    }
-    
     public String getApellido() {
         return this.apellido;
     }
