@@ -5,6 +5,7 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
+import static hibernateUtil.Conexion.getSessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -73,6 +74,16 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
 
     @Override
     public List<Empleado> listarEmpleado() {
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Empleado.class);
+//        criteria.addOrder(Order.asc("legajo"));
+        List<Empleado> lista = (List<Empleado>)criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return lista;
+    }
+    public List<Empleado> listarEmpleado(int leg, String ape, String nom) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empleado.class);

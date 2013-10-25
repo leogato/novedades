@@ -11,6 +11,8 @@ import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.ConceptoDaoImp;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import pojo.Empresa;
 import pojo.Novedad;
 import pojo.Sucursal;
@@ -36,6 +38,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
     public boolean isBotonGuardarSelecciono() {
         return BotonGuardarSelecciono;
     }
+    
+    
     /**
      * Creates new form Personal
      */
@@ -44,6 +48,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
     public AltaEmpleado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        llenaCmbEmpresa();
+        llenaCmbSucursal();
         btneEliminar.setVisible(false);
         btneEliminar.setEnabled(false);
         this.setTitle("NUEVO EMPLEADO");
@@ -58,6 +64,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
     public AltaEmpleado(java.awt.Frame parent, boolean modal,int legajo) {
         super(parent, modal);
         initComponents();
+        llenaCmbEmpresa();
+        llenaCmbSucursal();
         this.legajo = legajo;
         btneEliminar.setVisible(true);
         this.setTitle("EDITAR EMPLEADO");
@@ -97,13 +105,13 @@ public class AltaEmpleado extends javax.swing.JDialog {
         labelMetric9 = new org.edisoncor.gui.label.LabelMetric();
         txtLegajo = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric14 = new org.edisoncor.gui.label.LabelMetric();
-        txtEmpresa = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric16 = new org.edisoncor.gui.label.LabelMetric();
-        txtSucursal = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        cmbEmpresa = new org.edisoncor.gui.comboBox.ComboBoxRound();
+        cmbSucursal = new org.edisoncor.gui.comboBox.ComboBoxRound();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EMPLEADO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EMPLEADO", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
         pnlPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         btnGuardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
@@ -208,22 +216,15 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
         labelMetric14.setText("EMPRESA");
 
-        txtEmpresa.setBackground(new java.awt.Color(102, 102, 102));
-        txtEmpresa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        txtEmpresa.setForeground(new java.awt.Color(255, 255, 255));
-        txtEmpresa.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtEmpresa.setCaretColor(new java.awt.Color(255, 102, 0));
-        txtEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtEmpresa.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-
         labelMetric16.setText("SUCURSAL");
 
-        txtSucursal.setBackground(new java.awt.Color(102, 102, 102));
-        txtSucursal.setBorder(null);
-        txtSucursal.setForeground(new java.awt.Color(255, 255, 255));
-        txtSucursal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSucursal.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtSucursal.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        cmbEmpresa.setBackground(new java.awt.Color(102, 102, 102));
+        cmbEmpresa.setForeground(new java.awt.Color(255, 255, 255));
+        cmbEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
+
+        cmbSucursal.setBackground(new java.awt.Color(102, 102, 102));
+        cmbSucursal.setForeground(new java.awt.Color(255, 255, 255));
+        cmbSucursal.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -242,22 +243,12 @@ public class AltaEmpleado extends javax.swing.JDialog {
                         .addGap(141, 141, 141)
                         .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(146, 146, 146)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
                         .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(labelMetric12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(177, 177, 177)
-                        .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,13 +260,23 @@ public class AltaEmpleado extends javax.swing.JDialog {
                             .addComponent(txtTarea, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(146, 146, 146)
+                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelMetric16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(labelMetric12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(177, 177, 177)
                         .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(134, 134, 134)
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cmbSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
@@ -296,12 +297,12 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(cmbSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -419,7 +420,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                     Empleado e = getDatosEmpleado();
                     if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
                         Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
-                        List<Concepto> lista =new ConceptoDaoImp().listarConcepto(o);
+                        List<Empleado> lista =new EmpleadoDaoImp().listarEmpleado();
                         new EmpleadoDaoImp().addEmpleado(e);
                         // aqui va borrar el empleado o   porque se modiico la clave primario
 
@@ -507,6 +508,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
     private org.edisoncor.gui.button.ButtonIpod btnGuardar;
     private org.edisoncor.gui.button.ButtonIpod btneEliminar;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbEmpresa;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbSucursal;
     private javax.swing.JFileChooser elegirFichero;
     private org.edisoncor.gui.label.LabelMetric labelMetric10;
     private org.edisoncor.gui.label.LabelMetric labelMetric11;
@@ -520,10 +523,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtApellido;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtConvenio;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtCuit;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmpresa;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtLegajo;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtNombre;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtSucursal;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtTarea;
     // End of variables declaration//GEN-END:variables
 
@@ -584,6 +585,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
          return todoOk;
      }
      public Empleado getDatosEmpleado(){
+        
         Empleado empleado = new Empleado();
         Empresa empresa = new Empresa();
         Sucursal sucursal = new Sucursal();
@@ -591,8 +593,9 @@ public class AltaEmpleado extends javax.swing.JDialog {
         empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
         empleado.setApellido(txtApellido.getText());
         empleado.setNombre(txtNombre.getText());
-        empresa.setNombre(txtEmpresa.getText());
-        sucursal.setNombre(txtSucursal.getText());
+        empresa.setCodEmp(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
+        System.out.println("Cod Emp "+String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0)));
+        sucursal.setNombre(cmbSucursal.getSelectedItem().toString());
         empleado.setCuit(txtCuit.getText());
         empleado.setConvenio(txtConvenio.getText());
         empleado.setTarea(txtTarea.getText());
@@ -643,5 +646,40 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtCuit.setText(String.valueOf(e.getCuit()));
         txtConvenio.setText(e.getConvenio());
         txtTarea.setText(e.getTarea());
+    }
+    
+    public void llenaCmbEmpresa() {
+        Session sesion = null;
+        try {
+            sesion = Conexion.getSessionFactory().openSession();
+            Criteria crit = sesion.createCriteria(Empresa.class);
+            List<Empresa> rsConcepto = crit.list();// SELECT * FROM TABLA
+            cmbEmpresa.removeAllItems();
+            
+            for (Empresa emp : rsConcepto) {
+                cmbEmpresa.addItem(emp.getCodEmp()+"-"+ emp.getNombre());
+                System.out.println(emp.getCodEmp()+" "+emp.getNombre());
+            }
+            sesion.close();
+            //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void llenaCmbSucursal() {
+        Session sesion = null;
+        try {
+            sesion = Conexion.getSessionFactory().openSession();
+            Criteria crit = sesion.createCriteria(Sucursal.class);
+            List<Sucursal> rsConcepto = crit.list();// SELECT * FROM TABLA
+            cmbSucursal.removeAllItems();
+            for (Sucursal suc : rsConcepto) {
+                cmbSucursal.addItem("" + suc.getCodSuc()+ " - " + suc.getNombre());
+            }
+            sesion.close();
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

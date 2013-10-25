@@ -10,6 +10,7 @@ import java.util.List;
 import novedades.dao.UsuarioDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import pojo.Usuario;
 
 /**
@@ -63,6 +64,22 @@ Session session = Conexion.getSessionFactory().openSession();
         session.getTransaction().commit();
         session.close();
         return a;     
+    }
+    public Usuario getUsuarioAdministrador(String usuario,String clave){
+        Usuario e = null;
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Usuario.class);
+        criteria.add(Restrictions.eq("usuario", usuario));
+        criteria.add(Restrictions.eq("clave", clave));
+        
+        List<Usuario> lista = (List<Usuario>)criteria.list();
+        if (lista.size()!=0) {
+            e = lista.get(0);
+        }         
+        session.getTransaction().commit();
+        session.close();
+        return e;
     }
     
 }

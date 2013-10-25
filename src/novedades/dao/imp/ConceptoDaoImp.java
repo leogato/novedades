@@ -24,7 +24,7 @@ import pojo.Empleado;
 public class ConceptoDaoImp extends Conexion implements ConceptoDao{
 
     @Override
-    public List<Concepto> listarConcepto(Empleado o) {
+    public List<Concepto> listarConcepto() {
        Session session = Conexion.getSessionFactory().openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Concepto.class);

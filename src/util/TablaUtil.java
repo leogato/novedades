@@ -12,9 +12,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import novedades.dao.imp.EmpleadoDaoImp;
+import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
 import pojo.Usuario;
+import vistas.cargaNovedades;
 
 /**
  *
@@ -65,25 +67,47 @@ public class TablaUtil {
 //        tablaOrdendelDia.getColumnModel().getColumn(0).setMinWidth(0);
 //        tablaOrdendelDia.getColumnModel().getColumn(0).setPreferredWidth(0);
 //}
-    public static void cargarModeloAsistencia(DefaultTableModel modelo,List<Novedad> listaNovedad,JTable tablaOrdendelDia){
+    public static void cargarModeloConcepto(DefaultTableModel modelo,List<Concepto> listaConcepto,JTable tablaOrdendelDia){
          modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
-          
-         for (Novedad a : listaNovedad) {
-       
-        // extraigo de la asistencia el legajo y nombre del empleado
-//        Object[] empl = new AsistenciaDaoImp().getLegajoYNombreEmpleadoDeAsis(a.getIdAsistencia());
-        String fecha= FechaUtil.getDateDDMMAAAA(a.getFecha());
-        Object[] filaNovedad = {a.getConcepto(),a.getEmpleado().getLegajo(),a.getEmpleado().getNombre(),a.getEmpleado().getApellido(),a.getCantidad(),a.getObservacion(),a.getFecha()}; 
-//        Object[] filaAsistencia = {a.getIdAsistencia(),empl[0],empl[1],a.getEstado(),fecha,FechaUtil.getHora(a.getHora())}; 
+         for (Concepto a : listaConcepto) {
+        Object[] filaNovedad = {a.getCodCon(),a.getDescripcion(),a.getTipo(),a.getCargaUser()}; 
         modelo.addRow(filaNovedad);
-             
     }
         Conexion.getSessionFactory().close();
-       // hago que la columna 0 no sea visible
-        tablaOrdendelDia.getColumnModel().getColumn(0).setMaxWidth(0);
-        tablaOrdendelDia.getColumnModel().getColumn(0).setMinWidth(0);
-        tablaOrdendelDia.getColumnModel().getColumn(0).setPreferredWidth(0);
 }
+    
+    public static void prepararTablaConcepto(DefaultTableModel modelo, JTable tablaConcepto){
+        String[] titulos = {"CODIGO","DESCRIPCION","TIPO","CARGA USUARIO"};
+        modelo = new DefaultTableModel(null, titulos){
+            @Override
+            public boolean isCellEditable(int row, int col){
+                return false;
+            }
+        };
+        tablaConcepto.setModel(modelo);
+    }
+    
+    public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades){
+        
+        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
+        modelo = new DefaultTableModel(null, titulos){
+            public boolean isCelEditable(int row, int col){
+                return false;
+            }
+        };
+        tablaNovedades.setModel(modelo);
+    }
+    
+    public static void cargarModeloNovedades(DefaultTableModel modelo,List<Empleado> listaEmpleado,JTable tablaNovedades){
+        modelo = (DefaultTableModel) tablaNovedades.getModel();
+        for (Empleado n : listaEmpleado){
+//            String fecha= FechaUtil.getDateDDMMAAAA(n
+            Object[] filaAsistencia = {n.getLegajo(),n.getApellido(),n.getNombre()}; 
+            modelo.addRow(filaAsistencia);
+        }
+        Conexion.getSessionFactory().close();
+    }
+    
   public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
     String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
     modelo= new DefaultTableModel(null,titulos){
@@ -94,6 +118,17 @@ public class TablaUtil {
     };
     tablaEmpleado.setModel(modelo);
  }  
+  
+  public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
+    modelo =(DefaultTableModel) tablaEmpleado.getModel();
+    if (listaEmpleado == null)
+        JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo Empleado");
+        for ( Empleado a : listaEmpleado) {
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getCodEmp(),a.getSucursal(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
+            modelo.addRow(filaEmpleado);
+        }
+    }
+  
  public static void prepararTablaUsuario(DefaultTableModel modelo, JTable tablaUsuario){
         
         String[] titulos = {"LEGAJO","USUARIO","DESCRIPCION","CLAVE","TIPO"};
@@ -105,20 +140,7 @@ public class TablaUtil {
        };
        tablaUsuario.setModel(modelo);
     } 
- public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
-    modelo =(DefaultTableModel) tablaEmpleado.getModel();
-    if (listaEmpleado == null)
-        JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo Empleado");
-        for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getCodEmp(),a.getSucursal(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
-            modelo.addRow(filaEmpleado);
-           // hago que la columna 0 no sea visible
-//            tablaEmpleado.getColumnModel().getColumn(0).setMaxWidth(0);
-//            tablaEmpleado.getColumnModel().getColumn(0).setMinWidth(0);
-//            tablaEmpleado.getColumnModel().getColumn(0).setPreferredWidth(0);
-           
-           }
-    }
+ 
  public static void cargarModeloUsuario(DefaultTableModel modelo, List<Usuario> listaUsuario, JTable tablaUsuario){
     modelo =(DefaultTableModel) tablaUsuario.getModel();
             for (Usuario u : listaUsuario) {

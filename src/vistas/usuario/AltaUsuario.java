@@ -65,8 +65,8 @@ public class AltaUsuario extends javax.swing.JDialog {
 //        this.legajo = legajo;
         btneEliminar.setVisible(true);
         btnBuscar.setVisible(false);
-        Empleado e = new Empleado();
-        Usuario u = new UsuarioDaoImp().getUsuario(legajo);
+        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+        Usuario u = new Usuario();
         u.setEmpleado(e);
         txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
         txtUsuario.setText(u.getUsuario());

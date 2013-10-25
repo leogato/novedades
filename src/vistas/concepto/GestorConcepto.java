@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package vistas.empleado;
+package vistas.concepto;
 
-import hibernateUtil.Conexion;
+import vistas.usuario.*;
+import vistas.empleado.*;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
 import java.awt.event.KeyEvent;
@@ -12,49 +13,47 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
+import novedades.dao.imp.ConceptoDaoImp;
+import novedades.dao.imp.UsuarioDaoImp;
 import pojo.Concepto;
+import pojo.Usuario;
 
 /**
  *
  * @author Joel
  */
-public class GestorEmpleado extends javax.swing.JDialog {
+public class GestorConcepto extends javax.swing.JDialog {
     public static final int VENTANA_GESTOR_ASISTENCIA=1;
     public static final int MENU=2;
     public   boolean isModificar = false;// paramentro global uso: para ver si se presiono un boton agregar o moficar
                                          // sirve para configuarar ventnana infomracion  empleado
     
-    
     private DefaultTableModel modelo;
-    private List<Empleado> listaEmpleado;
+    private List<Concepto> listaConcepto;
     private boolean seleccionado;
-    private int legajo;
+    private int cod_con;
     int quienloyamo;
     java.awt.Frame parent;// indica quien es el padre. me sirve para pasar el icono de la aplcacion
   //  EmpleadoDao empleados ;
    
-    public GestorEmpleado(java.awt.Frame parent, boolean modal) {
+    public GestorConcepto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.parent = parent;
         initComponents();
-        
-        
         initComponentesVentana();    
-        this.setTitle("MODIFICACION DE EMPLEADO");
+        this.setTitle("MODIFICACION DE CONCEPTO");
         setLocationRelativeTo(this);
         setVisible(true);
         
         
     }
-    public GestorEmpleado(java.awt.Frame parent, boolean modal,int quienloyamo) {
+    public GestorConcepto(java.awt.Frame parent, boolean modal,int quienloyamo) {
         super(parent, modal);
         this.parent = parent;
         this.quienloyamo = quienloyamo;
         initComponents();
-        this.setTitle("ALTA DE EMPLEADO");
-        if (MENU== quienloyamo) {
+        this.setTitle("ALTA DE CONCEPTOS");
+        if (MENU == quienloyamo) {
             //boton seleccionar no debe aparecer
             btnSeleccion2.setVisible(false);
         }else{
@@ -62,26 +61,17 @@ public class GestorEmpleado extends javax.swing.JDialog {
             this.setSize(this.getWidth(),this.getHeight()-btnModificar.getWidth() );
             btnNuevo.setVisible(false);
             btnModificar.setVisible(false);
-            btnCancelarOperacion.setVisible(false);
+            btnAtras.setVisible(false);
             btnReporte.setVisible(false);
         }
         initComponentesVentana();  
         setLocationRelativeTo(this);
         setVisible(true);
-        
-        
     }
-    /**
-     *  cargarTablaConEmpleado();
-        
-        setEnableVentanaInformacionEmpleado(false);
-        limpiarVenanaEmpleado();
-        btnModificar.setEnabled(false);
-        btnNuevo.setEnabled(true);
-     */
+
     public void initComponentesVentana(){
         //empleados = new EmpleadoDaoImp();
-        cargarTablaConEmpleado();
+        cargarTablaConConcepto();
                 
         btnModificar.setEnabled(false);
        
@@ -100,17 +90,17 @@ public class GestorEmpleado extends javax.swing.JDialog {
         btnModificar = new org.edisoncor.gui.button.ButtonIpod();
         btnNuevo = new org.edisoncor.gui.button.ButtonIpod();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblEmpleado = new javax.swing.JTable();
+        tblConcepto = new javax.swing.JTable();
         labelMetric1 = new org.edisoncor.gui.label.LabelMetric();
         cmbFiltro = new org.edisoncor.gui.comboBox.ComboBoxRound();
         txtEmpleado = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         btnSeleccion2 = new org.edisoncor.gui.button.ButtonIpod();
-        btnCancelarOperacion = new org.edisoncor.gui.button.ButtonIpod();
+        btnAtras = new org.edisoncor.gui.button.ButtonIpod();
         btnReporte = new org.edisoncor.gui.button.ButtonIpod();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE EMPLEADOS", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE CONCEPTOS", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
@@ -131,35 +121,27 @@ public class GestorEmpleado extends javax.swing.JDialog {
             }
         });
 
-        tblEmpleado.setBackground(new java.awt.Color(204, 204, 204));
-        tblEmpleado.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        tblEmpleado.setModel(new javax.swing.table.DefaultTableModel(
+        tblConcepto.setBackground(new java.awt.Color(204, 204, 204));
+        tblConcepto.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        tblConcepto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "LEGAJO", "APELLIDO", "NOMBRE", "EMPRESA", "SUCURSAL", "CUIT", "CONVENIO", "TAREA"
+                "ID", "DESCRIPCION", "TIPO", "CARGA USUARIO"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
+        ));
+        tblConcepto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblEmpleadoMouseClicked(evt);
+                tblConceptoMouseClicked(evt);
             }
         });
-        tblEmpleado.addKeyListener(new java.awt.event.KeyAdapter() {
+        tblConcepto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                tblEmpleadoKeyPressed(evt);
+                tblConceptoKeyPressed(evt);
             }
         });
-        jScrollPane2.setViewportView(tblEmpleado);
+        jScrollPane2.setViewportView(tblConcepto);
 
         labelMetric1.setText("FILTRO");
 
@@ -186,12 +168,12 @@ public class GestorEmpleado extends javax.swing.JDialog {
             }
         });
 
-        btnCancelarOperacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
-        btnCancelarOperacion.setText("ATRAS");
-        btnCancelarOperacion.setAnimacion(false);
-        btnCancelarOperacion.addActionListener(new java.awt.event.ActionListener() {
+        btnAtras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
+        btnAtras.setText("ATRAS");
+        btnAtras.setAnimacion(false);
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarOperacionActionPerformed(evt);
+                btnAtrasActionPerformed(evt);
             }
         });
 
@@ -223,7 +205,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
                     .addComponent(jScrollPane2)
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addGap(11, 11, 11)
-                        .addComponent(btnCancelarOperacion, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(80, 80, 80)
                         .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(80, 80, 80)
@@ -245,7 +227,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelarOperacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -273,7 +255,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
     }
 
     public int getLegajo() {
-        return legajo;
+        return cod_con;
     }
 
     
@@ -283,23 +265,24 @@ public class GestorEmpleado extends javax.swing.JDialog {
         // filtrar las coincidencias con el contenido de la caja de texto
         
             
-             listaEmpleado = new EmpleadoDaoImp().listarEmpleado();
-        if ( txtEmpleado.getText().trim().isEmpty()) {
-          listaEmpleado = filtrarPorNombreEmpleado(listaEmpleado,txtEmpleado.getText()); 
-
-        }else{
-            if (cmbFiltro.getSelectedIndex()==0) {
-                // POR  NOMBRE
-                 listaEmpleado = filtrarPorNombreEmpleado(listaEmpleado,txtEmpleado.getText()); 
-
-        }
-         else {
-            // FILTRO POR LEGAJO
-             listaEmpleado = filtrarPorLegajoEmpleado(listaEmpleado,txtEmpleado.getText()); 
-        }
-        }
-//       TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
-//       util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
+//             listaConcepto = new ConceptoDaoImp().listarConcepto();
+//                     
+//        if ( txtEmpleado.getText().trim().isEmpty()) {
+//          listaUsuario = filtrarPorNombreUsuario(listaUsuario,txtEmpleado.getText()); 
+//
+//        }else{
+//            if (cmbFiltro.getSelectedIndex()==0) {
+//                // POR  NOMBRE
+//                 listaUsuario = filtrarPorNombreUsuario(listaUsuario,txtEmpleado.getText()); 
+//
+//        }
+//         else {
+//            // FILTRO POR LEGAJO
+//             listaUsuario = filtrarPorLegajoEmpleado(listaUsuario,txtEmpleado.getText()); 
+//        }
+//        }
+////       TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
+////       util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
     }//GEN-LAST:event_txtEmpleadoKeyPressed
   
     private void buttonIpod1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonIpod1ActionPerformed
@@ -311,22 +294,22 @@ public class GestorEmpleado extends javax.swing.JDialog {
      
     }//GEN-LAST:event_buttonIpod2ActionPerformed
 
-    private void btnCancelarOperacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarOperacionActionPerformed
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
        // cancela la operacion actual
 
         this.dispose();
         
-    }//GEN-LAST:event_btnCancelarOperacionActionPerformed
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
-    private void tblEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmpleadoMouseClicked
-           int fila = tblEmpleado.getSelectedRow();
+    private void tblConceptoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblConceptoMouseClicked
+           int fila = tblConcepto.getSelectedRow();
         if (fila!= -1) {
             btnModificar.setEnabled(true);  
             System.out.println("selecciono con el mouse");
         }
-    }//GEN-LAST:event_tblEmpleadoMouseClicked
+    }//GEN-LAST:event_tblConceptoMouseClicked
 
-    private void tblEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblEmpleadoKeyPressed
+    private void tblConceptoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblConceptoKeyPressed
 //        if (!isModificar) {
 //           if (evt.getKeyCode()==KeyEvent.VK_ENTER){
 //        int fila = tblEmpleado.getSelectedRow();
@@ -345,27 +328,29 @@ public class GestorEmpleado extends javax.swing.JDialog {
 //        }
         
         
-    }//GEN-LAST:event_tblEmpleadoKeyPressed
+    }//GEN-LAST:event_tblConceptoKeyPressed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         
 //        isModificar= true;
-        int fila = tblEmpleado.getSelectedRow();
+        int fila = tblConcepto.getSelectedRow();
+        System.out.println("Fila seleccionada "+tblConcepto.getSelectedRow());
         if (fila!= -1) {
-            legajo = (Integer) tblEmpleado.getModel().getValueAt(tblEmpleado.getSelectedRow(), 0);
+            cod_con = (Integer) tblConcepto.getModel().getValueAt(tblConcepto.getSelectedRow(), 0);
+            System.out.println("Codigo "+cod_con);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
-            AltaEmpleado ventanaEditEmpleado = new AltaEmpleado(parent, true, legajo);
-            cargarTablaConEmpleado();    
+            AbmConceptos EditConcepto = new AbmConceptos(parent, true, cod_con);
+            cargarTablaConConcepto();    
         }else{
-            JOptionPane.showMessageDialog(null, "Debes seleccionar un Empleado de la Tabla");
+            JOptionPane.showMessageDialog(null, "Debes seleccionar un Concepto de la Tabla");
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
-        AltaEmpleado ventanaNuevoEmpleado = new AltaEmpleado(parent, true);
+        AbmConceptos concepto = new AbmConceptos(parent, true);
 //        if (ventanaNuevoEmpleado.isBotonGuardarSelecciono()) {
-            cargarTablaConEmpleado();
+            cargarTablaConConcepto();
 //            ventanaNuevoEmpleado.dispose();
 //            
 //        }
@@ -375,14 +360,14 @@ public class GestorEmpleado extends javax.swing.JDialog {
 
     private void btnSeleccion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccion2ActionPerformed
             
-        int fila = tblEmpleado.getSelectedRow();
+        int fila = tblConcepto.getSelectedRow();
         if (fila== -1) {
             // no se selecciono ninguna fila de la lista
-            JOptionPane.showMessageDialog(null, "debes seleccionar un Empleado ", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "debes seleccionar un Concepto ", "Informacion",JOptionPane.INFORMATION_MESSAGE);
         } else {
             seleccionado = true;
-            modelo = (DefaultTableModel)tblEmpleado.getModel();
-            legajo = Integer.parseInt(modelo.getValueAt(fila, 0).toString());
+            modelo = (DefaultTableModel)tblConcepto.getModel();
+            cod_con = Integer.parseInt(modelo.getValueAt(fila, 0).toString());
             this.dispose();
         }
     }//GEN-LAST:event_btnSeleccion2ActionPerformed
@@ -444,7 +429,7 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonIpod btnCancelarOperacion;
+    private org.edisoncor.gui.button.ButtonIpod btnAtras;
     private org.edisoncor.gui.button.ButtonIpod btnModificar;
     private org.edisoncor.gui.button.ButtonIpod btnNuevo;
     private org.edisoncor.gui.button.ButtonIpod btnReporte;
@@ -453,34 +438,34 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JScrollPane jScrollPane2;
     private org.edisoncor.gui.label.LabelMetric labelMetric1;
     private org.edisoncor.gui.panel.Panel panel1;
-    private javax.swing.JTable tblEmpleado;
+    private javax.swing.JTable tblConcepto;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmpleado;
     // End of variables declaration//GEN-END:variables
 
     /**
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
-        private void cargarTablaConEmpleado() {
-
-       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
-       util.TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
-       util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
+    private void cargarTablaConConcepto() {
+//       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
+       listaConcepto = new ConceptoDaoImp().listarConcepto();
+       util.TablaUtil.prepararTablaConcepto(modelo, tblConcepto);
+       util.TablaUtil.cargarModeloConcepto(modelo, listaConcepto, tblConcepto);
     }
 
-    private List<Empleado> filtrarPorNombreEmpleado(List<Empleado> listaEmpleado, String text) {
-         List<Empleado> list = new ArrayList<Empleado>();
-         for (Empleado empleado : listaEmpleado) {
-             if (empleado.getApellido().contains(text)||empleado.getNombre().contains(text)) {
-                 list.add(empleado);
+    private List<Usuario> filtrarPorNombreUsuario(List<Usuario> listaUsuarios, String text) {
+         List<Usuario> list = new ArrayList<Usuario>();
+         for (Usuario usuario : listaUsuarios) {
+             if (usuario.getEmpleado().getApellido().contains(text)||usuario.getEmpleado().getNombre().contains(text)) {
+                 list.add(usuario);
              }
         }
          return list;
     }
-    private List<Empleado> filtrarPorLegajoEmpleado(List<Empleado> listaEmpleado, String text) {
-         List<Empleado> list = new ArrayList<Empleado>();
-         for (Empleado empleado : listaEmpleado) {
-             if (String.valueOf(empleado.getLegajo()).contains(text)) {
-                 list.add(empleado);
+    private List<Usuario> filtrarPorLegajoEmpleado(List<Usuario> listaUsuario, String text) {
+         List<Usuario> list = new ArrayList<Usuario>();
+         for (Usuario usuario : listaUsuario) {
+             if (String.valueOf(usuario.getEmpleado().getLegajo()).contains(text)) {
+                 list.add(usuario);
              }
         }
          return list;
@@ -507,9 +492,7 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
           btnModificar.setEnabled(false);
            btnNuevo.setEnabled(false);
      }
+    
 
      
 }
-
-     
-

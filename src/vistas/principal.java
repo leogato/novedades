@@ -11,21 +11,26 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JMenuBar;
+import vistas.concepto.AbmConceptos;
+import vistas.concepto.GestorConcepto;
 import vistas.empresa.AltaEmpresa;
 import vistas.empresa.AltaEmpresa2;
+import vistas.usuario.AltaUsuario;
 import vistas.usuario.GestorUsuario;
+import vistas.usuario.Login;
 
 /**
  *
  * @author usuario
  */
 public class principal extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form principal
      */
     public principal() {
         initComponents();
+        setConfiguracionMenuAdministrador(false);
         setLocationRelativeTo(this);
         setVisible(true);
         
@@ -61,26 +66,31 @@ public class principal extends javax.swing.JFrame {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         panel1 = new org.edisoncor.gui.panel.Panel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        textFieldRoundBackground1 = new org.edisoncor.gui.textField.TextFieldRoundBackground();
         clkHora = new org.edisoncor.gui.varios.ClockDigital();
-        passwordFieldRoundBackground1 = new org.edisoncor.gui.passwordField.PasswordFieldRoundBackground();
-        buttonIpod1 = new org.edisoncor.gui.button.ButtonIpod();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuArchivo = new javax.swing.JMenu();
+        mnuItmLogin = new javax.swing.JMenuItem();
+        mnuItmClose = new javax.swing.JMenuItem();
+        mnuItmAcerca = new javax.swing.JMenuItem();
         mnuSalir = new javax.swing.JMenuItem();
         mnuNovedades = new javax.swing.JMenu();
-        mnuCargaNovedades = new javax.swing.JMenuItem();
-        mnuABM = new javax.swing.JMenu();
-        mnuAltaEmpleados = new javax.swing.JMenuItem();
+        mnuItmCargaNovedades = new javax.swing.JMenuItem();
+        mnuItmNovedadesRRHH = new javax.swing.JMenuItem();
+        mnuEmpleados = new javax.swing.JMenu();
         mnuGestorEmpleados = new javax.swing.JMenuItem();
-        mnuABMNovedades = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        mnuABMUsuario = new javax.swing.JMenuItem();
+        mnuAltaEmpleados = new javax.swing.JMenuItem();
+        mnuUsuario = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        mnuABMUsuario = new javax.swing.JMenuItem();
+        mnuEmpresa = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
         mnuEmpresas = new javax.swing.JMenuItem();
+        mnuSucursal = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        mnuConcepto = new javax.swing.JMenu();
+        mnuItmGestorConcepto = new javax.swing.JMenuItem();
+        mnuItmAltaConceptos = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -88,67 +98,53 @@ public class principal extends javax.swing.JFrame {
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Floorboard & Wall - Green by ABH 1680x1050.jpg"))); // NOI18N
         panel1.setOpaque(false);
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
-        jLabel1.setText("USUARIO");
-
-        jLabel2.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
-        jLabel2.setText("CONTRASEÑA");
-
         clkHora.setForeground(new java.awt.Color(255, 255, 255));
-
-        passwordFieldRoundBackground1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        passwordFieldRoundBackground1.setDescripcion("password");
-
-        buttonIpod1.setBackground(new java.awt.Color(0, 0, 0));
-        buttonIpod1.setText("ACEPTAR");
-        buttonIpod1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addContainerGap(264, Short.MAX_VALUE)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(256, 256, 256))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textFieldRoundBackground1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(291, 291, 291))))
             .addGroup(panel1Layout.createSequentialGroup()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addGap(296, 296, 296)
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(buttonIpod1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(passwordFieldRoundBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)))
-                    .addComponent(clkHora, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(48, 48, 48)
+                .addComponent(clkHora, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addContainerGap()
                 .addComponent(clkHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addComponent(textFieldRoundBackground1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(passwordFieldRoundBackground1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
-                .addComponent(buttonIpod1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71))
+                .addContainerGap(359, Short.MAX_VALUE))
         );
 
         mnuArchivo.setText("Archivo");
 
+        mnuItmLogin.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItmLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Profile.png"))); // NOI18N
+        mnuItmLogin.setText("Iniciar Sesion");
+        mnuItmLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmLoginActionPerformed(evt);
+            }
+        });
+        mnuArchivo.add(mnuItmLogin);
+
+        mnuItmClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItmClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cerrar sesion - copia.png"))); // NOI18N
+        mnuItmClose.setText("Cerrar Sesion");
+        mnuItmClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmCloseActionPerformed(evt);
+            }
+        });
+        mnuArchivo.add(mnuItmClose);
+
+        mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
+        mnuItmAcerca.setText("Acerca");
+        mnuArchivo.add(mnuItmAcerca);
+
         mnuSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        mnuSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Exit.png"))); // NOI18N
         mnuSalir.setText("Salir");
         mnuSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,25 +162,23 @@ public class principal extends javax.swing.JFrame {
             }
         });
 
-        mnuCargaNovedades.setText("Carga Novedades");
-        mnuCargaNovedades.addActionListener(new java.awt.event.ActionListener() {
+        mnuItmCargaNovedades.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItmCargaNovedades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/asistencia empelado.png"))); // NOI18N
+        mnuItmCargaNovedades.setText("Carga Novedades");
+        mnuItmCargaNovedades.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuCargaNovedadesActionPerformed(evt);
+                mnuItmCargaNovedadesActionPerformed(evt);
             }
         });
-        mnuNovedades.add(mnuCargaNovedades);
+        mnuNovedades.add(mnuItmCargaNovedades);
+
+        mnuItmNovedadesRRHH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItmNovedadesRRHH.setText("Novedades RRHH");
+        mnuNovedades.add(mnuItmNovedadesRRHH);
 
         jMenuBar1.add(mnuNovedades);
 
-        mnuABM.setText("Empleados");
-
-        mnuAltaEmpleados.setText("Alta de Empleados");
-        mnuAltaEmpleados.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuAltaEmpleadosActionPerformed(evt);
-            }
-        });
-        mnuABM.add(mnuAltaEmpleados);
+        mnuEmpleados.setText("Empleados");
 
         mnuGestorEmpleados.setText("Gestor de Empleados");
         mnuGestorEmpleados.addActionListener(new java.awt.event.ActionListener() {
@@ -192,22 +186,19 @@ public class principal extends javax.swing.JFrame {
                 mnuGestorEmpleadosActionPerformed(evt);
             }
         });
-        mnuABM.add(mnuGestorEmpleados);
+        mnuEmpleados.add(mnuGestorEmpleados);
 
-        mnuABMNovedades.setText("ABMConceptos");
-        mnuABM.add(mnuABMNovedades);
-
-        jMenuBar1.add(mnuABM);
-
-        jMenu1.setText("Usuarios");
-
-        mnuABMUsuario.setText("Alta de Usuarios");
-        mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
+        mnuAltaEmpleados.setText("Alta de Empleados");
+        mnuAltaEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuABMUsuarioActionPerformed(evt);
+                mnuAltaEmpleadosActionPerformed(evt);
             }
         });
-        jMenu1.add(mnuABMUsuario);
+        mnuEmpleados.add(mnuAltaEmpleados);
+
+        jMenuBar1.add(mnuEmpleados);
+
+        mnuUsuario.setText("Usuarios");
 
         jMenuItem1.setText("Gestor de Usuarios");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -215,11 +206,22 @@ public class principal extends javax.swing.JFrame {
                 jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        mnuUsuario.add(jMenuItem1);
 
-        jMenuBar1.add(jMenu1);
+        mnuABMUsuario.setText("Alta de Usuarios");
+        mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuABMUsuarioActionPerformed(evt);
+            }
+        });
+        mnuUsuario.add(mnuABMUsuario);
 
-        jMenu2.setText("Empresas");
+        jMenuBar1.add(mnuUsuario);
+
+        mnuEmpresa.setText("Empresas");
+
+        jMenuItem4.setText("Gestor de Empresas");
+        mnuEmpresa.add(jMenuItem4);
 
         mnuEmpresas.setText("Alta de Empresas");
         mnuEmpresas.addActionListener(new java.awt.event.ActionListener() {
@@ -227,9 +229,39 @@ public class principal extends javax.swing.JFrame {
                 mnuEmpresasActionPerformed(evt);
             }
         });
-        jMenu2.add(mnuEmpresas);
+        mnuEmpresa.add(mnuEmpresas);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(mnuEmpresa);
+
+        mnuSucursal.setText("Sucursales");
+
+        jMenuItem2.setText("Gestor de Sucursales");
+        mnuSucursal.add(jMenuItem2);
+
+        jMenuItem3.setText("Alta de Sucursales");
+        mnuSucursal.add(jMenuItem3);
+
+        jMenuBar1.add(mnuSucursal);
+
+        mnuConcepto.setText("Conceptos");
+
+        mnuItmGestorConcepto.setText("Gestor de Conceptos");
+        mnuItmGestorConcepto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmGestorConceptoActionPerformed(evt);
+            }
+        });
+        mnuConcepto.add(mnuItmGestorConcepto);
+
+        mnuItmAltaConceptos.setText("Alta de Conceptos");
+        mnuItmAltaConceptos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmAltaConceptosActionPerformed(evt);
+            }
+        });
+        mnuConcepto.add(mnuItmAltaConceptos);
+
+        jMenuBar1.add(mnuConcepto);
 
         setJMenuBar(jMenuBar1);
 
@@ -237,7 +269,9 @@ public class principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,16 +289,16 @@ public class principal extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_mnuSalirActionPerformed
 
-    private void mnuCargaNovedadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCargaNovedadesActionPerformed
+    private void mnuItmCargaNovedadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCargaNovedadesActionPerformed
         cargaNovedades cn = new cargaNovedades(this, true);
-    }//GEN-LAST:event_mnuCargaNovedadesActionPerformed
+    }//GEN-LAST:event_mnuItmCargaNovedadesActionPerformed
 
     private void mnuEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEmpresasActionPerformed
         new AltaEmpresa2(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuEmpresasActionPerformed
 
     private void mnuABMUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuABMUsuarioActionPerformed
-        new abmUsuario(this, true);
+        new AltaUsuario(this, true);
     }//GEN-LAST:event_mnuABMUsuarioActionPerformed
 
     private void mnuAltaEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAltaEmpleadosActionPerformed
@@ -278,6 +312,35 @@ public class principal extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         new GestorUsuario(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void mnuItmLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmLoginActionPerformed
+        Login login = new Login(this, true);
+        if (login.isBotonAceptar() && login.isComun() == false) {
+            setConfiguracionMenuAdministrador(true);
+            mnuItmLogin.setEnabled(false);
+            mnuSalir.setEnabled(false);
+            
+        } else if(login.isBotonAceptar() && login.isComun()){
+            setConfiguracionComun(true);
+            mnuItmLogin.setEnabled(false);
+            mnuSalir.setEnabled(false);
+        }
+       
+    }//GEN-LAST:event_mnuItmLoginActionPerformed
+
+    private void mnuItmCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCloseActionPerformed
+        setConfiguracionMenuAdministrador(false);
+        mnuItmLogin.setEnabled(true);
+        mnuSalir.setEnabled(true);
+    }//GEN-LAST:event_mnuItmCloseActionPerformed
+
+    private void mnuItmGestorConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmGestorConceptoActionPerformed
+        new GestorConcepto(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_mnuItmGestorConceptoActionPerformed
+
+    private void mnuItmAltaConceptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmAltaConceptosActionPerformed
+        new AbmConceptos(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_mnuItmAltaConceptosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -314,27 +377,63 @@ public class principal extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonIpod buttonIpod1;
     private org.edisoncor.gui.varios.ClockDigital clkHora;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JMenu mnuABM;
-    private javax.swing.JMenuItem mnuABMNovedades;
     private javax.swing.JMenuItem mnuABMUsuario;
     private javax.swing.JMenuItem mnuAltaEmpleados;
     private javax.swing.JMenu mnuArchivo;
-    private javax.swing.JMenuItem mnuCargaNovedades;
+    private javax.swing.JMenu mnuConcepto;
+    private javax.swing.JMenu mnuEmpleados;
+    private javax.swing.JMenu mnuEmpresa;
     private javax.swing.JMenuItem mnuEmpresas;
     private javax.swing.JMenuItem mnuGestorEmpleados;
+    private javax.swing.JMenuItem mnuItmAcerca;
+    private javax.swing.JMenuItem mnuItmAltaConceptos;
+    private javax.swing.JMenuItem mnuItmCargaNovedades;
+    private javax.swing.JMenuItem mnuItmClose;
+    private javax.swing.JMenuItem mnuItmGestorConcepto;
+    private javax.swing.JMenuItem mnuItmLogin;
+    private javax.swing.JMenuItem mnuItmNovedadesRRHH;
     private javax.swing.JMenu mnuNovedades;
     private javax.swing.JMenuItem mnuSalir;
+    private javax.swing.JMenu mnuSucursal;
+    private javax.swing.JMenu mnuUsuario;
     private org.edisoncor.gui.panel.Panel panel1;
-    private org.edisoncor.gui.passwordField.PasswordFieldRoundBackground passwordFieldRoundBackground1;
-    private org.edisoncor.gui.textField.TextFieldRoundBackground textFieldRoundBackground1;
     // End of variables declaration//GEN-END:variables
+private void setConfiguracionMenuAdministrador(boolean b){
+        
+        mnuSalir.setVisible(true);
+        mnuItmAcerca.setVisible(true);
+        mnuNovedades.setVisible(b);
+        mnuNovedades.setEnabled(b);
+        mnuItmCargaNovedades.setVisible(true);
+        mnuItmNovedadesRRHH.setEnabled(b);
+        mnuItmNovedadesRRHH.setVisible(b);
+        mnuEmpleados.setEnabled(b);
+        mnuEmpleados.setVisible(b);
+        mnuUsuario.setEnabled(b);
+        mnuUsuario.setVisible(b);
+        mnuEmpresa.setEnabled(b);
+        mnuEmpresa.setVisible(b);
+        mnuSucursal.setEnabled(b);
+        mnuSucursal.setVisible(b);
+        mnuConcepto.setEnabled(b);
+        mnuConcepto.setVisible(b);
+        mnuItmClose.setEnabled(b);
+        
+    }
+    private void setConfiguracionComun(boolean b){
+        mnuNovedades.setVisible(b);
+        mnuNovedades.setEnabled(b);
+        mnuItmCargaNovedades.setVisible(b);
+        mnuItmCargaNovedades.setEnabled(b);
+        mnuItmClose.setEnabled(b);
+    }
+
 }
+

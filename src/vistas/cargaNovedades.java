@@ -4,10 +4,16 @@
  */
 package vistas;
 
+import com.mysql.jdbc.Util;
+import hibernateUtil.Conexion;
+import hibernateUtil.ConexionSQL;
+import java.sql.Connection;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -16,6 +22,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import novedades.dao.imp.ConceptoDaoImp;
+import novedades.dao.imp.EmpleadoDaoImp;
+import novedades.dao.imp.NovedadDaoImp;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import pojo.Concepto;
+import pojo.Empleado;
+import pojo.Novedad;
 //import vista.novedades.prueba;
 
 
@@ -25,16 +39,29 @@ import javax.swing.table.TableColumn;
  * @author usuario
  */
 public class cargaNovedades extends javax.swing.JDialog {
+    private List<Empleado> listaConcepto;
+    private DefaultTableModel modelo;
+    private Empleado e = new Empleado();
+//    Concepto c;
+//    List<Concepto> conce = new ArrayList<Concepto>();
+    JComboBox jcb = new JComboBox();
     
-    /**
-     * Creates new form cargaNovedades
-     */
+    
     public cargaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
-        JComboBox jcb = new JComboBox(datos);
-        TableColumn tc = jTable2.getColumnModel().getColumn(3);
+        cargarTablaNovedades();
+        llenaJComboBoxInvestigacion();
+//        System.out.println("CON "+con);
+////        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
+//        for (Concepto ce : conce){
+//            
+//        }
+//        Object [] datos = {con.add(c)};
+//        JComboBox jcb = new JComboBox();
+//        jcb.addItem(c.getCodCon()+c.getDescripcion());
+//        System.out.println("Datos "+datos);
+        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
         Date dia = new Date(System.currentTimeMillis()); 
@@ -43,7 +70,9 @@ public class cargaNovedades extends javax.swing.JDialog {
         setVisible(true);
         
     }
-
+    public cargaNovedades(){
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,11 +83,11 @@ public class cargaNovedades extends javax.swing.JDialog {
     private void initComponents() {
 
         panel1 = new org.edisoncor.gui.panel.Panel();
-        buttonIpod1 = new org.edisoncor.gui.button.ButtonIpod();
-        buttonIpod2 = new org.edisoncor.gui.button.ButtonIpod();
+        btnCargar = new org.edisoncor.gui.button.ButtonIpod();
+        btnSalir = new org.edisoncor.gui.button.ButtonIpod();
         lblFecha = new org.edisoncor.gui.label.LabelMetric();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblNovedadesUsr = new javax.swing.JTable();
         lblEmpresa = new org.edisoncor.gui.label.LabelMetric();
         lblSucursal = new org.edisoncor.gui.label.LabelMetric();
 
@@ -68,33 +97,29 @@ public class cargaNovedades extends javax.swing.JDialog {
         panel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Floorboard & Wall - Green by ABH 1680x1050.jpg"))); // NOI18N
 
-        buttonIpod1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cargar.png"))); // NOI18N
-        buttonIpod1.setText("Cargar");
-        buttonIpod1.setDistanciaDeSombra(45);
+        btnCargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cargar.png"))); // NOI18N
+        btnCargar.setText("Cargar");
+        btnCargar.setDistanciaDeSombra(45);
 
-        buttonIpod2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
-        buttonIpod2.setText("Salir");
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
+        btnSalir.setText("Salir");
 
         lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"123", "PEREZ", "PEPITO", null, null, null},
-                {"456", "JUAREZ", "LUIS", null, null, null},
-                {"789", "ALVAREZ", "RAMON", null, null, null},
-                {"543", "RAMIREZ", "CARLOS", null, null, null}
+                {null, null, null, null, null, null}
             },
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tblNovedadesUsr);
 
-        lblEmpresa.setText("3 - FERNANDO MANZUR");
         lblEmpresa.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
         lblEmpresa.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        lblSucursal.setText("2 - MAIMARA");
+        lblSucursal.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         lblSucursal.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
@@ -105,22 +130,22 @@ public class cargaNovedades extends javax.swing.JDialog {
                 .addGap(37, 37, 37)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(lblSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel1Layout.createSequentialGroup()
                         .addComponent(lblEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(59, 59, 59))
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(buttonIpod1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(183, 183, 183)
-                        .addComponent(buttonIpod2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(216, 216, 216))
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(lblSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(46, Short.MAX_VALUE))))
         );
         panel1Layout.setVerticalGroup(
@@ -131,14 +156,14 @@ public class cargaNovedades extends javax.swing.JDialog {
                     .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(lblSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
+                .addComponent(lblSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonIpod1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonIpod2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         lblEmpresa.getAccessibleContext().setAccessibleName("3 - FERNANDO MANZUR SUCURSAL");
@@ -202,17 +227,43 @@ public class cargaNovedades extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonIpod buttonIpod1;
-    private org.edisoncor.gui.button.ButtonIpod buttonIpod2;
+    private org.edisoncor.gui.button.ButtonIpod btnCargar;
+    private org.edisoncor.gui.button.ButtonIpod btnSalir;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
     private org.edisoncor.gui.label.LabelMetric lblEmpresa;
     private org.edisoncor.gui.label.LabelMetric lblFecha;
     private org.edisoncor.gui.label.LabelMetric lblSucursal;
     private org.edisoncor.gui.panel.Panel panel1;
+    private javax.swing.JTable tblNovedadesUsr;
     // End of variables declaration//GEN-END:variables
-   
+
+    private void cargarTablaNovedades(){
+        listaConcepto = new EmpleadoDaoImp().listarEmpleado(e.getLegajo(),e.getApellido(),e.getNombre());
+        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
+        util.TablaUtil.cargarModeloNovedades(modelo, listaConcepto, tblNovedadesUsr);
+    }
+            
+   public void llenaJComboBoxInvestigacion() {
+        Session sesion = null;
+        try {
+
+            sesion = Conexion.getSessionFactory().openSession();
+
+            Criteria crit = sesion.createCriteria(Concepto.class);
+            List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+
+            jcb.removeAllItems();
+
+            for (Concepto inv : rsConcepto) {
+                jcb.addItem("" + inv.getCodCon()+ " - " + inv.getDescripcion());
+            }
+
+            sesion.close();
+
+            //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
-
-
-    

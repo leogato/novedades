@@ -73,24 +73,12 @@
                           <Component id="txtApellido" min="-2" pref="185" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
-                          <Component id="labelMetric11" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="146" pref="146" max="-2" attributes="0"/>
-                          <Component id="txtNombre" min="-2" pref="185" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
                           <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
                           <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="85" pref="85" max="-2" attributes="0"/>
                           <Component id="btneEliminar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="85" pref="85" max="-2" attributes="0"/>
                           <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
-                          <Component id="labelMetric12" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
-                          <Component id="txtCuit" min="-2" pref="185" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
@@ -106,14 +94,27 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="labelMetric14" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="labelMetric11" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="146" pref="146" max="-2" attributes="0"/>
+                                  <Component id="txtNombre" min="-2" pref="185" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="labelMetric14" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="cmbEmpresa" min="-2" pref="185" max="-2" attributes="0"/>
+                              </Group>
                               <Component id="labelMetric16" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
+                          <Component id="labelMetric12" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtSucursal" min="-2" pref="185" max="-2" attributes="0"/>
-                              <Component id="txtEmpresa" min="-2" pref="185" max="-2" attributes="0"/>
+                              <Component id="cmbSucursal" min="-2" pref="185" max="-2" attributes="0"/>
+                              <Component id="txtCuit" min="-2" pref="185" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -139,17 +140,17 @@
                       <Component id="labelMetric11" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="labelMetric14" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtEmpresa" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbEmpresa" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="labelMetric16" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtSucursal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbSucursal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="labelMetric12" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtCuit" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -380,53 +381,34 @@
             <Property name="text" type="java.lang.String" value="EMPRESA"/>
           </Properties>
         </Component>
-        <Component class="org.edisoncor.gui.textField.TextFieldRoundIcon" name="txtEmpresa">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="66" green="66" red="66" type="rgb"/>
-            </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-                <EmptyBorder/>
-              </Border>
-            </Property>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="caretColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="66" red="ff" type="rgb"/>
-            </Property>
-            <Property name="colorDeBorde" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="66" red="ff" type="rgb"/>
-            </Property>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Calibri" size="14" style="1"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="org.edisoncor.gui.label.LabelMetric" name="labelMetric16">
           <Properties>
             <Property name="text" type="java.lang.String" value="SUCURSAL"/>
           </Properties>
         </Component>
-        <Component class="org.edisoncor.gui.textField.TextFieldRoundIcon" name="txtSucursal">
+        <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbEmpresa">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="66" green="66" red="66" type="rgb"/>
             </Property>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="colorDeBorde" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="66" red="ff" type="rgb"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbSucursal">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="66" green="66" red="66" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="colorDeBorde" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="66" red="ff" type="rgb"/>
-            </Property>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Calibri" size="14" style="1"/>
             </Property>
           </Properties>
         </Component>
