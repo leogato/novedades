@@ -8,20 +8,26 @@ import com.mysql.jdbc.Util;
 import hibernateUtil.Conexion;
 import hibernateUtil.ConexionSQL;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import novedades.Novedades;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
@@ -30,6 +36,7 @@ import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
+import sun.util.calendar.BaseCalendar;
 //import vista.novedades.prueba;
 
 
@@ -42,34 +49,31 @@ public class cargaNovedades extends javax.swing.JDialog {
     private List<Empleado> listaConcepto;
     private DefaultTableModel modelo;
     private Empleado e = new Empleado();
-//    Concepto c;
-//    List<Concepto> conce = new ArrayList<Concepto>();
+    private Novedad novedad = new Novedad();
+    private Concepto c= new Concepto();
+    private Calendar cal = new GregorianCalendar();
+    
     JComboBox jcb = new JComboBox();
-    
-    
+    int legajo = 0;
+    Date date = new Date();
+
     public cargaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
         cargarTablaNovedades();
         llenaJComboBoxInvestigacion();
-//        System.out.println("CON "+con);
-////        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
-//        for (Concepto ce : conce){
-//            
-//        }
-//        Object [] datos = {con.add(c)};
-//        JComboBox jcb = new JComboBox();
-//        jcb.addItem(c.getCodCon()+c.getDescripcion());
-//        System.out.println("Datos "+datos);
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
-        Date dia = new Date(System.currentTimeMillis()); 
-        lblFecha.setText(dia.getDay()+"/"+dia.getMonth()+"/"+(dia.getYear()+1900));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        lblFecha.setText(sdf.format(date));
+//        lblEmpresa.setText(emp.getSucursal().getCodSuc()+"-"+emp.getSucursal().getNombre());
+//        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
         setLocationRelativeTo(this);
         setVisible(true);
-        
     }
+    
     public cargaNovedades(){
         
     }
@@ -100,9 +104,19 @@ public class cargaNovedades extends javax.swing.JDialog {
         btnCargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cargar.png"))); // NOI18N
         btnCargar.setText("Cargar");
         btnCargar.setDistanciaDeSombra(45);
+        btnCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarActionPerformed(evt);
+            }
+        });
 
-        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
@@ -184,6 +198,29 @@ public class cargaNovedades extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
+//        try{
+            for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
+                System.out.println(i);
+                getDatosTabla(i);
+                new NovedadDaoImp().addNovedad(novedad);
+                novedad.setFecha(lblFecha.getText());
+                new NovedadDaoImp().addNovedad(novedad);
+            }
+//        }catch(NullPointerException ex){
+//            JOptionPane.showMessageDialog(null, "El campo CONCEPTO no debe estar vacio", "ATENCION!", 1);
+//        }
+        
+        
+        
+        
+    }//GEN-LAST:event_btnCargarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -242,6 +279,16 @@ public class cargaNovedades extends javax.swing.JDialog {
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarModeloNovedades(modelo, listaConcepto, tblNovedadesUsr);
     }
+    
+    private void getDatosTabla(int i){
+            e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString()));
+            novedad.setEmpleado(e);
+            c = new ConceptoDaoImp().getConcepto(Integer.parseInt(String.valueOf(tblNovedadesUsr.getValueAt(i, 3).toString().charAt(0))));
+            novedad.setConcepto(c);
+            novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 4).toString()));
+            novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 5).toString());
+            System.out.println(lblFecha.getText());
+    }
             
    public void llenaJComboBoxInvestigacion() {
         Session sesion = null;
@@ -266,4 +313,12 @@ public class cargaNovedades extends javax.swing.JDialog {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+   
+   public void cargaCantidad(){
+       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
+       if(con.getEstado()){
+//           tblNovedadesUsr.setc
+       }
+   }
+   
 }
