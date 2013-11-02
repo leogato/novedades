@@ -87,12 +87,14 @@ Session session = Conexion.getSessionFactory().openSession();
         Usuario e = null;
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Usuario.class);
-        criteria.add(Restrictions.eq("usuario", usuario));
-        List<Usuario> lista = (List<Usuario>)criteria.list();
-        if (lista.size()!=0) {
-            e = lista.get(0);
-        }         
+        String sql = "FROM Usuario u\n" +"join fetch u.empleado as e\n" +"join fetch e.sucursal as suc\n"+"join fetch suc.empresa as emp\n" +"WHERE u.usuario = '"+usuario+"'";
+        Usuario u = (Usuario)session.createQuery(sql).uniqueResult();
+//        Criteria criteria = session.createCriteria(Usuario.class);
+//        criteria.add(Restrictions.eq("usuario", usuario));
+//        List<Usuario> lista = (List<Usuario>)criteria.list();
+//        if (lista.size()!=0) {
+//            e = lista.get(0);
+//        }         
         session.getTransaction().commit();
         session.close();
         return e;

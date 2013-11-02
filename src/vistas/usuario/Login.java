@@ -26,7 +26,7 @@ public class Login extends javax.swing.JDialog {
      Date fecha = new Date();
      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
      String adm = "ADMINISTRADOR";
-     public static String usuario = null;
+     Usuario usuario;
      
     public boolean isBotonAceptar() {
         return BotonAceptar;
@@ -217,8 +217,8 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              JOptionPane.showMessageDialog(this, "Sus datos son incorrectos, intente nuevamente", "Error", JOptionPane.ERROR_MESSAGE);
              setearDatos();
          }
-         usuario = txtUsuario.getText();
-         capturaUsuario(usuario);
+         usuario = new UsuarioDaoImp().getUsuarioLogin(txtUsuario.getText());
+         
          
 }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -306,4 +306,13 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 //        user = usr.getEmpleado().getNombre().toString()+" "+usr.getEmpleado().getApellido().toString();
         System.out.println("Usuario obtenido: "+usr);
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+    
 }

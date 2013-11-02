@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JMenuBar;
+import pojo.Usuario;
 import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
 import vistas.empresa.AltaEmpresa;
@@ -25,6 +26,7 @@ import vistas.usuario.Login;
  */
 public class principal extends javax.swing.JFrame {
     
+    Usuario usuario;
     /**
      * Creates new form principal
      */
@@ -290,7 +292,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuSalirActionPerformed
 
     private void mnuItmCargaNovedadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCargaNovedadesActionPerformed
-        cargaNovedades cn = new cargaNovedades(this, true);
+        cargaNovedades cn = new cargaNovedades(this, true, usuario);
     }//GEN-LAST:event_mnuItmCargaNovedadesActionPerformed
 
     private void mnuEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEmpresasActionPerformed
@@ -316,11 +318,13 @@ public class principal extends javax.swing.JFrame {
     private void mnuItmLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmLoginActionPerformed
         Login login = new Login(this, true);
         if (login.isBotonAceptar() && login.isComun() == false) {
+            usuario = login.getUsuario();
             setConfiguracionMenuAdministrador(true);
             mnuItmLogin.setEnabled(false);
             mnuSalir.setEnabled(false);
             
         } else if(login.isBotonAceptar() && login.isComun()){
+            usuario = login.getUsuario();
             setConfiguracionComun(true);
             mnuItmLogin.setEnabled(false);
             mnuSalir.setEnabled(false);

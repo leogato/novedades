@@ -29,6 +29,7 @@ import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
+import pojo.Usuario;
 import vistas.usuario.Login;
 //import vista.novedades.prueba;
 
@@ -45,6 +46,7 @@ public class cargaNovedades extends javax.swing.JDialog {
     private Empleado e = new Empleado();
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
+    private Usuario usuario;
     private Calendar cal = new GregorianCalendar();
     private boolean si;
     private Login login = new Login();
@@ -56,7 +58,7 @@ public class cargaNovedades extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         cargarTablaNovedades();
-        cargaEmpresa(Login.usuario);
+//        cargaEmpresa(Login.usuario);
         llenaJComboBoxInvestigacion();
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
         TableCellEditor tce = new DefaultCellEditor(jcb);
@@ -64,12 +66,31 @@ public class cargaNovedades extends javax.swing.JDialog {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         lblFecha.setText(sdf.format(date));
         
-//        lblEmpresa.setText(emp.getSucursal().getCodSuc()+"-"+emp.getSucursal().getNombre());
+        lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
+        System.out.println("Usuario: "+usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
 //        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
         setLocationRelativeTo(this);
         setVisible(true);
     }
-   
+   public cargaNovedades(java.awt.Frame parent, boolean modal, Usuario usuario) {
+        super(parent, modal);
+        initComponents();
+        this.usuario = usuario;
+        cargarTablaNovedades();
+//        cargaEmpresa(Login.usuario);
+        llenaJComboBoxInvestigacion();
+        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
+        TableCellEditor tce = new DefaultCellEditor(jcb);
+        tc.setCellEditor(tce);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        lblFecha.setText(sdf.format(date));
+        
+//        lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
+        System.out.println("Usuario: "+usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
+//        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
+        setLocationRelativeTo(this);
+        setVisible(true);
+    }
            
     public cargaNovedades(){
         
