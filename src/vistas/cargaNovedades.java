@@ -4,30 +4,23 @@
  */
 package vistas;
 
-import com.mysql.jdbc.Util;
 import hibernateUtil.Conexion;
-import hibernateUtil.ConexionSQL;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.text.DateFormat;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import novedades.Novedades;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
@@ -36,7 +29,7 @@ import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
-import sun.util.calendar.BaseCalendar;
+import vistas.usuario.Login;
 //import vista.novedades.prueba;
 
 
@@ -47,12 +40,14 @@ import sun.util.calendar.BaseCalendar;
  */
 public class cargaNovedades extends javax.swing.JDialog {
     private List<Empleado> listaConcepto;
+    private List<Novedad> listaNov;
     private DefaultTableModel modelo;
     private Empleado e = new Empleado();
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
     private Calendar cal = new GregorianCalendar();
-    
+    private boolean si;
+    private Login login = new Login();
     JComboBox jcb = new JComboBox();
     int legajo = 0;
     Date date = new Date();
@@ -60,20 +55,22 @@ public class cargaNovedades extends javax.swing.JDialog {
     public cargaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
         cargarTablaNovedades();
+        cargaEmpresa(Login.usuario);
         llenaJComboBoxInvestigacion();
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         lblFecha.setText(sdf.format(date));
+        
 //        lblEmpresa.setText(emp.getSucursal().getCodSuc()+"-"+emp.getSucursal().getNombre());
 //        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
         setLocationRelativeTo(this);
         setVisible(true);
     }
-    
+   
+           
     public cargaNovedades(){
         
     }
@@ -209,8 +206,9 @@ public class cargaNovedades extends javax.swing.JDialog {
                 System.out.println(i);
                 getDatosTabla(i);
                 new NovedadDaoImp().addNovedad(novedad);
-                novedad.setFecha(lblFecha.getText());
+                novedad.setFecha(lblFecha.getText().toString());
                 new NovedadDaoImp().addNovedad(novedad);
+                
             }
 //        }catch(NullPointerException ex){
 //            JOptionPane.showMessageDialog(null, "El campo CONCEPTO no debe estar vacio", "ATENCION!", 1);
@@ -288,6 +286,13 @@ public class cargaNovedades extends javax.swing.JDialog {
             novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 4).toString()));
             novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 5).toString());
             System.out.println(lblFecha.getText());
+            System.out.println();
+            
+    }
+    
+    private boolean isBotonApretado(){
+        System.out.println("no se por donde empezaaaaaarrrrrrrr");
+        return si;
     }
             
    public void llenaJComboBoxInvestigacion() {
@@ -315,10 +320,25 @@ public class cargaNovedades extends javax.swing.JDialog {
     }
    
    public void cargaCantidad(){
-       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
-       if(con.getEstado()){
-//           tblNovedadesUsr.setc
+//       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
+       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(String.valueOf(tblNovedadesUsr.getValueAt(0, 4).toString().charAt(0))));
+       if(con.getCargaUser()){
+//           tblNovedadesUsr.set;
        }
+   }
+   
+   public void cargaEmpresa(String valor){
+        try {
+            String sql = "SELECT * FROM EMPRESA WHERE nombre LIKE '%"+valor+"%'";
+            Conexion con = new Conexion();
+            Connection conn = con.getSessionFactory().openSession().connection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            lblEmpresa.setText(rs.toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(cargaNovedades.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
    }
    
 }

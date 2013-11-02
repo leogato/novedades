@@ -373,68 +373,9 @@ public class AltaUsuario extends javax.swing.JDialog {
             Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
             u.setEmpleado(e);
             u = getDatosUsuario();
-//            u.setUsuario(txtUsuario.getText().trim());
-//            u.setClave(txtContrasenia.getText().trim());
-//            u.setDescripcion(txtDescripcion.getText().trim());
-//            u.setTipo(cmbTipo.getSelectedItem().toString());
             new UsuarioDaoImp().upDateUsuario(u);
             this.dispose();
         }
-//            if (legajo==0) {
-//                System.out.println("entro en nuevo");
-//                // nuevo empleado
-//                if(validarEmpleadoNuevo()){
-//                    System.out.println(validarEmpleadoNuevo());
-//                    Usuario e = getDatosUsuario();
-////                    Usuario e = getDatosEmpleado();
-//                    
-//                    // agrego los datos que faltan
-//                    //                       e.setAdministrador(false);
-//                    //                       e.setClave("");
-//                    //                       e.setFechaIngreso(null);
-//                    new UsuarioDaoImp().addUsuario(e);
-////                    new UsuarioDaoImp().addUsuario(e);
-//                    //                       mensajero.mensajeInformacionAltaOK(this);
-//                    this.dispose();
-//                }
-//            } else {
-//                System.out.println("entro a modificar");
-//                //actualizar empleado
-//                if (validarEmpleadoActulizado()) {
-//                    //obtengos los datos y creo el empelado
-//                    Empleado e = getDatosEmpleado();
-////                    Usuario e = getDatosEmpleado();
-//                    if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
-//                        Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
-//                        List<Concepto> lista =new ConceptoDaoImp().listarConcepto(o);
-//                        new EmpleadoDaoImp().addEmpleado(e);
-////                        new UsuarioDaoImp().addUsuario(e);
-//                        // aqui va borrar el empleado o   porque se modiico la clave primario
-//
-//                        new EmpleadoDaoImp().deleteEmpleado(o);
-//                        Empleado emplUp = new EmpleadoDaoImp().getEmpleado(o.getLegajo());
-//
-//                    }else{
-//                        new EmpleadoDaoImp().upDateEmpleado(e);
-////                        new UsuarioDaoImp().upDateUsuario(e);
-//                    }
-//                    // agregar todas la asistencia
-//
-//                    Conexion.getSessionFactory().close();
-//                    this.dispose();
-//                }
-//
-//            }
-//
-//            //               setEnableVentanaInformacionEmpleado(false);
-//            //               // BOTON
-//            //               btnGuardar.setEnabled(false);
-//            //               btnNuevo.setEnabled(true);
-//            //               }catch(Exception ez){
-//            //                  mensajero.mensajeError(this,"Cargue fotos con tama�o menor a 1mb ");
-//            //                  lblFoto.removeAll();
-//            //                  seleccionofoto=false;
-//            //               }
     }                                          
     
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {                                          
@@ -574,18 +515,7 @@ public class AltaUsuario extends javax.swing.JDialog {
          }   
          return todoOk;
      }
-//     public Empleado getDatosEmpleado(){
-//        Empleado empleado = new EmpleadoDaoImp().getEmpleado(legajo);
-//        Usuario usuario = new Usuario();
-//        usuario.setClave(txtLegajo.getText());
-////        usuario.setEmpleado().setLegajo(Integer.parseInt(txtLegajo.getText()));
-//        usuario.setUsuario(txtUsuario.getText());
-//        usuario.setDescripcion(txtDescripcion.getText());
-//        usuario.setClave(txtContrasenia.getText());
-//        usuario.setTipo(cmbTipo.getSelectedItem().toString());
-//        return empleado;
-//     }
-     
+
      public Usuario getDatosUsuario(){
          Usuario usuario = new Usuario();
          Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));

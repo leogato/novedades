@@ -5,6 +5,7 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
+import static hibernateUtil.Conexion.getSessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import novedades.dao.UsuarioDao;
@@ -82,4 +83,18 @@ Session session = Conexion.getSessionFactory().openSession();
         return e;
     }
     
+    public Usuario getUsuarioLogin(String usuario){
+        Usuario e = null;
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Usuario.class);
+        criteria.add(Restrictions.eq("usuario", usuario));
+        List<Usuario> lista = (List<Usuario>)criteria.list();
+        if (lista.size()!=0) {
+            e = lista.get(0);
+        }         
+        session.getTransaction().commit();
+        session.close();
+        return e;
+    }    
 }

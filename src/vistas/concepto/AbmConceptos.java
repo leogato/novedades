@@ -312,7 +312,7 @@ public class AbmConceptos extends javax.swing.JDialog {
     }//GEN-LAST:event_txtIdKeyTyped
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Concepto: \n"+txtId.getText()+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
+        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Concepto: \n"+txtId.getText()+" "+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
              Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
             new ConceptoDaoImp().deleteConcepto(c);

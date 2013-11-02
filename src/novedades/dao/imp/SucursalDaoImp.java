@@ -7,32 +7,31 @@ package novedades.dao.imp;
 import hibernateUtil.Conexion;
 import static hibernateUtil.Conexion.getSessionFactory;
 import java.util.List;
-import novedades.dao.EmpresaDao;
+import novedades.dao.SucursalDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import pojo.Empresa;
-import pojo.Usuario;
+import pojo.Sucursal;
 
 /**
  *
- * @author usuario
+ * @author Leo
  */
-public class EmpresaDaoImp extends Conexion implements EmpresaDao {
+public class SucursalDaoImp extends Conexion implements SucursalDao{
 
     @Override
-    public List<Empresa> listarEmpresa() {
+    public List<Sucursal> listarSucursal() {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Empresa.class);
-        List<Empresa> lista = (List<Empresa>)criteria.list();
+        Criteria criteria = session.createCriteria(Sucursal.class);
+        List<Sucursal> lista = (List<Sucursal>)criteria.list();
         session.getTransaction().commit();        
         session.close();
         return lista;
     }
 
     @Override
-    public void addEmpresa(Empresa a) {
+    public void addSucursal(Sucursal a) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         session.save(a);
@@ -41,7 +40,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
     }
 
     @Override
-    public void deleteEmpresa(Empresa a) {
+    public void deleteSucursal(Sucursal a) {
         Session session = Conexion.getSessionFactory().openSession();
         session.beginTransaction();
         session.delete(a);
@@ -50,31 +49,32 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
     }
 
     @Override
-    public void upDateEmpresa(Empresa a) {
+    public void upDateSucursal(Sucursal a) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         session.update(a);
         session.getTransaction().commit();
         session.close();
+    
     }
 
     @Override
-    public Empresa getEmpresa(int cod_emp) {
+    public Sucursal getSucursal(int idSuc) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        Empresa a = (Empresa) session.get(Empresa.class,cod_emp);
+        Sucursal a = (Sucursal) session.get(Sucursal.class,idSuc);
         session.getTransaction().commit();
         session.close();
         return a;
     }
     
-    public Empresa getEmpresaLogin(int cod_emp) {
-        Empresa e = null;
+    public Sucursal getSucursalLogin(int idSuc){
+        Sucursal e = null;
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Empresa.class);
-        criteria.add(Restrictions.eq("cod_emp", cod_emp));
-        List<Empresa> lista = (List<Empresa>)criteria.list();
+        Criteria criteria = session.createCriteria(Sucursal.class);
+        criteria.add(Restrictions.eq("cod_suc", idSuc));
+        List<Sucursal> lista = (List<Sucursal>)criteria.list();
         if (lista.size()!=0) {
             e = lista.get(0);
         }         
@@ -82,4 +82,5 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
         session.close();
         return e;
     }
+    
 }

@@ -5,11 +5,13 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
+import static hibernateUtil.Conexion.getSessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import novedades.dao.NovedadDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
@@ -26,6 +28,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         Session session = Conexion.getSessionFactory().openSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Novedad.class);
+        criteria.add(Restrictions.eq("Codigo de sucursal", o.getSucursal().getCodSuc()));
         ArrayList<Novedad> novedad = (ArrayList<Novedad>)criteria.list();
         session.close();
         return novedad;
@@ -68,5 +71,33 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         session.close();
         return con; 
     }
+    
+    @Override
+    public void addNovedad(Novedad n) {
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(n);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public List<Novedad> listarNovedad(String cad){
+        Session session = Conexion.getSessionFactory().openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Novedad.class);
+        ArrayList<Novedad> novedad = (ArrayList<Novedad>)criteria.list();
+        session.close();
+        return novedad;
+    }
+    
+    public Novedad getFecha(String fec){
+        Session session = Conexion.getSessionFactory().openSession();
+        session.beginTransaction();
+        Novedad con = (Novedad) session.get(Novedad.class,fec);
+        session.getTransaction().commit();
+        session.close();
+        return con; 
+    }
+    
     
 }

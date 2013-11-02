@@ -61,6 +61,15 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         session.close();
         return a;
     }
+    
+    public Empleado getEmpleado(String nombre){
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Empleado a = (Empleado) session.get(Empleado.class, nombre);
+        session.getTransaction().commit();
+        session.close();
+        return a;
+    }
 
     @Override
     public Set<Concepto> getConcepto(int idConcepto) {
@@ -83,6 +92,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         session.close();
         return lista;
     }
+    
     public List<Empleado> listarEmpleado(int leg, String ape, String nom) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();

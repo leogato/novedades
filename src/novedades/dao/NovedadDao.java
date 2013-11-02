@@ -19,5 +19,6 @@ public interface NovedadDao {
   public void deleteEmpleado(Empleado a);
   public void upDateEmpleado(Empleado a);
   public Concepto getConcepto(Concepto e);
+  public void addNovedad(Novedad n);
 //  public Novedad getNovedad(int idConcepto);
 }

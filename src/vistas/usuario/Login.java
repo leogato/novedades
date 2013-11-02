@@ -5,10 +5,13 @@
 package vistas.usuario;
 
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
 import pojo.Empleado;
+import pojo.Novedad;
 import pojo.Usuario;
 
 /**
@@ -18,7 +21,13 @@ import pojo.Usuario;
 public class Login extends javax.swing.JDialog {
      boolean BotonAceptar= false;
      boolean comun = true;
+     boolean ban = true;
+     Novedad n = new Novedad();
+     Date fecha = new Date();
+     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
      String adm = "ADMINISTRADOR";
+     public static String usuario = null;
+     
     public boolean isBotonAceptar() {
         return BotonAceptar;
     }
@@ -31,11 +40,16 @@ public class Login extends javax.swing.JDialog {
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
         setTitle("LOGIN");
+        lblFecha.setText(sdf.format(fecha));
         setLocationRelativeTo(this);
         setVisible(true);
     }
-
+    
+    public Login(){
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,6 +66,7 @@ public class Login extends javax.swing.JDialog {
         btnLogin = new org.edisoncor.gui.button.ButtonIpod();
         txtUsuario = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         txtClave = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        lblFecha = new org.edisoncor.gui.label.LabelMetric();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ADMINISTRADOR");
@@ -98,6 +113,8 @@ public class Login extends javax.swing.JDialog {
         txtClave.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtClave.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
+        lblFecha.setText("30/10/2013");
+
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
@@ -114,11 +131,16 @@ public class Login extends javax.swing.JDialog {
                     .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtClave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
+            .addGroup(panel1Layout.createSequentialGroup()
+                .addGap(92, 92, 92)
+                .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -126,11 +148,11 @@ public class Login extends javax.swing.JDialog {
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 24, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -141,7 +163,9 @@ public class Login extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 30, Short.MAX_VALUE))
         );
 
         pack();
@@ -149,11 +173,10 @@ public class Login extends javax.swing.JDialog {
 
 private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
      //         EmpleadoDaoImp empleados = new EmpleadoDaoImp();
-         
+         String fecha_login="";
          try{
              Usuario e = new UsuarioDaoImp().getUsuarioAdministrador(txtUsuario.getText(), txtClave.getText());
              String tipo = e.getTipo();
-             System.out.println("Tipo "+tipo);
              if (e!=null) {// si existe el  usuario y es administrador
                  if(tipo.equals(adm)){
                     System.out.println("Es administrador");
@@ -163,14 +186,29 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ e.getUsuario());
                  }else if(tipo.equals("COMUN")){
                      System.out.println("Es comun");
-                     BotonAceptar = true;
-                     comun = true;
-                     this.dispose();
-                     JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ e.getUsuario());
+                     System.out.println("Fecha actual "+fecha_login);
+                     System.out.println("Fecha "+sdf.format(fecha));
+                     if(!fecha_login.equals(sdf.format(fecha))){
+                        BotonAceptar = true;
+                        comun = true;
+                        fecha_login = sdf.format(fecha);//capturo la fecha actual en una cadena
+                        System.out.println("Fecha actual "+fecha_login);
+                        this.dispose();
+                        setearDatos();
+                        JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ e.getUsuario());
+                     }else{
+                         System.out.println("Entro!");
+                         BotonAceptar = false;
+                         JOptionPane.showMessageDialog(rootPane, "No puede cargar novedades dos veces en el mismo dia, intentalo mañana");
+                         this.dispose();
+                     }
+                   
+                     
                   }else {
                     JOptionPane.showMessageDialog(this, "Su Identificacion es Incorrecta, por favor Ingrese de nuevo", "ERROR", JOptionPane.ERROR_MESSAGE);
                     setearDatos();
                     }
+                 
             } 
          }catch(java.lang.NumberFormatException edd){
             JOptionPane.showMessageDialog(this, "No pueden estar vacios sus datos de identidad", "Error", JOptionPane.ERROR_MESSAGE);
@@ -179,6 +217,9 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              JOptionPane.showMessageDialog(this, "Sus datos son incorrectos, intente nuevamente", "Error", JOptionPane.ERROR_MESSAGE);
              setearDatos();
          }
+         usuario = txtUsuario.getText();
+         capturaUsuario(usuario);
+         
 }//GEN-LAST:event_btnLoginActionPerformed
 
 private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
@@ -234,6 +275,7 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private org.edisoncor.gui.button.ButtonIpod btnAtras;
     private org.edisoncor.gui.button.ButtonIpod btnLogin;
     private org.edisoncor.gui.label.LabelMetric labelMetric2;
+    private org.edisoncor.gui.label.LabelMetric lblFecha;
     private org.edisoncor.gui.panel.Panel panel1;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtClave;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtUsuario;
@@ -249,13 +291,19 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
           // permitir solo el ingreso de numero
          char caracter = evt.getKeyChar();
-        if(((caracter < '0') ||
-         (caracter > '9')) &&
-         (caracter != '\b' /*corresponde a BACK_SPACE*/))
-      {
-         evt.consume();  // ignorar el evento de teclado
-      }
+        if(((caracter < '0') || (caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
+            evt.consume();  // ignorar el evento de teclado
+        }
        
         
-     }    
+    }    
+    
+    public void capturaUsuario(String user){
+        Usuario usr = new UsuarioDaoImp().getUsuarioLogin(user);
+        String cadena = String.valueOf(usr.getEmpleado().getLegajo());
+//        Empleado emp = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(user));
+//        String cadena = emp.getApellido();
+//        user = usr.getEmpleado().getNombre().toString()+" "+usr.getEmpleado().getApellido().toString();
+        System.out.println("Usuario obtenido: "+usr);
+    }
 }

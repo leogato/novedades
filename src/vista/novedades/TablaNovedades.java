@@ -4,25 +4,39 @@
  */
 package vista.novedades;
 
+import hibernateUtil.Conexion;
 import java.awt.Color;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import novedades.dao.imp.ConceptoDaoImp;
+import novedades.dao.imp.EmpleadoDaoImp;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import pojo.Concepto;
+import pojo.Empleado;
 import pojo.Novedad;
 import util.FechaUtil;
+import util.TablaUtil;
 /**
  *
  * @author usuario
  */
 public class TablaNovedades extends javax.swing.JDialog {
-
-    private List<Novedad> listaAsistencia;
+    private DefaultTableModel modelo;
+    private List<Concepto> listaNovedad;
+    private List<Novedad> listaNov;
+    JComboBox jcb = new JComboBox();
+    java.awt.Frame parent;
     
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -32,17 +46,17 @@ public class TablaNovedades extends javax.swing.JDialog {
         deshabilitarFechas();
         inactivarBusqueda();
         rdbHoy.requestFocus();
-        
-        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
-        JComboBox jcb = new JComboBox(datos);
+        llenaJComboBoxInvestigacion();
         TableColumn tc = tblNovedades.getColumnModel().getColumn(6);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
+//        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
+               
         //el dispatcher se registra en forma global, por lo que es recomendable hacerlo dentro del frame principal
 //primero obtenemos le FocusManager (que a su vez es el KeyEventDispatcher)
-KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 //y enseguida registramos nuestro dispatcher
-manager.addKeyEventDispatcher(new KeyEventDispatcher(){
+        manager.addKeyEventDispatcher(new KeyEventDispatcher(){
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
                 //como dije, solo las notificaciones del tipo "typed" son las que actualizan los componentes
@@ -252,7 +266,7 @@ manager.addKeyEventDispatcher(new KeyEventDispatcher(){
         });
 
         fechaInicio.setBackground(new java.awt.Color(255, 255, 255));
-        fechaInicio.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        fechaInicio.setBorder(new javax.swing.border.SoftBevelBorder(0));
         fechaInicio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         fechaInicio.setMaxSelectableDate(new Date());
 
@@ -262,7 +276,7 @@ manager.addKeyEventDispatcher(new KeyEventDispatcher(){
         jLabel3.setText("Y");
 
         fechaFin.setBackground(new java.awt.Color(255, 255, 255));
-        fechaFin.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        fechaFin.setBorder(new javax.swing.border.SoftBevelBorder(0));
         fechaFin.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         fechaFin.setMaxSelectableDate(new Date());
 
@@ -276,6 +290,11 @@ manager.addKeyEventDispatcher(new KeyEventDispatcher(){
         btnBuscar.setText("Buscar");
         btnBuscar.setAngulo(120);
         btnBuscar.setDistanciaDeSombra(45);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTranslucidoComplete2Layout = new javax.swing.GroupLayout(panelTranslucidoComplete2);
         panelTranslucidoComplete2.setLayout(panelTranslucidoComplete2Layout);
@@ -425,7 +444,7 @@ manager.addKeyEventDispatcher(new KeyEventDispatcher(){
                 .addComponent(panelShadow2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -488,6 +507,43 @@ manager.addKeyEventDispatcher(new KeyEventDispatcher(){
             
         }
     }//GEN-LAST:event_rdbFechaActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        listaNov = new  ArrayList<Novedad>();
+       if (fechaInicio.getDate().getTime()<=fechaFin.getDate().getTime()) {
+            //  verificar de que la fecha inicio no sea mayor que la fecha fin
+        if (cmbBusqueda.getSelectedIndex()==1) {
+            
+           //busqueda empleado por DNI  
+            try {        
+              Empleado  e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtBusqueda.getText()));
+            
+            if (e!=null) {
+              listaNov = new ConceptoDaoImp().listarNovedad(fechaInicio.getDate());
+          
+            }else{
+            JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
+
+            }         
+            } catch (Exception e) {
+               JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
+            }
+       
+        } else {
+              // Busqueda asistencias de todos los empleados
+               listaNov = new ConceptoDaoImp().listarNovedad(FechaUtil.getFechaSinhora(fechaInicio.getDate()));
+              
+               System.out.println("cantidad de datos en la busqueda "+listaNov.size());
+            }
+          
+       }else{  
+               JOptionPane.showMessageDialog(this, "La fecha inicio no puedes ser mayor a la fecha Fin ","ERROR",JOptionPane.ERROR_MESSAGE);
+       }
+        
+    
+           TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
+           TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -602,6 +658,30 @@ private void deshabilitarFechas()
     fechaInicio.setEnabled(false);
     fechaFin.setEnabled(false);
 }
+
+    private void llenaJComboBoxInvestigacion() {
+        Session sesion = null;
+        try {
+
+            sesion = Conexion.getSessionFactory().openSession();
+
+            Criteria crit = sesion.createCriteria(Concepto.class);
+            List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+
+            jcb.removeAllItems();
+
+            for (Concepto inv : rsConcepto) {
+                jcb.addItem("" + inv.getCodCon()+ " - " + inv.getDescripcion());
+            }
+
+            sesion.close();
+
+            //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
 }
 

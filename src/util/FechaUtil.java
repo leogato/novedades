@@ -5,8 +5,6 @@ import static util.FechaUtil.getDia;
 import static util.FechaUtil.getDiaString;
 import static util.FechaUtil.getMes;
 import static util.FechaUtil.getMesString;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

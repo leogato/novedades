@@ -25,8 +25,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
     public static final int MENU=2;
     public   boolean isModificar = false;// paramentro global uso: para ver si se presiono un boton agregar o moficar
                                          // sirve para configuarar ventnana infomracion  empleado
-    
-    
     private DefaultTableModel modelo;
     private List<Empleado> listaEmpleado;
     private boolean seleccionado;
@@ -39,8 +37,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
         super(parent, modal);
         this.parent = parent;
         initComponents();
-        
-        
         initComponentesVentana();    
         this.setTitle("MODIFICACION DE EMPLEADO");
         setLocationRelativeTo(this);
@@ -68,8 +64,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
         initComponentesVentana();  
         setLocationRelativeTo(this);
         setVisible(true);
-        
-        
     }
     /**
      *  cargarTablaConEmpleado();
@@ -82,9 +76,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
     public void initComponentesVentana(){
         //empleados = new EmpleadoDaoImp();
         cargarTablaConEmpleado();
-                
         btnModificar.setEnabled(false);
-       
     }
     
     /**
@@ -275,9 +267,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
     public int getLegajo() {
         return legajo;
     }
-
-    
-    
     
     private void txtEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmpleadoKeyPressed
         // filtrar las coincidencias con el contenido de la caja de texto
@@ -342,7 +331,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
 //        }
 //       }
             
-//        }
+//      }
         
         
     }//GEN-LAST:event_tblEmpleadoKeyPressed

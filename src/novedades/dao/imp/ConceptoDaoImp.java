@@ -14,8 +14,11 @@ import novedades.dao.ConceptoDao;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
+import pojo.Novedad;
 
 /**
  *
@@ -48,7 +51,8 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
         session.beginTransaction();
         session.delete(a);
         session.getTransaction().commit();
-        session.close();    }
+        session.close();    
+    }
 
     @Override
     public void upDateConcepto(Concepto a) {
@@ -65,8 +69,38 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
         Concepto a = (Concepto) session.get(Concepto.class,idConcepto);
         session.getTransaction().commit();
         session.close();
-        return a;      }
+        return a;      
+    }
+
+    public Concepto getCarga(boolean carga) {
+        Session session = Conexion.getSessionFactory().openSession();
+        session.beginTransaction();
+        Concepto a = (Concepto) session.get(Concepto.class,carga);
+        session.getTransaction().commit();
+        session.close();
+        return a;
+    }
     
+    public List<Concepto> listarConcepto(Empleado e, Date fecIni){
+        Session session = getSessionFactory().openSession();
+         Criteria criteria = session.createCriteria(Concepto.class);
+         criteria.addOrder(Order.asc("Legajo"));
+         criteria.add(Restrictions.eq("empleado", e));
+         criteria.add( Restrictions.ge("fecha", fecIni) );
+         List<Concepto> lista = criteria.list();
+         return lista;
+    }
+    
+    public List<Novedad> listarNovedad(Date fechaInicio) {
+        Session session = getSessionFactory().openSession();
+          Criteria criteria = session.createCriteria(Novedad.class);
+//          criteria.addOrder(Order.asc("fecha"));
+//         criteria.addOrder(Order.asc("idAsistencia"));
+         criteria.add( Restrictions.ge("fecha", fechaInicio) );
+         List<Novedad> lista = criteria.list();
+//         session.close();
+          return lista;
+    }
    
   
 

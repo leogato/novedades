@@ -87,6 +87,26 @@ public class TablaUtil {
         tablaConcepto.setModel(modelo);
     }
     
+    public static void cargarModeloRRHH(DefaultTableModel modelo,List<Novedad> listaNovedad,JTable tablaOrdendelDia){
+         modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
+         for (Novedad a : listaNovedad) {
+        Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+" "+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+" "+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getCodCon()+"-"+a.getConcepto().getDescripcion(),a.getCantidad(),a.getConcepto(),a.getObservacion()}; 
+        modelo.addRow(filaNovedad);
+        }
+        Conexion.getSessionFactory().close();
+    }
+    
+    public static void prepararTablaRRHH(DefaultTableModel modelo, JTable tablaConcepto){
+        String[] titulos = {"FECHA","LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CONCEPTO","CANTIDAD", "OBSERVACION"};
+        modelo = new DefaultTableModel(null, titulos){
+            @Override
+            public boolean isCellEditable(int row, int col){
+                return false;
+            }
+        };
+        tablaConcepto.setModel(modelo);
+    }
+    
     public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades){
         
         String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
@@ -101,7 +121,6 @@ public class TablaUtil {
     public static void cargarModeloNovedades(DefaultTableModel modelo,List<Empleado> listaEmpleado,JTable tablaNovedades){
         modelo = (DefaultTableModel) tablaNovedades.getModel();
         for (Empleado n : listaEmpleado){
-//            String fecha= FechaUtil.getDateDDMMAAAA(n
             Object[] filaAsistencia = {n.getLegajo(),n.getApellido(),n.getNombre()}; 
             modelo.addRow(filaAsistencia);
         }
@@ -124,7 +143,7 @@ public class TablaUtil {
     if (listaEmpleado == null)
         JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo Empleado");
         for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getCodEmp(),a.getSucursal(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getCodEmp(),a.getSucursal().getCodSuc(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
             modelo.addRow(filaEmpleado);
         }
     }

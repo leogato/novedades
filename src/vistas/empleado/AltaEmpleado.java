@@ -11,6 +11,7 @@ import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.ConceptoDaoImp;
+import novedades.dao.imp.SucursalDaoImp;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import pojo.Empresa;
@@ -353,7 +354,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         //         try{
             //        Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
             //         if (e!=null) {
-                //            mensajero.mensajeError(this, "YA EXISTE EL EMPLEADO CON LEGAJO ="+e.getLegajo());
+                //            JOptionPane.showMessageDialog(rootPane, "EL LEGAJO YA EXISTE, INTENTE NUEVAMENTE", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
                 //            txtLegajo.setText("");
                 //            txtLegajo.requestFocus();
                 //        }else{
@@ -384,7 +385,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private void btneEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneEliminarActionPerformed
         //        limpiarVenanaEmpleado();
         //        setEnableVentanaInformacionEmpleado(true);
-        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtApellido.getText()+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
+        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtApellido.getText()+"2"+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
             Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
             new EmpleadoDaoImp().deleteEmpleado(e);
@@ -421,7 +422,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                     if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
                         Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
                         List<Empleado> lista =new EmpleadoDaoImp().listarEmpleado();
-                        new EmpleadoDaoImp().addEmpleado(e);
+                        new EmpleadoDaoImp().upDateEmpleado(e);
                         // aqui va borrar el empleado o   porque se modiico la clave primario
 
                         new EmpleadoDaoImp().deleteEmpleado(o);
@@ -438,18 +439,9 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 }
 
             }
-
-            //               setEnableVentanaInformacionEmpleado(false);
-            //               // BOTON
-            //               btnGuardar.setEnabled(false);
-            //               btnNuevo.setEnabled(true);
-            //               }catch(Exception ez){
-            //                  mensajero.mensajeError(this,"Cargue fotos con tamaño menor a 1mb ");
-            //                  lblFoto.removeAll();
-            //                  seleccionofoto=false;
-            //               }
     }//GEN-LAST:event_btnGuardarActionPerformed
-     private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
+     
+    private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
           // permitir solo el ingreso de numero
          char caracter = evt.getKeyChar();
         if(((caracter < '0') ||(caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
@@ -584,18 +576,19 @@ public class AltaEmpleado extends javax.swing.JDialog {
          }   
          return todoOk;
      }
+     
      public Empleado getDatosEmpleado(){
         
         Empleado empleado = new Empleado();
-        Empresa empresa = new Empresa();
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+        empleado.setSucursal(sucursal);
         System.out.println("Legajo "+Integer.parseInt(txtLegajo.getText()));
         empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
         empleado.setApellido(txtApellido.getText());
         empleado.setNombre(txtNombre.getText());
-        empresa.setCodEmp(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
-        System.out.println("Cod Emp "+String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0)));
-        sucursal.setNombre(cmbSucursal.getSelectedItem().toString());
+        empleado.setCodEmp(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
+        int v = Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0)));
+        System.out.println("Cod Emp "+v);
         empleado.setCuit(txtCuit.getText());
         empleado.setConvenio(txtConvenio.getText());
         empleado.setTarea(txtTarea.getText());
@@ -660,7 +653,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 cmbEmpresa.addItem(emp.getCodEmp()+"-"+ emp.getNombre());
                 System.out.println(emp.getCodEmp()+" "+emp.getNombre());
             }
-            sesion.close();
+//            sesion.close();
             //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -677,7 +670,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
             for (Sucursal suc : rsConcepto) {
                 cmbSucursal.addItem("" + suc.getCodSuc()+ " - " + suc.getNombre());
             }
-            sesion.close();
+//            sesion.close();
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
