@@ -663,7 +663,7 @@ private void deshabilitarFechas()
         Session sesion = null;
         try {
 
-            sesion = Conexion.getSessionFactory().openSession();
+            sesion = Conexion.getSession();
 
             Criteria crit = sesion.createCriteria(Concepto.class);
             List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA

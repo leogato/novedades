@@ -5,7 +5,7 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
-import static hibernateUtil.Conexion.getSessionFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
 
     @Override
     public void addEmpleado(Empleado a) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.save(a);
         session.getTransaction().commit();
@@ -35,7 +35,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
 
     @Override
     public void deleteEmpleado(Empleado a) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.delete(a);
         session.getTransaction().commit();
@@ -44,7 +44,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
 
     @Override
     public void upDateEmpleado(Empleado a) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.saveOrUpdate(a);
 //        session.update(a);
@@ -54,7 +54,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
 
     @Override
     public Empleado getEmpleado(int legajo) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Empleado a = (Empleado) session.get(Empleado.class, legajo);
         session.getTransaction().commit();
@@ -63,7 +63,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
     }
     
     public Empleado getEmpleado(String nombre){
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Empleado a = (Empleado) session.get(Empleado.class, nombre);
         session.getTransaction().commit();
@@ -83,7 +83,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
 
     @Override
     public List<Empleado> listarEmpleado() {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empleado.class);
 //        criteria.addOrder(Order.asc("legajo"));
@@ -94,7 +94,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
     }
     
     public List<Empleado> listarEmpleado(int leg, String ape, String nom) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empleado.class);
 //        criteria.addOrder(Order.asc("legajo"));

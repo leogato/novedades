@@ -5,7 +5,6 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
-import static hibernateUtil.Conexion.getSessionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import novedades.dao.UsuarioDao;
@@ -22,7 +21,7 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
 
     @Override
     public List<Usuario> listarUsuario() {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Usuario.class);
         
@@ -34,7 +33,7 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
 
     @Override
     public void addUsuario(Usuario a) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.save(a);
         session.getTransaction().commit();
@@ -42,7 +41,7 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
 
     @Override
     public void deleteUsuario(Usuario a) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.delete(a);
         session.getTransaction().commit();
@@ -51,7 +50,7 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
 
     @Override
     public void upDateUsuario(Usuario a) {
-Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.update(a);
         session.getTransaction().commit();
@@ -59,7 +58,7 @@ Session session = Conexion.getSessionFactory().openSession();
 
     @Override
     public Usuario getUsuario(int legajo) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Usuario a = (Usuario) session.get(Usuario.class,legajo);
         session.getTransaction().commit();
@@ -68,7 +67,7 @@ Session session = Conexion.getSessionFactory().openSession();
     }
     public Usuario getUsuarioAdministrador(String usuario,String clave){
         Usuario e = null;
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Usuario.class);
         criteria.add(Restrictions.eq("usuario", usuario));
@@ -85,7 +84,7 @@ Session session = Conexion.getSessionFactory().openSession();
     
     public Usuario getUsuarioLogin(String usuario){
         Usuario e = null;
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "FROM Usuario u\n" +"join fetch u.empleado as e\n" +"join fetch e.sucursal as suc\n"+"join fetch suc.empresa as emp\n" +"WHERE u.usuario = '"+usuario+"'";
         Usuario u = (Usuario)session.createQuery(sql).uniqueResult();

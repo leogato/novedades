@@ -299,7 +299,7 @@ public class AbmConceptos extends javax.swing.JDialog {
                     }
                     // agregar todas la asistencia
 
-                    Conexion.getSessionFactory().close();
+//                    Conexion.getSessionFactory().close();
                     this.dispose();
                 }
 

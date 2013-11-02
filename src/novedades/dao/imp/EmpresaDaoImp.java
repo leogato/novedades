@@ -5,7 +5,7 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
-import static hibernateUtil.Conexion.getSessionFactory;
+
 import java.util.List;
 import novedades.dao.EmpresaDao;
 import org.hibernate.Criteria;
@@ -22,7 +22,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
 
     @Override
     public List<Empresa> listarEmpresa() {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empresa.class);
         List<Empresa> lista = (List<Empresa>)criteria.list();
@@ -33,7 +33,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
 
     @Override
     public void addEmpresa(Empresa a) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.save(a);
         session.getTransaction().commit();
@@ -42,7 +42,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
 
     @Override
     public void deleteEmpresa(Empresa a) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.delete(a);
         session.getTransaction().commit();
@@ -51,7 +51,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
 
     @Override
     public void upDateEmpresa(Empresa a) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.update(a);
         session.getTransaction().commit();
@@ -60,7 +60,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
 
     @Override
     public Empresa getEmpresa(int cod_emp) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Empresa a = (Empresa) session.get(Empresa.class,cod_emp);
         session.getTransaction().commit();
@@ -70,7 +70,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
     
     public Empresa getEmpresaLogin(int cod_emp) {
         Empresa e = null;
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empresa.class);
         criteria.add(Restrictions.eq("cod_emp", cod_emp));

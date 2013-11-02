@@ -5,7 +5,7 @@
 package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
-import static hibernateUtil.Conexion.getSessionFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import novedades.dao.NovedadDao;
@@ -25,7 +25,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 
     @Override
     public List<Novedad> listarNovedad(Empleado o) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Novedad.class);
         criteria.add(Restrictions.eq("Codigo de sucursal", o.getSucursal().getCodSuc()));
@@ -36,7 +36,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 
     @Override
     public Empleado getEmpleado(Empleado a) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Empleado e = (Empleado) session.get(Empleado.class,a);
         session.getTransaction().commit();
@@ -46,7 +46,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 
     @Override
     public void deleteEmpleado(Empleado a) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.delete(a);
         session.getTransaction().commit();
@@ -55,7 +55,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 
     @Override
     public void upDateEmpleado(Empleado a) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.update(a);
         session.getTransaction().commit();
@@ -64,7 +64,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 
     @Override
     public Concepto getConcepto(Concepto e) {
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Concepto con = (Concepto) session.get(Usuario.class,e);
         session.getTransaction().commit();
@@ -74,7 +74,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
     
     @Override
     public void addNovedad(Novedad n) {
-        Session session = getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         session.save(n);
         session.getTransaction().commit();
@@ -82,7 +82,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
     }
 
     public List<Novedad> listarNovedad(String cad){
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Novedad.class);
         ArrayList<Novedad> novedad = (ArrayList<Novedad>)criteria.list();
@@ -91,7 +91,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
     }
     
     public Novedad getFecha(String fec){
-        Session session = Conexion.getSessionFactory().openSession();
+       Session session = Conexion.getSession();
         session.beginTransaction();
         Novedad con = (Novedad) session.get(Novedad.class,fec);
         session.getTransaction().commit();

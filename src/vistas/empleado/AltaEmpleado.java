@@ -434,7 +434,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                     }
                     // agregar todas la asistencia
 
-                    Conexion.getSessionFactory().close();
+//                    Conexion.getSessionFactory().close();
                     this.dispose();
                 }
 
@@ -644,7 +644,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
     public void llenaCmbEmpresa() {
         Session sesion = null;
         try {
-            sesion = Conexion.getSessionFactory().openSession();
+            sesion = Conexion.getSession();
             Criteria crit = sesion.createCriteria(Empresa.class);
             List<Empresa> rsConcepto = crit.list();// SELECT * FROM TABLA
             cmbEmpresa.removeAllItems();
@@ -663,7 +663,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private void llenaCmbSucursal() {
         Session sesion = null;
         try {
-            sesion = Conexion.getSessionFactory().openSession();
+            sesion = Conexion.getSession();
             Criteria crit = sesion.createCriteria(Sucursal.class);
             List<Sucursal> rsConcepto = crit.list();// SELECT * FROM TABLA
             cmbSucursal.removeAllItems();

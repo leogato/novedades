@@ -320,7 +320,7 @@ public class cargaNovedades extends javax.swing.JDialog {
         Session sesion = null;
         try {
 
-            sesion = Conexion.getSessionFactory().openSession();
+            sesion = Conexion.getSession();
 
             Criteria crit = sesion.createCriteria(Concepto.class);
             List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
@@ -352,7 +352,7 @@ public class cargaNovedades extends javax.swing.JDialog {
         try {
             String sql = "SELECT * FROM EMPRESA WHERE nombre LIKE '%"+valor+"%'";
             Conexion con = new Conexion();
-            Connection conn = con.getSessionFactory().openSession().connection();
+            Connection conn = con.getSession().connection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             lblEmpresa.setText(rs.toString());

@@ -73,7 +73,7 @@ public class TablaUtil {
         Object[] filaNovedad = {a.getCodCon(),a.getDescripcion(),a.getTipo(),a.getCargaUser()}; 
         modelo.addRow(filaNovedad);
     }
-        Conexion.getSessionFactory().close();
+//        Conexion.getSessionFactory().close();
 }
     
     public static void prepararTablaConcepto(DefaultTableModel modelo, JTable tablaConcepto){
@@ -93,7 +93,7 @@ public class TablaUtil {
         Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+" "+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+" "+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getCodCon()+"-"+a.getConcepto().getDescripcion(),a.getCantidad(),a.getConcepto(),a.getObservacion()}; 
         modelo.addRow(filaNovedad);
         }
-        Conexion.getSessionFactory().close();
+//        Conexion.getSessionFactory().close();
     }
     
     public static void prepararTablaRRHH(DefaultTableModel modelo, JTable tablaConcepto){
@@ -124,7 +124,7 @@ public class TablaUtil {
             Object[] filaAsistencia = {n.getLegajo(),n.getApellido(),n.getNombre()}; 
             modelo.addRow(filaAsistencia);
         }
-        Conexion.getSessionFactory().close();
+//        Conexion.getSessionFactory().close();
     }
     
   public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
