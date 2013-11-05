@@ -26,7 +26,7 @@ import vistas.usuario.Login;
  */
 public class principal extends javax.swing.JFrame {
     
-    Usuario usuario;
+    Usuario usuario= new Usuario();
     /**
      * Creates new form principal
      */

@@ -46,7 +46,7 @@ public class cargaNovedades extends javax.swing.JDialog {
     private Empleado e = new Empleado();
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
-    private Usuario usuario;
+    private Usuario usuario= new Usuario();
     private Calendar cal = new GregorianCalendar();
     private boolean si;
     private Login login = new Login();
@@ -85,8 +85,8 @@ public class cargaNovedades extends javax.swing.JDialog {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         lblFecha.setText(sdf.format(date));
         
-//        lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
-        System.out.println("Usuario: "+usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
+      lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
+        System.out.println("Usuario: "+this.usuario.getTipo());
 //        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
         setLocationRelativeTo(this);
         setVisible(true);
