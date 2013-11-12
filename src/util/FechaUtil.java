@@ -1,5 +1,6 @@
 package util;
 
+import java.text.SimpleDateFormat;
 import static util.FechaUtil.getAnio;
 import static util.FechaUtil.getDia;
 import static util.FechaUtil.getDiaString;
@@ -15,6 +16,13 @@ import java.util.GregorianCalendar;
  */
 public class FechaUtil {
     
+    
+     public static String getFechaString10DDMMAAAA (Date fecha){
+        
+         Date date = new Date();
+         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");     
+         return sdf.format(fecha);
+    }
  
     /**
      * 

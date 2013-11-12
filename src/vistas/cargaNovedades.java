@@ -80,6 +80,17 @@ public class cargaNovedades extends javax.swing.JDialog {
         lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
         System.out.println("Usuario: "+this.usuario.getTipo());
         lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
+        
+        // si el usuario ya cargo novedad cuando ingrese a esta ventana solo puede ver y no cargar 
+        // en sintesis se debe inhabilitar el boton carga
+//        if (usuario.getCargo() && usuario.getUltimoIngreso().equals(new Date())) {
+        if (usuario.getCargo()) {
+           btnCargar.setEnabled(false);
+           // mostrar las novedades  cargados en la tabla
+       }
+        if (usuario.getUltimoIngreso().equals(new Date())) {
+            System.out.println("son iguales las fechas")  ;             
+        }
         setLocationRelativeTo(this);
         setVisible(true);
         
@@ -228,6 +239,7 @@ public class cargaNovedades extends javax.swing.JDialog {
             System.out.println(i);
             getDatosTabla(i);
             novedad.setFecha(lblFecha.getText().toString());
+            usuario.setCargo(true);
             new NovedadDaoImp().addNovedad(novedad);
         }
         JOptionPane.showMessageDialog(rootPane, "Los datos fueron cargados correctamente");
