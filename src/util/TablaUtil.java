@@ -111,8 +111,15 @@ public class TablaUtil {
         
         String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
         modelo = new DefaultTableModel(null, titulos){
-            public boolean isCelEditable(int row,int col){
-                return false;
+            @Override
+            public boolean isCellEditable(int row,int col){
+                boolean b = false;
+                if (col == 4){
+                    b = false;
+                }else{
+                    b= true;
+                }
+                return b;
             }
         };
         tablaNovedades.setModel(modelo);
@@ -121,7 +128,7 @@ public class TablaUtil {
     public static void cargarModeloNovedades(DefaultTableModel modelo,List<Empleado> listaEmpleado,JTable tablaNovedades){
         modelo = (DefaultTableModel) tablaNovedades.getModel();
         for (Empleado n : listaEmpleado){
-            Object[] filaAsistencia = {n.getLegajo(),n.getApellido(),n.getNombre(),"0-Sin Novedad"}; 
+            Object[] filaAsistencia = {n.getLegajo(),n.getApellido(),n.getNombre(),"Sin Novedad"}; 
             modelo.addRow(filaAsistencia);
         }
 //        Conexion.getSessionFactory().close();

@@ -113,6 +113,18 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
 //         session.close();
           return lista;
     }
+
+    @Override
+    public Concepto getConceptoHql(String descripcion) {
+        Concepto con = null;
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql = "from Concepto u\n"+"Where u.tipo = '"+descripcion+"'";
+        con = (Concepto)session.createQuery(sql).uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return con;
+    }
    
   
 

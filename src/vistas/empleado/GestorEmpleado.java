@@ -158,6 +158,11 @@ public class GestorEmpleado extends javax.swing.JDialog {
         cmbFiltro.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
         cmbFiltro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nombre", "Legajo" }));
         cmbFiltro.setAnchoDeBorde(2.0F);
+        cmbFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbFiltroActionPerformed(evt);
+            }
+        });
 
         txtEmpleado.setBackground(new java.awt.Color(102, 102, 102));
         txtEmpleado.setForeground(new java.awt.Color(255, 255, 255));
@@ -379,6 +384,10 @@ public class GestorEmpleado extends javax.swing.JDialog {
 private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_btnReporteActionPerformed
+
+    private void cmbFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFiltroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbFiltroActionPerformed
       private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
           // permitir solo el ingreso de numero
          char caracter = evt.getKeyChar();

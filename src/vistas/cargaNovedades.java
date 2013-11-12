@@ -5,6 +5,7 @@
 package vistas;
 
 import hibernateUtil.Conexion;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -33,6 +34,7 @@ import javax.swing.table.TableColumn;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
+import novedades.dao.imp.UsuarioDaoImp;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -67,7 +69,32 @@ public class cargaNovedades extends javax.swing.JDialog {
         cargarTablaNovedades();
         
         llenaJComboBoxInvestigacion();
+         jcb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbFiltroActionPerformed(evt);
+            }
+
+            private void jcbFiltroActionPerformed(ActionEvent evt) {
+                if(!isCualitiva(jcb.getSelectedItem().toString())){
+                   // bloquear las columna 4
+                 int fila= tblNovedadesUsr.getSelectedRow();
+                 tblNovedadesUsr.setColumnSelectionInterval(fila, 4);
+                }
+            }
+
+            private boolean isCualitiva(String descrip) {
+                boolean b= false;
+                Concepto c = new ConceptoDaoImp().getConceptoHql(descrip);
+                System.out.println("Descripcion "+c.getDescripcion());
+                if ("CUALITATIVA".equalsIgnoreCase(c.getTipo())) {
+                   b= true;  
+                } 
+           
+                return b;
+            }
+        });
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
+        
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
         tblNovedadesUsr.setAutoCreateRowSorter(true);
@@ -84,13 +111,20 @@ public class cargaNovedades extends javax.swing.JDialog {
         // si el usuario ya cargo novedad cuando ingrese a esta ventana solo puede ver y no cargar 
         // en sintesis se debe inhabilitar el boton carga
 //        if (usuario.getCargo() && usuario.getUltimoIngreso().equals(new Date())) {
-        if (usuario.getCargo()) {
+//        usuario.setCargo(false);
+        String ultimoing= util.FechaUtil.getFechaString10DDMMAAAA(usuario.getUltimoIngreso());
+        String hoy= util.FechaUtil.getFechaString10DDMMAAAA(new Date());
+        if (!ultimoing.equals(hoy)) {
+           usuario.setCargo(false);
+           btnCargar.setEnabled(true);
+       }else if (usuario.getCargo() ) {
            btnCargar.setEnabled(false);
            // mostrar las novedades  cargados en la tabla
+           
+           
        }
-        if (usuario.getUltimoIngreso().equals(new Date())) {
-            System.out.println("son iguales las fechas")  ;             
-        }
+         
+        
         setLocationRelativeTo(this);
         setVisible(true);
         
@@ -234,13 +268,14 @@ public class cargaNovedades extends javax.swing.JDialog {
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
         
-        tblNovedadesUsr.getCellEditor().stopCellEditing();
+//        tblNovedadesUsr.getCellEditor().stopCellEditing();
         for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
             System.out.println(i);
             getDatosTabla(i);
             novedad.setFecha(lblFecha.getText().toString());
             usuario.setCargo(true);
             new NovedadDaoImp().addNovedad(novedad);
+            new UsuarioDaoImp().upDateUsuario(usuario);
         }
         JOptionPane.showMessageDialog(rootPane, "Los datos fueron cargados correctamente");
 //        if ()
@@ -297,7 +332,8 @@ public class cargaNovedades extends javax.swing.JDialog {
 //                List<Concepto> liscon = (List<Concepto>)session.createQuery(sql); esto me genera problemas, no me trae nada a la lista y nunca pasa de esta linea
                 List<Concepto> liscon = crit.list();
                 for (Concepto inv : liscon){
-                    jcb.addItem(inv.getCodCon()+" - "+inv.getDescripcion());
+//                    jcb.addItem(inv.getCodCon()+" - "+inv.getDescripcion());
+                    jcb.addItem(inv.getDescripcion());
                     i++;
                 }
                 session.close();
@@ -307,7 +343,7 @@ public class cargaNovedades extends javax.swing.JDialog {
                 List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
                 jcb.removeAllItems();
                 for (Concepto inv : rsConcepto) {
-                    jcb.addItem("" + inv.getCodCon()+ " - " + inv.getDescripcion());
+                    jcb.addItem(inv.getDescripcion());
                 }
                 session.close();
             }

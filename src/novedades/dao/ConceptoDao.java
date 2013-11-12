@@ -17,6 +17,7 @@ public interface ConceptoDao {
     
   public List<Concepto> listarConcepto();
   public Concepto getConcepto(boolean carga);
+  public Concepto getConceptoHql(String descripcion);
   public void addConcepto(Concepto a);
   public void deleteConcepto(Concepto a);
   public void upDateConcepto(Concepto a);
