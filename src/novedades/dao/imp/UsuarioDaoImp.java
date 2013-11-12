@@ -67,16 +67,12 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
     }
     public Usuario getUsuarioAdministrador(String usuario,String clave){
         Usuario e = null;
-       Session session = Conexion.getSession();
+        Session session = Conexion.getSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Usuario.class);
-        criteria.add(Restrictions.eq("usuario", usuario));
-        criteria.add(Restrictions.eq("clave", clave));
-        
-        List<Usuario> lista = (List<Usuario>)criteria.list();
-        if (lista.size()!=0) {
-            e = lista.get(0);
-        }         
+        e = (Usuario) session.createQuery("from Usuario u\n"+"join fetch u.empleado as e\n"+
+                "join fetch e.sucursal as suc\n"+
+                "join fetch suc.empresa as emp\n"+
+                "where u.usuario = '"+usuario+"' and u.clave = '"+clave+"'").uniqueResult();
         session.getTransaction().commit();
         session.close();
         return e;
@@ -84,9 +80,12 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
     
     public Usuario getUsuarioLogin(String usuario){
         Usuario e = null;
-       Session session = Conexion.getSession();
+        Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "FROM Usuario u\n" +"join fetch u.empleado as e\n" +"join fetch e.sucursal as suc\n"+"join fetch suc.empresa as emp\n" +"WHERE u.usuario = '"+usuario+"'";
+        String sql = "FROM Usuario u\n" +"join fetch u.empleado as e\n" +
+        "join fetch e.sucursal as suc\n"+
+        "join fetch suc.empresa as emp\n" +
+        "WHERE u.usuario = '"+usuario+"'";
         e = (Usuario)session.createQuery(sql).uniqueResult();
 //        Criteria criteria = session.createCriteria(Usuario.class);
 //        criteria.add(Restrictions.eq("usuario", usuario));

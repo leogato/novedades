@@ -5,6 +5,11 @@
 package vistas;
 
 import hibernateUtil.Conexion;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +21,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -26,6 +35,7 @@ import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
@@ -40,56 +50,40 @@ import vistas.usuario.Login;
  * @author usuario
  */
 public class cargaNovedades extends javax.swing.JDialog {
-    private List<Empleado> listaConcepto;
-    private List<Novedad> listaNov;
     private DefaultTableModel modelo;
     private Empleado e = new Empleado();
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
     private Usuario usuario= new Usuario();
-    private Calendar cal = new GregorianCalendar();
-    private boolean si;
-    private Login login = new Login();
-    JComboBox jcb = new JComboBox();
     int legajo = 0;
     Date date = new Date();
+    Date ultimaCarga;
+    JComboBox jcb = new JComboBox();
 
-    public cargaNovedades(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        cargarTablaNovedades();
-//        cargaEmpresa(Login.usuario);
-        llenaJComboBoxInvestigacion();
-        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
-        TableCellEditor tce = new DefaultCellEditor(jcb);
-        tc.setCellEditor(tce);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        lblFecha.setText(sdf.format(date));
-        
-        lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
-        System.out.println("Usuario: "+usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
-//        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
-        setLocationRelativeTo(this);
-        setVisible(true);
-    }
    public cargaNovedades(java.awt.Frame parent, boolean modal, Usuario usuario) {
         super(parent, modal);
         initComponents();
         this.usuario = usuario;
         cargarTablaNovedades();
-//        cargaEmpresa(Login.usuario);
+        
         llenaJComboBoxInvestigacion();
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
+        tblNovedadesUsr.setAutoCreateRowSorter(true);
+        
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         lblFecha.setText(sdf.format(date));
+        ultimaCarga = new Date(sdf.format(date));
+        System.out.println("Ultima Carga: "+ultimaCarga);
         
-      lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
+        lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
         System.out.println("Usuario: "+this.usuario.getTipo());
-//        lblSucursal.setText(e.getSucursal().getCodSuc()+"-"+e.getSucursal().getNombre());
+        lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
         setLocationRelativeTo(this);
         setVisible(true);
+        
+        usuario.setUltimoIngreso(new Date());
     }
            
     public cargaNovedades(){
@@ -127,6 +121,11 @@ public class cargaNovedades extends javax.swing.JDialog {
                 btnCargarActionPerformed(evt);
             }
         });
+        btnCargar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnCargarKeyPressed(evt);
+            }
+        });
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
         btnSalir.setText("Salir");
@@ -140,12 +139,13 @@ public class cargaNovedades extends javax.swing.JDialog {
 
         tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null}
+                {null, null, null, "0 - Sin Novedad", null, null}
             },
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
             }
         ));
+        tblNovedadesUsr.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblNovedadesUsr);
 
         lblEmpresa.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
@@ -222,66 +222,25 @@ public class cargaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
-//        try{
-            for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-                System.out.println(i);
-                getDatosTabla(i);
-                new NovedadDaoImp().addNovedad(novedad);
-                novedad.setFecha(lblFecha.getText().toString());
-                new NovedadDaoImp().addNovedad(novedad);
-                
-            }
-//        }catch(NullPointerException ex){
-//            JOptionPane.showMessageDialog(null, "El campo CONCEPTO no debe estar vacio", "ATENCION!", 1);
-//        }
         
-        
-        
+        tblNovedadesUsr.getCellEditor().stopCellEditing();
+        for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
+            System.out.println(i);
+            getDatosTabla(i);
+            novedad.setFecha(lblFecha.getText().toString());
+            new NovedadDaoImp().addNovedad(novedad);
+        }
+        JOptionPane.showMessageDialog(rootPane, "Los datos fueron cargados correctamente");
+//        if ()
+        this.dispose();
         
     }//GEN-LAST:event_btnCargarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(cargaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(cargaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(cargaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(cargaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnCargarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnCargarKeyPressed
+        
+    }//GEN-LAST:event_btnCargarKeyPressed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                cargaNovedades dialog = new cargaNovedades(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnCargar;
     private org.edisoncor.gui.button.ButtonIpod btnSalir;
@@ -294,51 +253,56 @@ public class cargaNovedades extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void cargarTablaNovedades(){
-        listaConcepto = new EmpleadoDaoImp().listarEmpleado(e.getLegajo(),e.getApellido(),e.getNombre());
+        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
-        util.TablaUtil.cargarModeloNovedades(modelo, listaConcepto, tblNovedadesUsr);
+        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
     }
-    
+     
     private void getDatosTabla(int i){
-            e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString()));
-            novedad.setEmpleado(e);
-            c = new ConceptoDaoImp().getConcepto(Integer.parseInt(String.valueOf(tblNovedadesUsr.getValueAt(i, 3).toString().charAt(0))));
-            novedad.setConcepto(c);
-            novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 4).toString()));
-            novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 5).toString());
-            System.out.println(lblFecha.getText());
-            System.out.println();
+        e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString()));
+        novedad.setEmpleado(e);
+        c = new ConceptoDaoImp().getConcepto(Integer.parseInt(String.valueOf(tblNovedadesUsr.getValueAt(i, 3).toString().charAt(0))));
+        novedad.setConcepto(c);
+        novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 4).toString()));
+        novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 5).toString());
+        System.out.println(lblFecha.getText());
+        System.out.println();
             
     }
     
-    private boolean isBotonApretado(){
-        System.out.println("no se por donde empezaaaaaarrrrrrrr");
-        return si;
-    }
-            
+       
    public void llenaJComboBoxInvestigacion() {
-        Session sesion = null;
+        Session session = null;
+        int i = 0;
         try {
-
-            sesion = Conexion.getSession();
-
-            Criteria crit = sesion.createCriteria(Concepto.class);
-            List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
-
-            jcb.removeAllItems();
-
-            for (Concepto inv : rsConcepto) {
-                jcb.addItem("" + inv.getCodCon()+ " - " + inv.getDescripcion());
+            if (usuario.getTipo().equals("COMUN")){
+                session = Conexion.getSession();
+//                session.beginTransaction();
+                boolean cargar = true;
+                Criteria crit = session.createCriteria(Concepto.class);
+//                String sql = "from Concepto u\n"+"Where u.cargaUser = '"+cargar+"'";
+                crit.add(Restrictions.eq("cargaUser", cargar));
+//                List<Concepto> liscon = (List<Concepto>)session.createQuery(sql); esto me genera problemas, no me trae nada a la lista y nunca pasa de esta linea
+                List<Concepto> liscon = crit.list();
+                for (Concepto inv : liscon){
+                    jcb.addItem(inv.getCodCon()+" - "+inv.getDescripcion());
+                    i++;
+                }
+                session.close();
+            }else{
+                session = Conexion.getSession();
+                Criteria crit = session.createCriteria(Concepto.class);
+                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+                jcb.removeAllItems();
+                for (Concepto inv : rsConcepto) {
+                    jcb.addItem("" + inv.getCodCon()+ " - " + inv.getDescripcion());
+                }
+                session.close();
             }
-
-            sesion.close();
-
-            //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
-
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
+   }      
    
    public void cargaCantidad(){
 //       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
@@ -346,20 +310,6 @@ public class cargaNovedades extends javax.swing.JDialog {
        if(con.getCargaUser()){
 //           tblNovedadesUsr.set;
        }
-   }
-   
-   public void cargaEmpresa(String valor){
-        try {
-            String sql = "SELECT * FROM EMPRESA WHERE nombre LIKE '%"+valor+"%'";
-            Conexion con = new Conexion();
-            Connection conn = con.getSession().connection();
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            lblEmpresa.setText(rs.toString());
-        } catch (SQLException ex) {
-            Logger.getLogger(cargaNovedades.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
    }
    
 }

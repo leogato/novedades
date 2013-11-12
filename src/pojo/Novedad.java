@@ -1,5 +1,5 @@
 package pojo;
-// Generated 30/10/2013 11:25:34 by Hibernate Tools 3.2.1.GA
+// Generated 05/11/2013 00:51:52 by Hibernate Tools 3.2.1.GA
 
 
 
@@ -62,10 +62,10 @@ public class Novedad  implements java.io.Serializable {
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
+    
     public String getObservacion() {
         return this.observacion;
-    }
-    
+    }    
     public void setObservacion(String observacion) {
         this.observacion = observacion;
     }

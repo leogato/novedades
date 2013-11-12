@@ -4,17 +4,17 @@
  */
 package vistas;
 
-import vistas.usuario.abmUsuario;
 import vistas.empleado.AltaEmpleado;
 import vistas.empleado.GestorEmpleado;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.List;
 import javax.swing.JMenuBar;
+import pojo.Concepto;
 import pojo.Usuario;
 import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
-import vistas.empresa.AltaEmpresa;
 import vistas.empresa.AltaEmpresa2;
 import vistas.usuario.AltaUsuario;
 import vistas.usuario.GestorUsuario;
@@ -27,6 +27,7 @@ import vistas.usuario.Login;
 public class principal extends javax.swing.JFrame {
     
     Usuario usuario= new Usuario();
+    List<Concepto> con;
     /**
      * Creates new form principal
      */
@@ -82,7 +83,7 @@ public class principal extends javax.swing.JFrame {
         mnuGestorEmpleados = new javax.swing.JMenuItem();
         mnuAltaEmpleados = new javax.swing.JMenuItem();
         mnuUsuario = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mnuItmGestorUsuario = new javax.swing.JMenuItem();
         mnuABMUsuario = new javax.swing.JMenuItem();
         mnuEmpresa = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -202,13 +203,13 @@ public class principal extends javax.swing.JFrame {
 
         mnuUsuario.setText("Usuarios");
 
-        jMenuItem1.setText("Gestor de Usuarios");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mnuItmGestorUsuario.setText("Gestor de Usuarios");
+        mnuItmGestorUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mnuItmGestorUsuarioActionPerformed(evt);
             }
         });
-        mnuUsuario.add(jMenuItem1);
+        mnuUsuario.add(mnuItmGestorUsuario);
 
         mnuABMUsuario.setText("Alta de Usuarios");
         mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -288,7 +289,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuNovedadesActionPerformed
 
     private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
-        this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_mnuSalirActionPerformed
 
     private void mnuItmCargaNovedadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCargaNovedadesActionPerformed
@@ -311,9 +312,9 @@ public class principal extends javax.swing.JFrame {
         new GestorEmpleado(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuGestorEmpleadosActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mnuItmGestorUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmGestorUsuarioActionPerformed
         new GestorUsuario(this, rootPaneCheckingEnabled);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mnuItmGestorUsuarioActionPerformed
 
     private void mnuItmLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmLoginActionPerformed
         Login login = new Login(this, true);
@@ -336,6 +337,7 @@ public class principal extends javax.swing.JFrame {
         setConfiguracionMenuAdministrador(false);
         mnuItmLogin.setEnabled(true);
         mnuSalir.setEnabled(true);
+        usuario = null;
     }//GEN-LAST:event_mnuItmCloseActionPerformed
 
     private void mnuItmGestorConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmGestorConceptoActionPerformed
@@ -383,7 +385,6 @@ public class principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.varios.ClockDigital clkHora;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -401,6 +402,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuItmCargaNovedades;
     private javax.swing.JMenuItem mnuItmClose;
     private javax.swing.JMenuItem mnuItmGestorConcepto;
+    private javax.swing.JMenuItem mnuItmGestorUsuario;
     private javax.swing.JMenuItem mnuItmLogin;
     private javax.swing.JMenuItem mnuItmNovedadesRRHH;
     private javax.swing.JMenu mnuNovedades;

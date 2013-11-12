@@ -4,13 +4,13 @@
  */
 package vistas.usuario;
 
-import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
-import novedades.dao.imp.EmpleadoDaoImp;
+import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
-import pojo.Empleado;
+import pojo.Concepto;
 import pojo.Novedad;
 import pojo.Usuario;
 
@@ -27,6 +27,7 @@ public class Login extends javax.swing.JDialog {
      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
      String adm = "ADMINISTRADOR";
      Usuario e;
+     Concepto con;
      
     public boolean isBotonAceptar() {
         return BotonAceptar;
@@ -165,17 +166,23 @@ public class Login extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 30, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-     //         EmpleadoDaoImp empleados = new EmpleadoDaoImp();
-         String fecha_login="";
+
+    String fecha_login="";
          try{
+                // obtengo el usuario que se logueo
              e = new UsuarioDaoImp().getUsuarioAdministrador(txtUsuario.getText(), txtClave.getText());
+                // actualizo la ultima fecha de  ingreso del usuario
+             e.setUltimoIngreso(new Date());
+             new UsuarioDaoImp().upDateUsuario(e);
+                //.........
+             
              String tipo = e.getTipo();
              if (e!=null) {// si existe el  usuario y es administrador
                  if(tipo.equals(adm)){
@@ -185,12 +192,10 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     this.dispose();
                     JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ e.getUsuario());
                  }else if(tipo.equals("COMUN")){
-                     System.out.println("Es comun");
-                     System.out.println("Fecha actual "+fecha_login);
-                     System.out.println("Fecha "+sdf.format(fecha));
                      if(!fecha_login.equals(sdf.format(fecha))){
                         BotonAceptar = true;
                         comun = true;
+//                        con = new ConceptoDaoImp().getConcepto(comun);
                         fecha_login = sdf.format(fecha);//capturo la fecha actual en una cadena
                         System.out.println("Fecha actual "+fecha_login);
                         this.dispose();
@@ -217,7 +222,7 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              JOptionPane.showMessageDialog(this, "Sus datos son incorrectos, intente nuevamente", "Error", JOptionPane.ERROR_MESSAGE);
              setearDatos();
          }
-        e = new UsuarioDaoImp().getUsuarioLogin(e.getUsuario());
+//        e = new UsuarioDaoImp().getUsuarioLogin(e.getUsuario());
          
 }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -312,6 +317,14 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     public void setUsuario(Usuario usuario) {
         this.e = usuario;
+    }
+
+    public Concepto getCon() {
+        return con;
+    }
+
+    public void setCon(Concepto con) {
+        this.con = con;
     }
     
 }

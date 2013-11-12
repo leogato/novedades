@@ -4,6 +4,7 @@
  */
 package novedades.dao;
 
+import java.util.List;
 import pojo.Concepto;
 import pojo.Empleado;
 
@@ -13,9 +14,12 @@ import pojo.Empleado;
  * @author Joel
  */
 public interface ConceptoDao {
-  java.util.List<Concepto> listarConcepto();
+    
+  public List<Concepto> listarConcepto();
+  public Concepto getConcepto(boolean carga);
   public void addConcepto(Concepto a);
   public void deleteConcepto(Concepto a);
   public void upDateConcepto(Concepto a);
   public Concepto getConcepto(int idConcepto);
+  
 }

@@ -93,8 +93,18 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         return lista;
     }
     
+        public List<Empleado> listarEmpleado(int codEmp, int codSuc){
+            Session session = Conexion.getSession();
+            session.beginTransaction();
+            List<Empleado> lista = (List<Empleado>)session.createQuery("from Empleado as e\n" +
+            "join fetch e.sucursal as suc\n" +
+            "join fetch suc.empresa as emp\n" +
+            "where emp.codEmp = '"+codEmp+"' and suc.codSuc = '"+codSuc+"'").list();
+            return lista;
+    }
+    
     public List<Empleado> listarEmpleado(int leg, String ape, String nom) {
-       Session session = Conexion.getSession();
+        Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empleado.class);
 //        criteria.addOrder(Order.asc("legajo"));
