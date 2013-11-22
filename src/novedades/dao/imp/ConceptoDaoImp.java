@@ -103,13 +103,30 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
          return lista;
     }
     
-    public List<Novedad> listarNovedad(Date fechaInicio) {
+    public List<Novedad> listarNovedad(Date fechaInicio, Date fechaFin) {
+       Session session = Conexion.getSession();
+       Criteria criteria = session.createCriteria(Novedad.class);
+       criteria.add( Restrictions.ge("fecha", fechaInicio) );
+       criteria.add( Restrictions.ge("fecha", fechaFin) );
+       List<Novedad> lista = criteria.list();
+       return lista;
+    }
+    
+//    public List<Novedad> listarNovedad(Date fechaInicio, Date fechaFin) {
+//       Session session = Conexion.getSession();
+//       List<Novedad> lista = .list();
+//       return lista;
+//    }
+    
+    public List<Novedad> listarNovedad(Empleado e,Date fechaInicio, Date fechaFin) {
        Session session = Conexion.getSession();
           Criteria criteria = session.createCriteria(Novedad.class);
 //          criteria.addOrder(Order.asc("fecha"));
-//         criteria.addOrder(Order.asc("idAsistencia"));
-         criteria.add( Restrictions.ge("fecha", fechaInicio) );
-         List<Novedad> lista = criteria.list();
+         criteria.addOrder(Order.asc("idAsistencia"));
+          criteria.add(Restrictions.eq("empleado", e));
+          criteria.add( Restrictions.ge("fecha", fechaInicio) );
+          criteria.add( Restrictions.ge("fecha", fechaFin) );
+          List<Novedad> lista = criteria.list();
 //         session.close();
           return lista;
     }

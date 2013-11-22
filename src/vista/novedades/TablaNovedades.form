@@ -31,7 +31,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="panel1" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="panel1" min="-2" pref="1155" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -54,14 +57,14 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="panelShadow2" alignment="1" pref="1192" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="panelShadow1" min="-2" max="-2" attributes="0"/>
                               <Component id="jScrollPane1" alignment="0" min="-2" pref="1130" max="-2" attributes="0"/>
-                              <Component id="panelShadow1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="panelShadow2" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -69,12 +72,12 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="panelShadow2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="119" max="-2" attributes="0"/>
-                  <EmptySpace pref="29" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="panelShadow1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -192,6 +195,9 @@
                     <Property name="angulo" type="int" value="120"/>
                     <Property name="distanciaDeSombra" type="int" value="45"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImprimirActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="org.edisoncor.gui.button.ButtonIcon" name="btnNuevo">
                   <Properties>
@@ -252,20 +258,20 @@
                       <Component id="btnBuscar" min="-2" pref="67" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="panelTranslucidoComplete2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="panelTranslucidoComplete2" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       <Component id="btnBuscar" min="-2" pref="67" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="panelTranslucidoComplete2" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -276,19 +282,124 @@
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-                <Property name="useNullLayout" type="boolean" value="false"/>
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="labelMetric1" min="-2" pref="81" max="-2" attributes="0"/>
+                                  <EmptySpace min="19" pref="19" max="-2" attributes="0"/>
+                                  <Component id="cmbConcepto" min="-2" pref="273" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" alignment="1" attributes="0">
+                                                  <EmptySpace max="-2" attributes="0"/>
+                                                  <Component id="labelMetric4" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                      <Component id="cmbSucursal" pref="191" max="32767" attributes="0"/>
+                                                      <Component id="cmbEmpresa" max="32767" attributes="0"/>
+                                                  </Group>
+                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Component id="fechaInicio" min="-2" pref="145" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                                          <Component id="labelMetric2" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" min="-2" pref="44" max="-2" attributes="0"/>
+                                  <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
+                                  <Component id="fechaFin" min="-2" pref="146" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="labelMetric3" min="-2" pref="81" max="-2" attributes="0"/>
+                                  <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                                  <Component id="cmbBusqueda" min="-2" pref="273" max="-2" attributes="0"/>
+                                  <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                                  <Component id="txtBusqueda" min="-2" pref="191" max="-2" attributes="0"/>
+                                  <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                                  <Component id="rdbHoy" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="74" pref="74" max="-2" attributes="0"/>
+                                  <Component id="rdbMes" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="75" pref="75" max="-2" attributes="0"/>
+                                  <Component id="rdbFecha" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
+                                  <Component id="labelMetric3" min="-2" pref="20" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
+                                  <Component id="cmbBusqueda" min="-2" pref="23" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
+                                  <Component id="txtBusqueda" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="rdbHoy" min="-2" max="-2" attributes="0"/>
+                              <Component id="rdbMes" min="-2" max="-2" attributes="0"/>
+                              <Component id="rdbFecha" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Component id="labelMetric1" min="-2" pref="20" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                                  <Component id="labelMetric4" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="cmbConcepto" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                                      <Component id="cmbEmpresa" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                                  <Component id="fechaInicio" min="-2" pref="29" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="labelMetric2" min="-2" pref="20" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" min="-2" pref="33" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                                  <Component id="fechaFin" min="-2" pref="29" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cmbSucursal" min="-2" pref="23" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
               </Layout>
               <SubComponents>
                 <Component class="org.edisoncor.gui.label.LabelMetric" name="labelMetric1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Conceptos"/>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="10" y="50" width="81" height="20"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="org.edisoncor.gui.textField.TextFieldRoundIcon" name="txtBusqueda">
                   <Properties>
@@ -297,11 +408,6 @@
                       <Font name="Bookman Old Style" size="14" style="0"/>
                     </Property>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="403" y="11" width="191" height="-1"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdbHoy">
                   <Properties>
@@ -322,11 +428,6 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbHoyActionPerformed"/>
                   </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="612" y="7" width="-1" height="-1"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdbMes">
                   <Properties>
@@ -347,11 +448,6 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbMesActionPerformed"/>
                   </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="731" y="7" width="-1" height="-1"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdbFecha">
                   <Properties>
@@ -372,11 +468,6 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbFechaActionPerformed"/>
                   </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="887" y="7" width="-1" height="-1"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="fechaInicio">
                   <Properties>
@@ -395,11 +486,6 @@
                       <Connection code="new Date()" type="code"/>
                     </Property>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="612" y="49" width="145" height="29"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
@@ -412,11 +498,6 @@
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="text" type="java.lang.String" value="Y"/>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="780" y="49" width="44" height="33"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="fechaFin">
                   <Properties>
@@ -435,43 +516,16 @@
                       <Connection code="new Date()" type="code"/>
                     </Property>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="846" y="49" width="146" height="29"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="org.edisoncor.gui.label.LabelMetric" name="labelMetric2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Sucursal"/>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="460" y="40" width="-1" height="20"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="org.edisoncor.gui.textField.TextFieldRoundIcon" name="txtSucursal">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Bookman Old Style" size="14" style="0"/>
-                    </Property>
-                  </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="400" y="60" width="191" height="-1"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="org.edisoncor.gui.label.LabelMetric" name="labelMetric3">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Busqueda"/>
                   </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="10" y="14" width="81" height="20"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbBusqueda">
                   <Properties>
@@ -491,18 +545,17 @@
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbBusquedaItemStateChanged"/>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbBusquedaActionPerformed"/>
                   </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="109" y="11" width="273" height="23"/>
-                    </Constraint>
-                  </Constraints>
                 </Component>
                 <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbConcepto">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="110" y="50" width="273" height="23"/>
-                    </Constraint>
-                  </Constraints>
+                </Component>
+                <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbEmpresa">
+                </Component>
+                <Component class="org.edisoncor.gui.label.LabelMetric" name="labelMetric4">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Empresa"/>
+                  </Properties>
+                </Component>
+                <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbSucursal">
                 </Component>
               </SubComponents>
             </Container>
@@ -540,16 +593,72 @@
                   <Font name="Calibri" size="12" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="9" rowCount="5">
-                    <Column editable="true" title="FECHA" type="java.lang.Object"/>
-                    <Column editable="true" title="LEGAJO" type="java.lang.Integer"/>
-                    <Column editable="true" title="APELLIDO" type="java.lang.String"/>
-                    <Column editable="true" title="NOMBRE" type="java.lang.String"/>
-                    <Column editable="true" title="EMPRESA" type="java.lang.String"/>
-                    <Column editable="true" title="SUCURSAL" type="java.lang.String"/>
-                    <Column editable="true" title="CONCEPTO" type="java.lang.String"/>
-                    <Column editable="true" title="CANTIDAD" type="java.lang.Double"/>
-                    <Column editable="true" title="OBSERVACION" type="java.lang.String"/>
+                  <Table columnCount="11" rowCount="5">
+                    <Column editable="true" title="FECHA" type="java.lang.Object">
+                      <Data value="15/11/2013"/>
+                      <Data value="15/11/2013"/>
+                      <Data value="15/11/2013"/>
+                      <Data value="16/11/2013"/>
+                      <Data value="16/11/2013"/>
+                    </Column>
+                    <Column editable="true" title="LEGAJO" type="java.lang.Integer">
+                      <Data value="237"/>
+                      <Data value="157"/>
+                      <Data value="233"/>
+                      <Data value="133"/>
+                      <Data value="233"/>
+                    </Column>
+                    <Column editable="true" title="APELLIDO" type="java.lang.String">
+                      <Data value="campos"/>
+                      <Data value="ainstein"/>
+                      <Data value="flores"/>
+                      <Data value="claure"/>
+                      <Data value="campos"/>
+                    </Column>
+                    <Column editable="true" title="NOMBRE" type="java.lang.String">
+                      <Data value="leonardo"/>
+                      <Data value="facundo"/>
+                      <Data value="guillermo"/>
+                      <Data value="ruben"/>
+                      <Data value="leonardo"/>
+                    </Column>
+                    <Column editable="false" title="CONVENIO" type="java.lang.Object"/>
+                    <Column editable="false" title="TAREA" type="java.lang.Object"/>
+                    <Column editable="true" title="EMPRESA" type="java.lang.String">
+                      <Data value="don pedro"/>
+                      <Data value="don pedro"/>
+                      <Data value="daniel manzur"/>
+                      <Data value="fernando"/>
+                      <Data value="don pedro"/>
+                    </Column>
+                    <Column editable="true" title="SUCURSAL" type="java.lang.String">
+                      <Data value="jujuy"/>
+                      <Data value="jujuy"/>
+                      <Data value="salta"/>
+                      <Data value="san pedro"/>
+                      <Data value="jujuy"/>
+                    </Column>
+                    <Column editable="true" title="CONCEPTO" type="java.lang.String">
+                      <Data value="falta"/>
+                      <Data value="feriado"/>
+                      <Data value="adelando"/>
+                      <Data value="sin novedad"/>
+                      <Data value="feriado"/>
+                    </Column>
+                    <Column editable="true" title="CANTIDAD" type="java.lang.Double">
+                      <Data value="100.0"/>
+                      <Data value="300.0"/>
+                      <Data value="400.0"/>
+                      <Data value="100.0"/>
+                      <Data value="400.0"/>
+                    </Column>
+                    <Column editable="true" title="OBSERVACION" type="java.lang.String">
+                      <Data value="nada"/>
+                      <Data value="nada"/>
+                      <Data value="ade"/>
+                      <Data value="sin"/>
+                      <Data value="nada"/>
+                    </Column>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -565,6 +674,16 @@
                       <Renderer/>
                     </Column>
                     <Column maxWidth="72" minWidth="72" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="70" minWidth="70" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="70" minWidth="70" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>

@@ -7,6 +7,7 @@ package util;
 
 
 import hibernateUtil.Conexion;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -23,8 +24,8 @@ import vistas.cargaNovedades;
  * @author Alumno
  */
 public class TablaUtil {
-    
-    
+    static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    static String fecha;
     /**
      * Crea la estructura de la tabla Asamblea , indica que columnas contendra
      * @param modelo  modelo de la tabla asamblea 
@@ -91,18 +92,26 @@ public class TablaUtil {
          modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
          for (Novedad a : listaNovedad) {
 //            Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+" "+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+" "+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getCodCon()+"-"+a.getConcepto().getDescripcion(),a.getCantidad(),a.getConcepto(),a.getObservacion()}; 
-             Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),"","","","",a.getConcepto().getCodCon(),a.getCantidad(),a.getObservacion()}; 
+             
+             Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getConvenio(),a.getEmpleado().getTarea(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+"-"+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getDescripcion(),a.getCantidad(),a.getObservacion()}; 
         modelo.addRow(filaNovedad);
         }
 //        Conexion.getSessionFactory().close();
     }
     
     public static void prepararTablaRRHH(DefaultTableModel modelo, JTable tablaConcepto){
-        String[] titulos = {"FECHA","LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CONCEPTO","CANTIDAD", "OBSERVACION"};
+        String[] titulos = {"FECHA","LEGAJO","APELLIDO","NOMBRE","CONVENIO","TAREA","EMPRESA","SUCURSAL","CONCEPTO","CANTIDAD", "OBSERVACION"};
         modelo = new DefaultTableModel(null, titulos){
             @Override
             public boolean isCellEditable(int row, int col){
-                return false;
+                
+                if (col == 8){
+                    return true;
+                    
+                }else{
+                    return false;
+                }
+            
             }
         };
         tablaConcepto.setModel(modelo);

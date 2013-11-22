@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,10 +34,13 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
+import novedades.dao.imp.EmpresaDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
+import novedades.dao.imp.SucursalDaoImp;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -50,7 +54,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
+import pojo.Empresa;
 import pojo.Novedad;
+import pojo.Sucursal;
 import util.FechaUtil;
 import util.TablaUtil;
 /**
@@ -59,25 +65,31 @@ import util.TablaUtil;
  */
 public class TablaNovedades extends javax.swing.JDialog {
     private DefaultTableModel modelo;
-    private List<Concepto> listaNovedad;
     private List<Novedad> listaNov;
     private Empleado empleado;
     JComboBox jcb = new JComboBox();
     java.awt.Frame parent;
     
+    
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
 //        fechaInicio.setDate(new Date());
-        String fechaInicio;
+//        String fechaInicio;
+        fechaInicio.setDate(FechaUtil.getFechaSinhora(new Date()));
         fechaFin.setDate(new Date());
         deshabilitarFechas();
         inactivarBusqueda();
+        cmbConcepto.setEnabled(false);
         rdbHoy.requestFocus();
-        llenaJComboBoxInvestigacion();
-        TableColumn tc = tblNovedades.getColumnModel().getColumn(6);
-        TableCellEditor tce = new DefaultCellEditor(jcb);
-        tc.setCellEditor(tce);
+        rdbHoy.setSelected(true);
+        llenaCmbConcepto();
+        llenaCmbEmpresa();
+        llenaCmbSucursal();
+        inactivarEmpSuc();
+        
+        tblNovedades.setAutoCreateRowSorter(true);
+
 //        cargarTabla();
 //        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
                
@@ -137,10 +149,12 @@ public class TablaNovedades extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         fechaFin = new com.toedter.calendar.JDateChooser();
         labelMetric2 = new org.edisoncor.gui.label.LabelMetric();
-        txtSucursal = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric3 = new org.edisoncor.gui.label.LabelMetric();
         cmbBusqueda = new org.edisoncor.gui.comboBox.ComboBoxRound();
         cmbConcepto = new org.edisoncor.gui.comboBox.ComboBoxRound();
+        cmbEmpresa = new org.edisoncor.gui.comboBox.ComboBoxRound();
+        labelMetric4 = new org.edisoncor.gui.label.LabelMetric();
+        cmbSucursal = new org.edisoncor.gui.comboBox.ComboBoxRound();
         btnBuscar = new org.edisoncor.gui.button.ButtonIcon();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblNovedades = new javax.swing.JTable();
@@ -173,6 +187,11 @@ public class TablaNovedades extends javax.swing.JDialog {
         btnImprimir.setText("Imprimir");
         btnImprimir.setAngulo(120);
         btnImprimir.setDistanciaDeSombra(45);
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         btnNuevo.setBackground(new java.awt.Color(51, 51, 51));
         btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/agregar_registro.png"))); // NOI18N
@@ -250,14 +269,11 @@ public class TablaNovedades extends javax.swing.JDialog {
         panelShadow2.setDistance(10);
 
         panelTranslucidoComplete2.setOpaque(false);
-        panelTranslucidoComplete2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelMetric1.setText("Conceptos");
-        panelTranslucidoComplete2.add(labelMetric1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 81, 20));
 
         txtBusqueda.setText("Daniel Manzur");
         txtBusqueda.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
-        panelTranslucidoComplete2.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 11, 191, -1));
 
         rdbHoy.setBackground(new java.awt.Color(51, 51, 51));
         buttonGroup1.add(rdbHoy);
@@ -269,7 +285,6 @@ public class TablaNovedades extends javax.swing.JDialog {
                 rdbHoyActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete2.add(rdbHoy, new org.netbeans.lib.awtextra.AbsoluteConstraints(612, 7, -1, -1));
 
         rdbMes.setBackground(new java.awt.Color(51, 51, 51));
         buttonGroup1.add(rdbMes);
@@ -281,7 +296,6 @@ public class TablaNovedades extends javax.swing.JDialog {
                 rdbMesActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete2.add(rdbMes, new org.netbeans.lib.awtextra.AbsoluteConstraints(731, 7, -1, -1));
 
         rdbFecha.setBackground(new java.awt.Color(51, 51, 51));
         buttonGroup1.add(rdbFecha);
@@ -293,34 +307,25 @@ public class TablaNovedades extends javax.swing.JDialog {
                 rdbFechaActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete2.add(rdbFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(887, 7, -1, -1));
 
         fechaInicio.setBackground(new java.awt.Color(255, 255, 255));
         fechaInicio.setBorder(new javax.swing.border.SoftBevelBorder(0));
         fechaInicio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         fechaInicio.setMaxSelectableDate(new Date());
-        panelTranslucidoComplete2.add(fechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(612, 49, 145, 29));
 
         jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Y");
-        panelTranslucidoComplete2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 49, 44, 33));
 
         fechaFin.setBackground(new java.awt.Color(255, 255, 255));
         fechaFin.setBorder(new javax.swing.border.SoftBevelBorder(0));
         fechaFin.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         fechaFin.setMaxSelectableDate(new Date());
-        panelTranslucidoComplete2.add(fechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(846, 49, 146, 29));
 
         labelMetric2.setText("Sucursal");
-        panelTranslucidoComplete2.add(labelMetric2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, -1, 20));
-
-        txtSucursal.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
-        panelTranslucidoComplete2.add(txtSucursal, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 191, -1));
 
         labelMetric3.setText("Busqueda");
-        panelTranslucidoComplete2.add(labelMetric3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 14, 81, 20));
 
         cmbBusqueda.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODO LOS EMPLEADOS", "LEGAJO", "EMPRESA Y SUCURSAL", "CONCEPTOS" }));
         cmbBusqueda.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
@@ -334,8 +339,97 @@ public class TablaNovedades extends javax.swing.JDialog {
                 cmbBusquedaActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete2.add(cmbBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 11, 273, 23));
-        panelTranslucidoComplete2.add(cmbConcepto, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 273, 23));
+
+        labelMetric4.setText("Empresa");
+
+        javax.swing.GroupLayout panelTranslucidoComplete2Layout = new javax.swing.GroupLayout(panelTranslucidoComplete2);
+        panelTranslucidoComplete2.setLayout(panelTranslucidoComplete2Layout);
+        panelTranslucidoComplete2Layout.setHorizontalGroup(
+            panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addComponent(labelMetric1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19)
+                        .addComponent(cmbConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTranslucidoComplete2Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(labelMetric4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(89, 89, 89))
+                                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                                        .addGap(20, 20, 20)
+                                        .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(cmbSucursal, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                                            .addComponent(cmbEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(18, 18, 18)))
+                                .addComponent(fechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                                .addGap(76, 76, 76)
+                                .addComponent(labelMetric2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addComponent(fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addComponent(labelMetric3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cmbBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(rdbHoy)
+                        .addGap(74, 74, 74)
+                        .addComponent(rdbMes)
+                        .addGap(75, 75, 75)
+                        .addComponent(rdbFecha))))
+        );
+        panelTranslucidoComplete2Layout.setVerticalGroup(
+            panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(labelMetric3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(cmbBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rdbHoy)
+                    .addComponent(rdbMes)
+                    .addComponent(rdbFecha))
+                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(labelMetric1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(labelMetric4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(fechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelMetric2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         btnBuscar.setBackground(new java.awt.Color(51, 51, 51));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
@@ -357,39 +451,46 @@ public class TablaNovedades extends javax.swing.JDialog {
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(panelTranslucidoComplete2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(128, 128, 128))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelShadow2Layout.setVerticalGroup(
             panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelShadow2Layout.createSequentialGroup()
-                .addComponent(panelTranslucidoComplete2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(panelShadow2Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(panelShadow2Layout.createSequentialGroup()
+                .addComponent(panelTranslucidoComplete2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tblNovedades.setBackground(new java.awt.Color(153, 153, 153));
         tblNovedades.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
         tblNovedades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {"15/11/2013",  new Integer(237), "campos", "leonardo", null, null, "don pedro", "jujuy", "falta",  new Double(100.0), "nada"},
+                {"15/11/2013",  new Integer(157), "ainstein", "facundo", null, null, "don pedro", "jujuy", "feriado",  new Double(300.0), "nada"},
+                {"15/11/2013",  new Integer(233), "flores", "guillermo", null, null, "daniel manzur", "salta", "adelando",  new Double(400.0), "ade"},
+                {"16/11/2013",  new Integer(133), "claure", "ruben", null, null, "fernando", "san pedro", "sin novedad",  new Double(100.0), "sin"},
+                {"16/11/2013",  new Integer(233), "campos", "leonardo", null, null, "don pedro", "jujuy", "feriado",  new Double(400.0), "nada"}
             },
             new String [] {
-                "FECHA", "LEGAJO", "APELLIDO", "NOMBRE", "EMPRESA", "SUCURSAL", "CONCEPTO", "CANTIDAD", "OBSERVACION"
+                "FECHA", "LEGAJO", "APELLIDO", "NOMBRE", "CONVENIO", "TAREA", "EMPRESA", "SUCURSAL", "CONCEPTO", "CANTIDAD", "OBSERVACION"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
+                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, true, true, true, false, false, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tblNovedades.getTableHeader().setReorderingAllowed(false);
@@ -402,16 +503,20 @@ public class TablaNovedades extends javax.swing.JDialog {
         tblNovedades.getColumnModel().getColumn(2).setMaxWidth(72);
         tblNovedades.getColumnModel().getColumn(3).setMinWidth(70);
         tblNovedades.getColumnModel().getColumn(3).setMaxWidth(70);
-        tblNovedades.getColumnModel().getColumn(4).setMinWidth(120);
-        tblNovedades.getColumnModel().getColumn(4).setMaxWidth(110);
-        tblNovedades.getColumnModel().getColumn(5).setMinWidth(110);
-        tblNovedades.getColumnModel().getColumn(5).setMaxWidth(110);
-        tblNovedades.getColumnModel().getColumn(6).setMinWidth(150);
-        tblNovedades.getColumnModel().getColumn(6).setMaxWidth(150);
-        tblNovedades.getColumnModel().getColumn(7).setMinWidth(70);
-        tblNovedades.getColumnModel().getColumn(7).setPreferredWidth(5);
-        tblNovedades.getColumnModel().getColumn(7).setMaxWidth(70);
-        tblNovedades.getColumnModel().getColumn(8).setPreferredWidth(40);
+        tblNovedades.getColumnModel().getColumn(4).setMinWidth(70);
+        tblNovedades.getColumnModel().getColumn(4).setMaxWidth(70);
+        tblNovedades.getColumnModel().getColumn(5).setMinWidth(70);
+        tblNovedades.getColumnModel().getColumn(5).setMaxWidth(70);
+        tblNovedades.getColumnModel().getColumn(6).setMinWidth(120);
+        tblNovedades.getColumnModel().getColumn(6).setMaxWidth(110);
+        tblNovedades.getColumnModel().getColumn(7).setMinWidth(110);
+        tblNovedades.getColumnModel().getColumn(7).setMaxWidth(110);
+        tblNovedades.getColumnModel().getColumn(8).setMinWidth(150);
+        tblNovedades.getColumnModel().getColumn(8).setMaxWidth(150);
+        tblNovedades.getColumnModel().getColumn(9).setMinWidth(70);
+        tblNovedades.getColumnModel().getColumn(9).setPreferredWidth(5);
+        tblNovedades.getColumnModel().getColumn(9).setMaxWidth(70);
+        tblNovedades.getColumnModel().getColumn(10).setPreferredWidth(40);
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -420,12 +525,12 @@ public class TablaNovedades extends javax.swing.JDialog {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelShadow2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1192, Short.MAX_VALUE)
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(panelShadow2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panel1Layout.setVerticalGroup(
@@ -433,9 +538,9 @@ public class TablaNovedades extends javax.swing.JDialog {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelShadow2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -444,7 +549,9 @@ public class TablaNovedades extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -484,43 +591,344 @@ public class TablaNovedades extends javax.swing.JDialog {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         listaNov = new  ArrayList<Novedad>();
-       if (fechaInicio.getDate().getTime()<=fechaFin.getDate().getTime()) {
+        if (fechaInicio.getDate().getTime()<=fechaFin.getDate().getTime()) {
             //  verificar de que la fecha inicio no sea mayor que la fecha fin
-        if (cmbConcepto.getSelectedIndex()==1) {
-            
+            if (cmbBusqueda.getSelectedIndex()== 1) {
            //busqueda empleado por Legajo  
-            try {        
-                Empleado  e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtBusqueda.getText()));
-                String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+e.getLegajo()+"'";
-            if (e!=null) {
-              listaNov = new ConceptoDaoImp().listarNovedad(fechaInicio.getDate());
-              cargarTabla(listaNov);
+                try {        
+                    Empleado emp = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtBusqueda.getText().toString()));
+                    System.out.println("Empleado: "+emp.getApellido());
+                    String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+emp.getLegajo()+"'";
+                    if (emp!=null) {
+                        listaNov = new NovedadDaoImp().listarNovedad(emp,FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
+                        System.out.println("ListNov: Op1"+listaNov);
+                    }else{
+                        JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
+                    }         
+                } catch (Exception e) {
+//                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
+                }
+            }else if(cmbBusqueda.getSelectedIndex()== 2){
+                Sucursal suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+                System.out.println("Sucursal: "+suc.getNombre());
+                if(suc!=null){
+                    listaNov = new NovedadDaoImp().listarNovedad(suc, FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
+                    System.out.println("ListNov: Op2"+listaNov);
+                }
+            }else if(cmbBusqueda.getSelectedIndex()== 3){
+                Concepto con = new ConceptoDaoImp().getConceptoHql(cmbConcepto.getSelectedItem().toString());
+                System.out.println("Concepto: "+con.getDescripcion());
+                if(con!=null){
+                    listaNov = new NovedadDaoImp().listarNovedad(con, FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
+                    System.out.println("ListNov Op3: "+listaNov);
+                }
             }else{
-            JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
-
-            }         
-            } catch (Exception e) {
-               JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
-            }
-       
-        } else {
               // Busqueda asistencias de todos los empleados
-               listaNov = new ConceptoDaoImp().listarNovedad(FechaUtil.getFechaSinhora(fechaInicio.getDate()));
-               cargarTabla(listaNov);
-               System.out.println("cantidad de datos en la busqueda "+listaNov.size());
-            }
+                listaNov = new NovedadDaoImp().listarNovedad(FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
+                System.out.println("Fecha INI: "+fechaInicio.getDate());
+                System.out.println("Fecha FIN: "+fechaFin.getDate());
+                System.out.println("ListNov Op0: "+listaNov);
+                System.out.println("cantidad de datos en la busqueda "+listaNov.size());
+                }
           
-       }else{  
+        }else{  
                JOptionPane.showMessageDialog(this, "La fecha inicio no puedes ser mayor a la fecha Fin ","ERROR",JOptionPane.ERROR_MESSAGE);
-       }
-        
-    
-           TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
-           TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
+            }
+            TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
+            TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
+            llenaJComboBoxInvestigacion();
+            TableColumn tc = tblNovedades.getColumnModel().getColumn(8);
+            TableCellEditor tce = new DefaultCellEditor(jcb);
+            tc.setCellEditor(tce);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
-         Workbook libro = new HSSFWorkbook();//Creo el LIBRO donde guardare las HOJAS
+        Empresa emp = new EmpresaDaoImp().getEmpresa(WIDTH);
+        HSSFWorkbook libro = new HSSFWorkbook();//crea el libro
+        Map<String, CellStyle> styles = createStyles(libro);
+        HSSFSheet hoja = libro.createSheet("Hoja 1");//crea una hoja
+        HSSFRow f = hoja.createRow(0);
+        HSSFCell celda;
+        celda = f.createCell(0);
+
+        for (int j = 0; j < tblNovedades.getColumnCount(); j++) {//crea las cabeceras de las columnas(titulos)
+                    celda = f.createCell(j);//crea celdas dependiendo de la cantidad de columnas en la tabla
+                    celda.setCellValue(new HSSFRichTextString(tblNovedades.getColumnModel().getColumn(j).getHeaderValue().toString()));//insterta datos a las celdas
+                    celda.setCellStyle((CellStyle)styles.get("title"));
+//                            celda.setCellStyle((CellStyle)styles.get("fondo"));
+                }
+//        celda.setCellValue(new HSSFRichTextString(empleado.getSucursal().getEmpresa().getCodEmp()+"-"+empleado.getSucursal().getEmpresa().getNombre()));
+        for (int i = 0; i < tblNovedades.getRowCount(); i++) {
+            HSSFRow fila = hoja.createRow(i+1);//Crea filas dependiando de la cantidad que hayan en la tabla          
+                for (int j = 0; j < tblNovedades.getColumnCount(); j++) {//empieza a agregar datos de la tabla
+                    celda = fila.createCell(j);
+                    if(tblNovedades.getValueAt(i, j)!=null)
+                        celda.setCellValue(new HSSFRichTextString(tblNovedades.getValueAt(i, j).toString()));
+                        celda.setCellStyle((CellStyle)styles.get("fondo"));
+                }
+            try {
+                FileOutputStream elFichero = new FileOutputStream("holamundo.xls");
+                libro.write(elFichero);
+                elFichero.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }//GEN-LAST:event_btnExcelActionPerformed
+
+    private void cmbBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBusquedaItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbBusquedaItemStateChanged
+
+    private void cmbBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusquedaActionPerformed
+        if(fechaInicio.getDate().getTime() < fechaFin.getDate().getTime()){
+            if(cmbBusqueda.getSelectedIndex()== 0){
+                inactivarBusqueda();
+                inactivarEmpSuc();
+                cmbConcepto.setEnabled(false);
+            }
+            else if(cmbBusqueda.getSelectedIndex() == 1){
+                txtBusqueda.setEditable(true);
+                txtBusqueda.setBackground(Color.YELLOW);
+                txtBusqueda.setForeground(Color.BLACK);
+                txtBusqueda.requestFocus();
+                cmbConcepto.setEnabled(false);
+                cmbConcepto.setEditable(false);
+                inactivarEmpSuc();
+            }else if(cmbBusqueda.getSelectedIndex() == 2){
+                cmbEmpresa.requestFocus();
+                activarEmpSuc();
+                cmbConcepto.setEnabled(false);
+            }else if (cmbBusqueda.getSelectedIndex() == 3){
+                cmbConcepto.setEnabled(true);
+                inactivarBusqueda();
+                inactivarEmpSuc();
+                
+            }
+        }
+    }//GEN-LAST:event_cmbBusquedaActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        try {
+            tblNovedades.print();//envia los datos de la tabla a la impresora
+        } catch (PrinterException ex) {
+            Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                TablaNovedades dialog = new TablaNovedades(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.edisoncor.gui.button.ButtonIcon btnBuscar;
+    private org.edisoncor.gui.button.ButtonIcon btnCancelar;
+    private org.edisoncor.gui.button.ButtonIcon btnExcel;
+    private org.edisoncor.gui.button.ButtonIcon btnGuardar;
+    private org.edisoncor.gui.button.ButtonIcon btnImprimir;
+    private org.edisoncor.gui.button.ButtonIcon btnNuevo;
+    private org.edisoncor.gui.button.ButtonIcon btnPDF;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbBusqueda;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbConcepto;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbEmpresa;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbSucursal;
+    private com.toedter.calendar.JDateChooser fechaFin;
+    private com.toedter.calendar.JDateChooser fechaInicio;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private org.edisoncor.gui.label.LabelMetric labelMetric1;
+    private org.edisoncor.gui.label.LabelMetric labelMetric2;
+    private org.edisoncor.gui.label.LabelMetric labelMetric3;
+    private org.edisoncor.gui.label.LabelMetric labelMetric4;
+    private org.edisoncor.gui.panel.Panel panel1;
+    private org.edisoncor.gui.panel.PanelShadow panelShadow1;
+    private org.edisoncor.gui.panel.PanelShadow panelShadow2;
+    private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete1;
+    private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete2;
+    private javax.swing.JRadioButton rdbFecha;
+    private javax.swing.JRadioButton rdbHoy;
+    private javax.swing.JRadioButton rdbMes;
+    private javax.swing.JTable tblNovedades;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtBusqueda;
+    // End of variables declaration//GEN-END:variables
+
+    private void cargarTabla(List<Novedad> listaNovedad){
+        listaNovedad = new NovedadDaoImp().listarNovedad();
+        util.TablaUtil.prepararTablaRRHH(modelo, tblNovedades);
+        util.TablaUtil.cargarModeloRRHH(modelo, listaNovedad, tblNovedades);
+    }
+    
+    public void llenaCmbConcepto() {
+        Session sesion;
+        try {
+            sesion = Conexion.getSession();
+            Criteria crit = sesion.createCriteria(Concepto.class);
+            List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+            System.out.println("rsConcepto: "+rsConcepto);
+            cmbConcepto.removeAllItems();
+            for (Concepto con : rsConcepto) {
+                cmbConcepto.addItem(con.getDescripcion());
+            }
+            sesion.close();
+        } catch (Exception e) {
+        }
+    }
+    
+    private void llenaCmbEmpresa(){
+        Session sesion;
+        try{
+            sesion = Conexion.getSession();
+            Criteria crit = sesion.createCriteria(Empresa.class);
+            List<Empresa> rsEmpresa = crit.list();
+            System.out.println("rsEmpresa: "+rsEmpresa);
+            cmbEmpresa.removeAllItems();
+            for(Empresa emp : rsEmpresa){
+                cmbEmpresa.addItem(emp.getCodEmp()+"-"+emp.getNombre());
+            }
+            sesion.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+     private void llenaCmbSucursal() {
+        Session sesion;
+        try{
+            sesion = Conexion.getSession();
+            Criteria crit = sesion.createCriteria(Sucursal.class);
+            List<Sucursal> rsSucursal = crit.list();
+            System.out.println("rsSucursal: "+rsSucursal);
+            cmbSucursal.removeAllItems();
+            for(Sucursal suc : rsSucursal){
+                cmbSucursal.addItem(suc.getCodSuc()+"-"+suc.getNombre());
+            }
+            sesion.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+     
+    private void activarEmpSuc(){
+        cmbEmpresa.setEnabled(true);
+        cmbSucursal.setEnabled(true);
+        cmbEmpresa.setBackground(Color.white);
+        cmbSucursal.setBackground(Color.white);
+    } 
+    
+    private void inactivarEmpSuc(){
+        cmbEmpresa.setEnabled(false);
+        cmbSucursal.setEnabled(false);
+        cmbEmpresa.setBackground(Color.BLACK);
+        cmbSucursal.setBackground(Color.black);
+    }
+    private void inactivarBusqueda(){
+         // dejar no editable el txtbusqueda y no activo el boton busqueda
+        txtBusqueda.setEditable(false);
+        cmbSucursal.setEditable(false);
+        cmbEmpresa.setEditable(false);
+        //borro el contendido de la caja de texto
+        txtBusqueda.setText("");
+        txtBusqueda.setBackground(Color.DARK_GRAY);
+        cmbSucursal.setBackground(Color.DARK_GRAY);
+        cmbEmpresa.setBackground(Color.DARK_GRAY);
+      
+//        btnBusquedaPersonal.setEnabled(false);
+    }
+    private void activarBusqueda(){
+       txtBusqueda.setEditable(false);
+       cmbEmpresa.setEditable(true);
+       cmbSucursal.setEditable(true);
+       //obtnego el foco
+       cmbEmpresa.requestFocus();
+//       txtSucursal.requestFocus();
+       //cambio el color
+       txtBusqueda.setBackground(Color.darkGray);
+       cmbSucursal.setBackground(Color.white);
+       cmbEmpresa.setBackground(Color.WHITE);
+//       btnBusquedaPersonal.setEnabled(true);
+         
+    }
+    private void activarLegajo(){
+        txtBusqueda.setEditable(true);
+        cmbSucursal.setEditable(false);
+        cmbEmpresa.setEditable(false);
+        txtBusqueda.requestFocus();
+        txtBusqueda.setBackground(Color.white);
+        cmbSucursal.setBackground(Color.DARK_GRAY);
+    }
+    
+private void habilitarFechas()
+{
+    fechaInicio.setEnabled(true);
+    fechaFin.setEnabled(true);
+    
+}
+private void deshabilitarFechas()
+{
+    fechaInicio.setEnabled(false);
+    fechaFin.setEnabled(false);
+}
+
+    private void llenaJComboBoxInvestigacion() {
+        Session session = null;
+        try {
+                session = Conexion.getSession();
+                Criteria crit = session.createCriteria(Concepto.class);
+                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+//                jcb.removeAllItems();
+                System.out.println("Entre a llenaCMB");
+                for (Concepto inv : rsConcepto) {
+                    System.out.println("desc "+inv.getDescripcion());
+                    jcb.addItem(inv.getDescripcion());
+                }
+                System.out.println("Salte el For");
+                session.close();
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void Excel(){
+        Workbook libro = new HSSFWorkbook();//Creo el LIBRO donde guardare las HOJAS
             Map<String, CellStyle> styles = createStyles(libro);//Crea un ESTILO para la hoja
             Sheet hoja = libro.createSheet("Novedades");//Creo una HOJA
             hoja.setPrintGridlines(false);
@@ -595,162 +1003,6 @@ public class TablaNovedades extends javax.swing.JDialog {
             } catch (Exception ex) {
                 Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
-    }//GEN-LAST:event_btnExcelActionPerformed
-
-    private void cmbBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBusquedaItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbBusquedaItemStateChanged
-
-    private void cmbBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusquedaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbBusquedaActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TablaNovedades.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                TablaNovedades dialog = new TablaNovedades(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonIcon btnBuscar;
-    private org.edisoncor.gui.button.ButtonIcon btnCancelar;
-    private org.edisoncor.gui.button.ButtonIcon btnExcel;
-    private org.edisoncor.gui.button.ButtonIcon btnGuardar;
-    private org.edisoncor.gui.button.ButtonIcon btnImprimir;
-    private org.edisoncor.gui.button.ButtonIcon btnNuevo;
-    private org.edisoncor.gui.button.ButtonIcon btnPDF;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private org.edisoncor.gui.comboBox.ComboBoxRound cmbBusqueda;
-    private org.edisoncor.gui.comboBox.ComboBoxRound cmbConcepto;
-    private com.toedter.calendar.JDateChooser fechaFin;
-    private com.toedter.calendar.JDateChooser fechaInicio;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private org.edisoncor.gui.label.LabelMetric labelMetric1;
-    private org.edisoncor.gui.label.LabelMetric labelMetric2;
-    private org.edisoncor.gui.label.LabelMetric labelMetric3;
-    private org.edisoncor.gui.panel.Panel panel1;
-    private org.edisoncor.gui.panel.PanelShadow panelShadow1;
-    private org.edisoncor.gui.panel.PanelShadow panelShadow2;
-    private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete1;
-    private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete2;
-    private javax.swing.JRadioButton rdbFecha;
-    private javax.swing.JRadioButton rdbHoy;
-    private javax.swing.JRadioButton rdbMes;
-    private javax.swing.JTable tblNovedades;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtBusqueda;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtSucursal;
-    // End of variables declaration//GEN-END:variables
-
-    private void cargarTabla(List<Novedad> listaNovedad){
-         listaNovedad = new NovedadDaoImp().listarNovedad();
-        util.TablaUtil.prepararTablaRRHH(modelo, tblNovedades);
-        util.TablaUtil.cargarModeloRRHH(modelo, listaNovedad, tblNovedades);
-    }
-    
-    private void inactivarBusqueda(){
-         // dejar no editable el txtbusqueda y no activo el boton busqueda
-        txtBusqueda.setEditable(false);
-        txtSucursal.setEditable(false);
-        //borro el contendido de la caja de texto
-        txtBusqueda.setText("");
-        txtBusqueda.setBackground(Color.DARK_GRAY);
-        txtSucursal.setText("");
-        txtSucursal.setBackground(Color.DARK_GRAY);
-      
-//        btnBusquedaPersonal.setEnabled(false);
-    }
-    private void activarBusqueda(){
-       txtBusqueda.setEditable(true);
-       txtSucursal.setEditable(true);
-       //obtnego el foco
-       txtBusqueda.requestFocus();
-//       txtSucursal.requestFocus();
-       //cambio el color
-       txtBusqueda.setBackground(Color.white);
-       txtSucursal.setBackground(Color.white);
-//       btnBusquedaPersonal.setEnabled(true);
-         
-    }
-    private void activarLegajo(){
-        txtBusqueda.setEditable(true);
-        txtSucursal.setEditable(false);
-        txtBusqueda.requestFocus();
-        txtBusqueda.setBackground(Color.white);
-        txtSucursal.setText("");
-        txtSucursal.setBackground(Color.DARK_GRAY);
-    }
-    
-private void habilitarFechas()
-{
-    fechaInicio.setEnabled(true);
-    fechaFin.setEnabled(true);
-    
-}
-private void deshabilitarFechas()
-{
-    fechaInicio.setEnabled(false);
-    fechaFin.setEnabled(false);
-}
-
-    private void llenaJComboBoxInvestigacion() {
-        Session sesion = null;
-        try {
-
-            sesion = Conexion.getSession();
-
-            Criteria crit = sesion.createCriteria(Concepto.class);
-            List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
-
-            jcb.removeAllItems();
-
-            for (Concepto inv : rsConcepto) {
-                jcb.addItem("" + inv.getCodCon()+ " - " + inv.getDescripcion());
-            }
-
-            sesion.close();
-
-            //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
     public void CrearExcel(Workbook libro) throws Exception{
         JFileChooser fc = null;
@@ -811,12 +1063,15 @@ private void deshabilitarFechas()
     Map<String, CellStyle> styles = new HashMap();
     
     Font titleFont = wb.createFont();
-    titleFont.setFontHeightInPoints((short)14);
-    titleFont.setFontName("Trebuchet MS");
+    titleFont.setFontHeightInPoints((short)16);
+//    titleFont.setFontName("Trebuchet MS");
+    titleFont.setFontName("Algerian");
     CellStyle style = wb.createCellStyle();
     style.setFont(titleFont);
+    style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
     style.setBorderBottom((short)7);
     style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+    
     styles.put("title", style);
     
     Font itemFont = wb.createFont();
@@ -904,5 +1159,7 @@ private void deshabilitarFechas()
           }
       }
   }
+
+   
 }
 

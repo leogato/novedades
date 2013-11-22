@@ -66,8 +66,8 @@ public class Login extends javax.swing.JDialog {
         btnAtras = new org.edisoncor.gui.button.ButtonIpod();
         btnLogin = new org.edisoncor.gui.button.ButtonIpod();
         txtUsuario = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtClave = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         lblFecha = new org.edisoncor.gui.label.LabelMetric();
+        txtClave = new org.edisoncor.gui.passwordField.PasswordFieldRoundIcon();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ADMINISTRADOR");
@@ -106,15 +106,15 @@ public class Login extends javax.swing.JDialog {
         txtUsuario.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtUsuario.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
+        lblFecha.setText("30/10/2013");
+
         txtClave.setBackground(new java.awt.Color(102, 102, 102));
-        txtClave.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtClave.setForeground(new java.awt.Color(255, 255, 255));
         txtClave.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtClave.setCaretColor(new java.awt.Color(255, 102, 0));
         txtClave.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtClave.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-
-        lblFecha.setText("30/10/2013");
+        txtClave.setMinimumSize(new java.awt.Dimension(2, 19));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -128,8 +128,8 @@ public class Login extends javax.swing.JDialog {
                     .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtClave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
             .addGroup(panel1Layout.createSequentialGroup()
@@ -149,7 +149,7 @@ public class Login extends javax.swing.JDialog {
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelMetric2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 21, Short.MAX_VALUE)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -281,7 +281,7 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private org.edisoncor.gui.label.LabelMetric labelMetric2;
     private org.edisoncor.gui.label.LabelMetric lblFecha;
     private org.edisoncor.gui.panel.Panel panel1;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtClave;
+    private org.edisoncor.gui.passwordField.PasswordFieldRoundIcon txtClave;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtUsuario;
     // End of variables declaration//GEN-END:variables
 

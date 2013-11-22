@@ -4,18 +4,16 @@
  */
 package vistas.empleado;
 
-import pojo.Concepto;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
 import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
-import novedades.dao.imp.ConceptoDaoImp;
+import novedades.dao.imp.EmpresaDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import pojo.Empresa;
-import pojo.Novedad;
 import pojo.Sucursal;
 
 /**
@@ -405,12 +403,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 if(validarEmpleadoNuevo()){
                     System.out.println(validarEmpleadoNuevo());
                     Empleado e = getDatosEmpleado();
-                    // agrego los datos que faltan
-                    //                       e.setAdministrador(false);
-                    //                       e.setClave("");
-                    //                       e.setFechaIngreso(null);
                     new EmpleadoDaoImp().addEmpleado(e);
-                    //                       mensajero.mensajeInformacionAltaOK(this);
                     this.dispose();
                 }
             } else {
@@ -424,7 +417,6 @@ public class AltaEmpleado extends javax.swing.JDialog {
                         List<Empleado> lista =new EmpleadoDaoImp().listarEmpleado();
                         new EmpleadoDaoImp().upDateEmpleado(e);
                         // aqui va borrar el empleado o   porque se modiico la clave primario
-
                         new EmpleadoDaoImp().deleteEmpleado(o);
                         Empleado emplUp = new EmpleadoDaoImp().getEmpleado(e.getLegajo());
 
@@ -432,9 +424,6 @@ public class AltaEmpleado extends javax.swing.JDialog {
                         new EmpleadoDaoImp().upDateEmpleado(e);
 
                     }
-                    // agregar todas la asistencia
-
-//                    Conexion.getSessionFactory().close();
                     this.dispose();
                 }
 
@@ -651,7 +640,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
             
             for (Empresa emp : rsConcepto) {
                 cmbEmpresa.addItem(emp.getCodEmp()+"-"+ emp.getNombre());
-                System.out.println(emp.getCodEmp()+" "+emp.getNombre());
+                System.out.println(emp.getCodEmp()+"-"+emp.getNombre());
             }
 //            sesion.close();
             //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
@@ -662,13 +651,16 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
     private void llenaCmbSucursal() {
         Session sesion = null;
+        Empresa su = new EmpresaDaoImp().getEmpresa(cmbEmpresa.getSelectedItem().toString().charAt(0));
         try {
             sesion = Conexion.getSession();
+            String sql = "from Empresa where codEmp = '"+su+"'";
+            sesion.beginTransaction();
             Criteria crit = sesion.createCriteria(Sucursal.class);
             List<Sucursal> rsConcepto = crit.list();// SELECT * FROM TABLA
             cmbSucursal.removeAllItems();
             for (Sucursal suc : rsConcepto) {
-                cmbSucursal.addItem("" + suc.getCodSuc()+ " - " + suc.getNombre());
+                cmbSucursal.addItem(suc.getCodSuc()+ "-" + suc.getNombre());
             }
 //            sesion.close();
         } catch (Exception e) {

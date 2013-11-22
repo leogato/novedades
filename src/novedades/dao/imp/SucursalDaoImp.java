@@ -11,6 +11,7 @@ import novedades.dao.SucursalDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import pojo.Empresa;
 import pojo.Sucursal;
 
 /**
@@ -67,6 +68,7 @@ public class SucursalDaoImp extends Conexion implements SucursalDao{
         session.close();
         return a;
     }
+    
     
     public Sucursal getSucursalLogin(int idSuc){
         Sucursal e = null;

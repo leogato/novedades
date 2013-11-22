@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JMenuBar;
 import pojo.Concepto;
 import pojo.Usuario;
+import vista.novedades.TablaNovedades;
 import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
 import vistas.empresa.AltaEmpresa2;
@@ -176,13 +177,20 @@ public class principal extends javax.swing.JFrame {
         mnuNovedades.add(mnuItmCargaNovedades);
 
         mnuItmNovedadesRRHH.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItmNovedadesRRHH.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Pad.png"))); // NOI18N
         mnuItmNovedadesRRHH.setText("Novedades RRHH");
+        mnuItmNovedadesRRHH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmNovedadesRRHHActionPerformed(evt);
+            }
+        });
         mnuNovedades.add(mnuItmNovedadesRRHH);
 
         jMenuBar1.add(mnuNovedades);
 
         mnuEmpleados.setText("Empleados");
 
+        mnuGestorEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/User_Group_Icon_32.png"))); // NOI18N
         mnuGestorEmpleados.setText("Gestor de Empleados");
         mnuGestorEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -191,6 +199,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuEmpleados.add(mnuGestorEmpleados);
 
+        mnuAltaEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Profile.png"))); // NOI18N
         mnuAltaEmpleados.setText("Alta de Empleados");
         mnuAltaEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +212,7 @@ public class principal extends javax.swing.JFrame {
 
         mnuUsuario.setText("Usuarios");
 
+        mnuItmGestorUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/users.png"))); // NOI18N
         mnuItmGestorUsuario.setText("Gestor de Usuarios");
         mnuItmGestorUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,6 +221,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuUsuario.add(mnuItmGestorUsuario);
 
+        mnuABMUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/user.png"))); // NOI18N
         mnuABMUsuario.setText("Alta de Usuarios");
         mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -347,6 +358,10 @@ public class principal extends javax.swing.JFrame {
     private void mnuItmAltaConceptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmAltaConceptosActionPerformed
         new AbmConceptos(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuItmAltaConceptosActionPerformed
+
+    private void mnuItmNovedadesRRHHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmNovedadesRRHHActionPerformed
+        new TablaNovedades(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_mnuItmNovedadesRRHHActionPerformed
 
     /**
      * @param args the command line arguments

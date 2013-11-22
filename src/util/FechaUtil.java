@@ -38,6 +38,16 @@ public class FechaUtil {
         
         return f;
     }
+//    
+//    public static Date getFechaDDMMAAAA (Date fecha){
+//        String mifecha = fecha.toString();
+//        String dia = mifecha.substring(8, 10);
+//        String  mes = mifecha.substring(5, 7);
+//        String anio = mifecha.substring(0, 4);
+//        Date f = dia+"/"+mes+"/"+anio;
+//        
+//        return f;
+//    }
     
     
       /**

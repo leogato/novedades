@@ -6,29 +6,14 @@ package vistas;
 
 import hibernateUtil.Conexion;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -43,7 +28,7 @@ import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
 import pojo.Usuario;
-import vistas.usuario.Login;
+import util.FechaUtil;
 //import vista.novedades.prueba;
 
 
@@ -60,7 +45,9 @@ public class cargaNovedades extends javax.swing.JDialog {
     private Usuario usuario= new Usuario();
     int legajo = 0;
     Date date = new Date();
+    DateFormat df = DateFormat.getDateInstance();
     Date ultimaCarga;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     JComboBox jcb = new JComboBox();
     
                
@@ -101,7 +88,6 @@ public class cargaNovedades extends javax.swing.JDialog {
         tc.setCellEditor(tce);
         tblNovedadesUsr.setAutoCreateRowSorter(true);
         
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         lblFecha.setText(sdf.format(date));
         ultimaCarga = new Date(sdf.format(date));
         System.out.println("Ultima Carga: "+ultimaCarga);
@@ -110,9 +96,9 @@ public class cargaNovedades extends javax.swing.JDialog {
         System.out.println("Usuario: "+this.usuario.getTipo());
         lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
         
-        if (lblFecha.getText() == novedad.getFecha()){
-            
-        }
+//        if (lblFecha.getText() == novedad.getFecha()){
+//            
+//        }
         
         // si el usuario ya cargo novedad cuando ingrese a esta ventana solo puede ver y no cargar 
         // en sintesis se debe inhabilitar el boton carga
@@ -299,21 +285,33 @@ public class cargaNovedades extends javax.swing.JDialog {
 //        }
         
         if (nov.isEmpty()){
-            System.out.println("Entro");
-            for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-                System.out.println(i);
-                getDatosTabla(i);
-                novedad.setFecha(lblFecha.getText().toString());
-                usuario.setCargo(true);
-            
-//            System.out.println("Sentencia: "+sql);
-            new NovedadDaoImp().addNovedad(novedad);
-            new UsuarioDaoImp().upDateUsuario(usuario);
-            
+            if(tblNovedadesUsr.isEditing()){
+                tblNovedadesUsr.getCellEditor().stopCellEditing();
+                System.out.println("Entro");
+                for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
+                    System.out.println(i);
+                    getDatosTabla(i);
+//                    novedad.setFecha(lblFecha.getText().toString);
+                    novedad.setFecha(FechaUtil.getFechaSinhora(date));
+                    usuario.setCargo(true);
+                    new NovedadDaoImp().addNovedad(novedad);
+                    new UsuarioDaoImp().upDateUsuario(usuario);
+                }
+                JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
+            }else{
+                for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
+                    System.out.println(i);
+                    getDatosTabla(i);
+                    novedad.setFecha(date);
+                    novedad.setFecha((date));
+                    usuario.setCargo(true);
+                    new NovedadDaoImp().addNovedad(novedad);
+                    new UsuarioDaoImp().upDateUsuario(usuario);
+                }
+                JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
             }
-            JOptionPane.showMessageDialog(rootPane, "Los datos fueron cargados correctamente");
         }else{
-            JOptionPane.showMessageDialog(rootPane, "Los datos ya fueron cargados");
+            JOptionPane.showMessageDialog(rootPane, "LOS DATOS YA FUERON CARGADOS ANTERIORMENTE, INTENTE MAÑANA NUEVAMENTE");
         }
         this.dispose();
         
@@ -360,17 +358,13 @@ public class cargaNovedades extends javax.swing.JDialog {
         try {
             if (usuario.getTipo().equals("COMUN")){
                 session = Conexion.getSession();
-//                session.beginTransaction();
                 boolean cargar = true;
                 Criteria crit = session.createCriteria(Concepto.class);
-//                String sql = "from Concepto u\n"+"Where u.cargaUser = '"+cargar+"'";
                 crit.add(Restrictions.eq("cargaUser", cargar));
-//                List<Concepto> liscon = (List<Concepto>)session.createQuery(sql); esto me genera problemas, no me trae nada a la lista y nunca pasa de esta linea
                 List<Concepto> liscon = crit.list();
                 for (Concepto inv : liscon){
-//                    jcb.addItem(inv.getCodCon()+" - "+inv.getDescripcion());
                     jcb.addItem(inv.getDescripcion());
-                    i++;
+//                    i++;
                 }
                 session.close();
             }else{
