@@ -7,6 +7,7 @@ package novedades.dao.imp;
 import hibernateUtil.Conexion;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import novedades.dao.NovedadDao;
 import org.hibernate.Criteria;
@@ -25,7 +26,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 
     @Override
     public List<Novedad> listarNovedad(Empleado o) {
-       Session session = Conexion.getSession();
+        Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Novedad.class);
         criteria.add(Restrictions.eq("Codigo de sucursal", o.getSucursal().getCodSuc()));
@@ -97,6 +98,31 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         session.getTransaction().commit();
         session.close();
         return con; 
+    }
+
+    @Override
+    public List<Novedad> listarNovedad() {
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Novedad.class);
+        List<Novedad> novedad = (List<Novedad>)criteria.list();
+        session.getTransaction().commit();
+        session.close();
+        return novedad;
+    }
+
+    @Override
+    public List<Novedad> listarNovedad(Empleado e, Date fechaInicio, Date fechaFin) {
+//        Session session = Conexion.getSession();
+//        session.beginTransaction();
+//        String sql = "from Novedad as n\n join fetch n.empleado as e\n where e.legajo = '"+233+"' and n.fecha = '"+14/11/2013+"'";
+//         Criteria criteria = session.createCriteria(Novedad.class);
+////        criteria.addOrder(Order.asc("fecha"));
+//         criteria.addOrder(Order.asc("idAsistencia"));
+//         criteria.add(Restrictions.eq("empleado", e));
+//         criteria.add( Restrictions.ge("fecha", fechaInicio) );
+//         criteria.add( Restrictions.le("fecha", fechaFin) ); 
+//         List<Novedad> lista = criteria.list();
     }
     
     

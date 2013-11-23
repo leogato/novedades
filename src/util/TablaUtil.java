@@ -90,7 +90,8 @@ public class TablaUtil {
     public static void cargarModeloRRHH(DefaultTableModel modelo,List<Novedad> listaNovedad,JTable tablaOrdendelDia){
          modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
          for (Novedad a : listaNovedad) {
-        Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+" "+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+" "+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getCodCon()+"-"+a.getConcepto().getDescripcion(),a.getCantidad(),a.getConcepto(),a.getObservacion()}; 
+//            Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+" "+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+" "+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getCodCon()+"-"+a.getConcepto().getDescripcion(),a.getCantidad(),a.getConcepto(),a.getObservacion()}; 
+             Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),"","","","",a.getConcepto().getCodCon(),a.getCantidad(),a.getObservacion()}; 
         modelo.addRow(filaNovedad);
         }
 //        Conexion.getSessionFactory().close();
@@ -111,12 +112,13 @@ public class TablaUtil {
         
         String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
         modelo = new DefaultTableModel(null, titulos){
-            @Override
+//            @Override
             public boolean isCellEditable(int row,int col){
                 boolean b = false;
                 if (col == 4){
-                    b = false;
+                    b = true;
                 }else{
+                    
                     b= true;
                 }
                 return b;
@@ -133,11 +135,19 @@ public class TablaUtil {
         }
 //        Conexion.getSessionFactory().close();
     }
+    public static void cargarNovedadesCompleta(DefaultTableModel modelo,List<Novedad> listaEmpleado,JTable tablaNovedades){
+        modelo = (DefaultTableModel) tablaNovedades.getModel();
+        for (Novedad n : listaEmpleado){
+            Object[] filaAsistencia = {n.getEmpleado().getLegajo(),"","","",n.getCantidad(),n.getObservacion()};//,n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()}; 
+            modelo.addRow(filaAsistencia);
+            //Cargar todas las novedades con fecha de hoy
+        }
+    }
     
   public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
     String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
     modelo= new DefaultTableModel(null,titulos){
-    @Override// impleamento este metodo para que la tabla sea no editable
+        @Override// impleamento este metodo para que la tabla sea no editable
         public boolean isCellEditable(int row, int column) {
             return false;
         }

@@ -4,22 +4,48 @@
  */
 package vista.novedades;
 
+import org.apache.poi.ss.usermodel.IndexedColors;
 import hibernateUtil.Conexion;
 import java.awt.Color;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
+import novedades.dao.imp.NovedadDaoImp;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.PrintSetup;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import pojo.Concepto;
@@ -35,13 +61,15 @@ public class TablaNovedades extends javax.swing.JDialog {
     private DefaultTableModel modelo;
     private List<Concepto> listaNovedad;
     private List<Novedad> listaNov;
+    private Empleado empleado;
     JComboBox jcb = new JComboBox();
     java.awt.Frame parent;
     
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        fechaInicio.setDate(new Date());
+//        fechaInicio.setDate(new Date());
+        String fechaInicio;
         fechaFin.setDate(new Date());
         deshabilitarFechas();
         inactivarBusqueda();
@@ -50,6 +78,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         TableColumn tc = tblNovedades.getColumnModel().getColumn(6);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
+//        cargarTabla();
 //        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
                
         //el dispatcher se registra en forma global, por lo que es recomendable hacerlo dentro del frame principal
@@ -93,14 +122,13 @@ public class TablaNovedades extends javax.swing.JDialog {
         panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
         btnCancelar = new org.edisoncor.gui.button.ButtonIcon();
         btnPDF = new org.edisoncor.gui.button.ButtonIcon();
-        btnExcel = new org.edisoncor.gui.button.ButtonIcon();
         btnImprimir = new org.edisoncor.gui.button.ButtonIcon();
         btnNuevo = new org.edisoncor.gui.button.ButtonIcon();
         btnGuardar = new org.edisoncor.gui.button.ButtonIcon();
+        btnExcel = new org.edisoncor.gui.button.ButtonIcon();
         panelShadow2 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete2 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
         labelMetric1 = new org.edisoncor.gui.label.LabelMetric();
-        cmbBusqueda = new org.edisoncor.gui.comboBox.ComboBoxRound();
         txtBusqueda = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         rdbHoy = new javax.swing.JRadioButton();
         rdbMes = new javax.swing.JRadioButton();
@@ -110,6 +138,9 @@ public class TablaNovedades extends javax.swing.JDialog {
         fechaFin = new com.toedter.calendar.JDateChooser();
         labelMetric2 = new org.edisoncor.gui.label.LabelMetric();
         txtSucursal = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        labelMetric3 = new org.edisoncor.gui.label.LabelMetric();
+        cmbBusqueda = new org.edisoncor.gui.comboBox.ComboBoxRound();
+        cmbConcepto = new org.edisoncor.gui.comboBox.ComboBoxRound();
         btnBuscar = new org.edisoncor.gui.button.ButtonIcon();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblNovedades = new javax.swing.JTable();
@@ -125,22 +156,17 @@ public class TablaNovedades extends javax.swing.JDialog {
         panelTranslucidoComplete1.setOpaque(false);
 
         btnCancelar.setBackground(new java.awt.Color(51, 51, 51));
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
-        btnCancelar.setText("buttonIcon1");
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
+        btnCancelar.setText("Atras");
+        btnCancelar.setToolTipText("");
         btnCancelar.setAngulo(120);
         btnCancelar.setDistanciaDeSombra(45);
 
         btnPDF.setBackground(new java.awt.Color(51, 51, 51));
         btnPDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pdf.png"))); // NOI18N
-        btnPDF.setText("buttonIcon2");
+        btnPDF.setText("PDF");
         btnPDF.setAngulo(120);
         btnPDF.setDistanciaDeSombra(45);
-
-        btnExcel.setBackground(new java.awt.Color(51, 51, 51));
-        btnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel.png"))); // NOI18N
-        btnExcel.setText("buttonIcon3");
-        btnExcel.setAngulo(120);
-        btnExcel.setDistanciaDeSombra(45);
 
         btnImprimir.setBackground(new java.awt.Color(51, 51, 51));
         btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/imprimir.png"))); // NOI18N
@@ -150,15 +176,26 @@ public class TablaNovedades extends javax.swing.JDialog {
 
         btnNuevo.setBackground(new java.awt.Color(51, 51, 51));
         btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/agregar_registro.png"))); // NOI18N
-        btnNuevo.setText("buttonIcon5");
+        btnNuevo.setText("Nuevo");
         btnNuevo.setAngulo(120);
         btnNuevo.setDistanciaDeSombra(45);
 
         btnGuardar.setBackground(new java.awt.Color(51, 51, 51));
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
-        btnGuardar.setText("buttonIcon6");
+        btnGuardar.setText("Guardar");
         btnGuardar.setAngulo(120);
         btnGuardar.setDistanciaDeSombra(45);
+
+        btnExcel.setBackground(new java.awt.Color(51, 51, 51));
+        btnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel.png"))); // NOI18N
+        btnExcel.setText("Excel");
+        btnExcel.setAngulo(120);
+        btnExcel.setDistanciaDeSombra(45);
+        btnExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTranslucidoComplete1Layout = new javax.swing.GroupLayout(panelTranslucidoComplete1);
         panelTranslucidoComplete1.setLayout(panelTranslucidoComplete1Layout);
@@ -167,31 +204,31 @@ public class TablaNovedades extends javax.swing.JDialog {
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(btnPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162)
+                .addGap(132, 132, 132)
                 .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162)
+                .addGap(126, 126, 126)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162)
+                .addGap(152, 152, 152)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
                 .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162)
+                .addGap(134, 134, 134)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
         );
         panelTranslucidoComplete1Layout.setVerticalGroup(
             panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         javax.swing.GroupLayout panelShadow1Layout = new javax.swing.GroupLayout(panelShadow1);
@@ -199,8 +236,8 @@ public class TablaNovedades extends javax.swing.JDialog {
         panelShadow1Layout.setHorizontalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelShadow1Layout.createSequentialGroup()
-                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 51, Short.MAX_VALUE))
         );
         panelShadow1Layout.setVerticalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,24 +250,14 @@ public class TablaNovedades extends javax.swing.JDialog {
         panelShadow2.setDistance(10);
 
         panelTranslucidoComplete2.setOpaque(false);
+        panelTranslucidoComplete2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labelMetric1.setText("Busqueda");
-
-        cmbBusqueda.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODO LOS EMPLEADOS", "LEGAJO", "EMPRESA Y SUCURSAL" }));
-        cmbBusqueda.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        cmbBusqueda.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbBusquedaItemStateChanged(evt);
-            }
-        });
-        cmbBusqueda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbBusquedaActionPerformed(evt);
-            }
-        });
+        labelMetric1.setText("Conceptos");
+        panelTranslucidoComplete2.add(labelMetric1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 81, 20));
 
         txtBusqueda.setText("Daniel Manzur");
         txtBusqueda.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
+        panelTranslucidoComplete2.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(403, 11, 191, -1));
 
         rdbHoy.setBackground(new java.awt.Color(51, 51, 51));
         buttonGroup1.add(rdbHoy);
@@ -242,6 +269,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                 rdbHoyActionPerformed(evt);
             }
         });
+        panelTranslucidoComplete2.add(rdbHoy, new org.netbeans.lib.awtextra.AbsoluteConstraints(612, 7, -1, -1));
 
         rdbMes.setBackground(new java.awt.Color(51, 51, 51));
         buttonGroup1.add(rdbMes);
@@ -253,6 +281,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                 rdbMesActionPerformed(evt);
             }
         });
+        panelTranslucidoComplete2.add(rdbMes, new org.netbeans.lib.awtextra.AbsoluteConstraints(731, 7, -1, -1));
 
         rdbFecha.setBackground(new java.awt.Color(51, 51, 51));
         buttonGroup1.add(rdbFecha);
@@ -264,26 +293,49 @@ public class TablaNovedades extends javax.swing.JDialog {
                 rdbFechaActionPerformed(evt);
             }
         });
+        panelTranslucidoComplete2.add(rdbFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(887, 7, -1, -1));
 
         fechaInicio.setBackground(new java.awt.Color(255, 255, 255));
         fechaInicio.setBorder(new javax.swing.border.SoftBevelBorder(0));
         fechaInicio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         fechaInicio.setMaxSelectableDate(new Date());
+        panelTranslucidoComplete2.add(fechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(612, 49, 145, 29));
 
         jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Y");
+        panelTranslucidoComplete2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 49, 44, 33));
 
         fechaFin.setBackground(new java.awt.Color(255, 255, 255));
         fechaFin.setBorder(new javax.swing.border.SoftBevelBorder(0));
         fechaFin.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         fechaFin.setMaxSelectableDate(new Date());
+        panelTranslucidoComplete2.add(fechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(846, 49, 146, 29));
 
         labelMetric2.setText("Sucursal");
+        panelTranslucidoComplete2.add(labelMetric2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, -1, 20));
 
-        txtSucursal.setText("Maimara");
         txtSucursal.setFont(new java.awt.Font("Bookman Old Style", 0, 14)); // NOI18N
+        panelTranslucidoComplete2.add(txtSucursal, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 191, -1));
+
+        labelMetric3.setText("Busqueda");
+        panelTranslucidoComplete2.add(labelMetric3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 14, 81, 20));
+
+        cmbBusqueda.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODO LOS EMPLEADOS", "LEGAJO", "EMPRESA Y SUCURSAL", "CONCEPTOS" }));
+        cmbBusqueda.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        cmbBusqueda.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbBusquedaItemStateChanged(evt);
+            }
+        });
+        cmbBusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBusquedaActionPerformed(evt);
+            }
+        });
+        panelTranslucidoComplete2.add(cmbBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 11, 273, 23));
+        panelTranslucidoComplete2.add(cmbConcepto, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 273, 23));
 
         btnBuscar.setBackground(new java.awt.Color(51, 51, 51));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
@@ -296,82 +348,14 @@ public class TablaNovedades extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout panelTranslucidoComplete2Layout = new javax.swing.GroupLayout(panelTranslucidoComplete2);
-        panelTranslucidoComplete2.setLayout(panelTranslucidoComplete2Layout);
-        panelTranslucidoComplete2Layout.setHorizontalGroup(
-            panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                        .addComponent(labelMetric1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cmbBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(247, 247, 247)
-                        .addComponent(labelMetric2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                        .addComponent(fechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                        .addComponent(fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                        .addComponent(rdbHoy)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(rdbMes)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(rdbFecha)))
-                .addContainerGap())
-        );
-        panelTranslucidoComplete2Layout.setVerticalGroup(
-            panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rdbFecha)
-                            .addComponent(rdbMes)
-                            .addComponent(rdbHoy))
-                        .addGap(17, 17, 17)
-                        .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTranslucidoComplete2Layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelMetric2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(4, 4, 4))))
-                    .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelTranslucidoComplete2Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(labelMetric1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelTranslucidoComplete2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(cmbBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout panelShadow2Layout = new javax.swing.GroupLayout(panelShadow2);
         panelShadow2.setLayout(panelShadow2Layout);
         panelShadow2Layout.setHorizontalGroup(
             panelShadow2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelShadow2Layout.createSequentialGroup()
-                .addGap(128, 128, 128)
+                .addGap(31, 31, 31)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
                 .addComponent(panelTranslucidoComplete2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(128, 128, 128))
         );
@@ -380,6 +364,10 @@ public class TablaNovedades extends javax.swing.JDialog {
             .addGroup(panelShadow2Layout.createSequentialGroup()
                 .addComponent(panelTranslucidoComplete2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(panelShadow2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tblNovedades.setBackground(new java.awt.Color(153, 153, 153));
@@ -432,9 +420,12 @@ public class TablaNovedades extends javax.swing.JDialog {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelShadow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelShadow2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(panelShadow2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1192, Short.MAX_VALUE)
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel1Layout.setVerticalGroup(
@@ -442,9 +433,9 @@ public class TablaNovedades extends javax.swing.JDialog {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelShadow2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -462,23 +453,6 @@ public class TablaNovedades extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cmbBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBusquedaItemStateChanged
-
-    }//GEN-LAST:event_cmbBusquedaItemStateChanged
-
-    private void cmbBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusquedaActionPerformed
-        if (cmbBusqueda.getSelectedIndex()==1) {
-//             busqueda de empleado por legajo o empresa y sucursal
-            activarLegajo();
-        } else if (cmbBusqueda.getSelectedIndex()==2){
-              activarBusqueda();
-        } else  {
-//             todos los empleados
-            inactivarBusqueda();
-        }
-
-    }//GEN-LAST:event_cmbBusquedaActionPerformed
 
     private void rdbHoyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbHoyActionPerformed
         if (rdbHoy.isSelected())
@@ -512,15 +486,15 @@ public class TablaNovedades extends javax.swing.JDialog {
         listaNov = new  ArrayList<Novedad>();
        if (fechaInicio.getDate().getTime()<=fechaFin.getDate().getTime()) {
             //  verificar de que la fecha inicio no sea mayor que la fecha fin
-        if (cmbBusqueda.getSelectedIndex()==1) {
+        if (cmbConcepto.getSelectedIndex()==1) {
             
-           //busqueda empleado por DNI  
+           //busqueda empleado por Legajo  
             try {        
-              Empleado  e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtBusqueda.getText()));
-            
+                Empleado  e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtBusqueda.getText()));
+                String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+e.getLegajo()+"'";
             if (e!=null) {
               listaNov = new ConceptoDaoImp().listarNovedad(fechaInicio.getDate());
-          
+              cargarTabla(listaNov);
             }else{
             JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
 
@@ -532,7 +506,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         } else {
               // Busqueda asistencias de todos los empleados
                listaNov = new ConceptoDaoImp().listarNovedad(FechaUtil.getFechaSinhora(fechaInicio.getDate()));
-              
+               cargarTabla(listaNov);
                System.out.println("cantidad de datos en la busqueda "+listaNov.size());
             }
           
@@ -544,6 +518,93 @@ public class TablaNovedades extends javax.swing.JDialog {
            TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
            TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
+         Workbook libro = new HSSFWorkbook();//Creo el LIBRO donde guardare las HOJAS
+            Map<String, CellStyle> styles = createStyles(libro);//Crea un ESTILO para la hoja
+            Sheet hoja = libro.createSheet("Novedades");//Creo una HOJA
+            hoja.setPrintGridlines(false);
+            hoja.setDisplayGridlines(false);
+      
+
+            PrintSetup printSetup = hoja.getPrintSetup();
+            printSetup.setLandscape(true);
+            hoja.setFitToPage(true);
+            hoja.setHorizontallyCenter(true);
+      
+
+            Row filatitulo = hoja.createRow(0);//Creo la primer FILA
+            filatitulo.setHeightInPoints(35.0F);//Le doy un TAMAÑO
+            for (int i = 1; i <= 7; i++) {
+              filatitulo.createCell(i).setCellStyle((CellStyle)styles.get("title"));//Setea el ESTILO a las CELDAS  
+            }
+            Cell filaCell = filatitulo.getCell(2);//Obtiene una CELDA
+            filaCell.setCellValue("Cálculo retribuciones en especie: ");//Inserta el VALOR que queremos a la CELDA(ENCABEZADO)
+            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$H$1"));//Combina y centra el VALOR insertado en la CELDA
+            
+            Row row = hoja.createRow(0);//Fila
+            Cell cell = row.createCell(0);//Columna
+            cell.setCellValue("Distribuidora Don Pedro");//Sacado de la BASE de DATOS
+            cell.setCellStyle((CellStyle)styles.get("title"));
+            
+            row = hoja.createRow(1);
+            cell = row.createCell(0);
+            cell.setCellValue("CUIT N°");//Sacado de la BASE de DATOS
+            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$2:$H$3"));
+            cell.setCellStyle((CellStyle)styles.get("fondo"));
+            
+//            row = hoja.createRow(1);
+            cell = row.createCell(2);
+            cell.setCellValue("Junio 2013");//Sacado de la BASE de DATOS
+            cell.setCellStyle((CellStyle)styles.get("title"));
+            
+            row = hoja.createRow(3);
+            cell = row.createCell(2);
+            cell.setCellValue("Bruto nómina");
+            cell.setCellStyle((CellStyle)styles.get("item_left"));
+            cell = row.createCell(5);
+//            cell.setCellValue(this.NominajTextField.getText());
+            cell.setCellStyle((CellStyle)styles.get("data"));
+            cell.setAsActiveCell();
+            
+            row = hoja.createRow(4);
+            cell = row.createCell(2);
+            cell.setCellValue("Ingreso a cuenta");
+            cell.setCellStyle((CellStyle)styles.get("item_left"));
+            cell = row.createCell(5);
+//            cell.setCellValue(this.IngresoaCuentajTextField.getText());
+            cell.setCellStyle((CellStyle)styles.get("data"));
+            
+            row = hoja.createRow(5);
+            cell = row.createCell(2);
+            cell.setCellValue("Total retribucion en especie");
+            cell.setCellStyle((CellStyle)styles.get("item_left"));
+            cell = row.createCell(5);
+//            cell.setCellValue(this.TotaljTextField.getText());
+            cell.setCellStyle((CellStyle)styles.get("data"));
+            
+            row = hoja.createRow(6);
+            cell = row.createCell(2);
+            cell.setCellValue("IVA repercutido");
+            cell.setCellStyle((CellStyle)styles.get("item_left"));
+            cell = row.createCell(5);
+//            cell.setCellValue(this.IVAjTextField.getText());
+            cell.setCellStyle((CellStyle)styles.get("data"));
+            try {
+                CrearExcel(libro);
+            } catch (Exception ex) {
+                Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+    }//GEN-LAST:event_btnExcelActionPerformed
+
+    private void cmbBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBusquedaItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbBusquedaItemStateChanged
+
+    private void cmbBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusquedaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbBusquedaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -596,12 +657,14 @@ public class TablaNovedades extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonIcon btnPDF;
     private javax.swing.ButtonGroup buttonGroup1;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbBusqueda;
+    private org.edisoncor.gui.comboBox.ComboBoxRound cmbConcepto;
     private com.toedter.calendar.JDateChooser fechaFin;
     private com.toedter.calendar.JDateChooser fechaInicio;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private org.edisoncor.gui.label.LabelMetric labelMetric1;
     private org.edisoncor.gui.label.LabelMetric labelMetric2;
+    private org.edisoncor.gui.label.LabelMetric labelMetric3;
     private org.edisoncor.gui.panel.Panel panel1;
     private org.edisoncor.gui.panel.PanelShadow panelShadow1;
     private org.edisoncor.gui.panel.PanelShadow panelShadow2;
@@ -614,7 +677,14 @@ public class TablaNovedades extends javax.swing.JDialog {
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtBusqueda;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtSucursal;
     // End of variables declaration//GEN-END:variables
- private void inactivarBusqueda(){
+
+    private void cargarTabla(List<Novedad> listaNovedad){
+         listaNovedad = new NovedadDaoImp().listarNovedad();
+        util.TablaUtil.prepararTablaRRHH(modelo, tblNovedades);
+        util.TablaUtil.cargarModeloRRHH(modelo, listaNovedad, tblNovedades);
+    }
+    
+    private void inactivarBusqueda(){
          // dejar no editable el txtbusqueda y no activo el boton busqueda
         txtBusqueda.setEditable(false);
         txtSucursal.setEditable(false);
@@ -682,6 +752,157 @@ private void deshabilitarFechas()
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    public void CrearExcel(Workbook libro) throws Exception{
+        JFileChooser fc = null;
+        FileNameExtensionFilter filter = null;
+        if (fc == null){
+            fc = new JFileChooser();
+            fc.setDialogTitle("Guardar");
+      
+            fc.setFileSelectionMode(0);
+            filter = new FileNameExtensionFilter("Libro de Excel", new String[] { "xls" });
+            fc.addChoosableFileFilter(filter);
+            fc.setFileFilter(filter);
+        }
+        int returnVal = fc.showSaveDialog(this);
+        if (returnVal == 0){
+            File file = fc.getSelectedFile();
+            String ext = "";
+            if (fc.getFileFilter() == filter){
+                String extension = file.getAbsolutePath();
+                if (!extension.endsWith(".xls")){
+                    ext = ".xls";
+                }
+            }
+        try{
+            OutputStream output = new FileOutputStream(file + ext);
+            Throwable localThrowable2 = null;
+            try{
+                libro.write(output);
+                output.close();
+            }catch (Throwable localThrowable1){
+                localThrowable2 = localThrowable1;
+                throw localThrowable1;
+            }
+            finally{
+                if (output != null){
+                    if (localThrowable2 != null){
+                        try{
+                            output.close();
+                        }catch (Throwable x2){
+                            localThrowable2.addSuppressed(x2);
+                        }
+                    }else {
+                        output.close();
+                    }
+                }
+            }
+        }catch (FileNotFoundException e){
+            System.err.println(e.getMessage());
+        }catch (IOException e){
+            System.err.println(e.getMessage());
+        }
+     }
+     fc.setSelectedFile(null);
+  }
+  
+  private static Map<String, CellStyle> createStyles(Workbook wb)
+  {
+    Map<String, CellStyle> styles = new HashMap();
     
+    Font titleFont = wb.createFont();
+    titleFont.setFontHeightInPoints((short)14);
+    titleFont.setFontName("Trebuchet MS");
+    CellStyle style = wb.createCellStyle();
+    style.setFont(titleFont);
+    style.setBorderBottom((short)7);
+    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+    styles.put("title", style);
+    
+    Font itemFont = wb.createFont();
+    itemFont.setFontHeightInPoints((short)9);
+    itemFont.setFontName("Trebuchet MS");
+//    itemFont.setFontName("Arial Black");
+    style = wb.createCellStyle();
+    style.setAlignment((short)1);
+    style.setFont(itemFont);
+    styles.put("item_left", style);
+    
+    style = wb.createCellStyle();
+    style.setAlignment((short)3);
+    style.setFont(itemFont);
+    styles.put("item_right", style);
+    
+
+//    style = wb.createCellStyle();
+//    style.setAlignment((short)3);
+//    style.setFont(itemFont);
+//    style.setBorderRight((short)7);
+//    style.setRightBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+//    style.setBorderBottom((short)7);
+//    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+//    style.setBorderLeft((short)7);
+//    style.setLeftBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+//    style.setBorderTop((short)7);
+//    style.setTopBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+//    style.setDataFormat(wb.createDataFormat().getFormat("0"));
+//    style.setBorderBottom((short)7);
+//    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+//    style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+//    style.setFillPattern((short)1);
+//    styles.put("data", style);
+    style = wb.createCellStyle();
+    style.setAlignment((short)3);
+    style.setFont(itemFont);
+    style.setBorderRight((short)7);
+    style.setRightBorderColor(IndexedColors.RED.getIndex());
+    style.setBorderBottom((short)7);
+    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+    style.setBorderLeft((short)7);
+    style.setLeftBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+    style.setBorderTop((short)7);
+    style.setTopBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+    style.setDataFormat(wb.createDataFormat().getFormat("0"));
+    style.setBorderBottom((short)7);
+    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
+    style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
+    style.setFillPattern((short)1);
+    styles.put("data", style);
+    
+    style.setFont(itemFont);
+    style.setFillBackgroundColor(IndexedColors.AQUA.getIndex());
+    style.setAlignment((short)1);
+    styles.put("fondo", style);
+    
+
+    return styles;
+  }
+  
+  private void generarExcel(){
+      Workbook libro = new HSSFWorkbook();//Creo el LIBRO donde guardare las HOJAS
+      Sheet hoja = libro.createSheet("Novedades");//Creo una HOJA
+      for (int i = 0; i < tblNovedades.getRowCount()-1; i++) {
+          Row fila = hoja.createRow(i);          
+          if(i==0){
+             for (int j = 0; j < tblNovedades.getColumnCount()-1; j++) {
+                 Cell celda = fila.createCell(j);
+                 celda.setCellValue(new HSSFRichTextString(tblNovedades.getColumnModel().getColumn(j).getHeaderValue().toString()));
+             }
+         }else{
+              for (int j = 0; j < tblNovedades.getColumnCount()-1; j++) {
+                  Cell celda = fila.createCell(j);
+                  if(tblNovedades.getValueAt(i, j)!=null)
+                      celda.setCellValue(new HSSFRichTextString(tblNovedades.getValueAt(i, j).toString()));
+              }
+          }
+          try {
+              FileOutputStream elFichero = new FileOutputStream("holamundo.xls");
+              libro.write(elFichero);
+              elFichero.close();
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }
+  }
 }
 

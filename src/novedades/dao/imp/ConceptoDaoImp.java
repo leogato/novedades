@@ -43,7 +43,7 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
         Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "from Concepto u\n"+"Where u.cargaUser = '"+carga+"'";
-        con = (Concepto)session.createQuery(sql);
+        con = (Concepto)session.createQuery(sql).uniqueResult();
         session.getTransaction().commit();
         session.close();
         return con;
@@ -119,7 +119,7 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
         Concepto con = null;
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "from Concepto u\n"+"Where u.tipo = '"+descripcion+"'";
+        String sql = "from Concepto u\n"+"Where u.descripcion = '"+descripcion+"'";
         con = (Concepto)session.createQuery(sql).uniqueResult();
         session.getTransaction().commit();
         session.close();
