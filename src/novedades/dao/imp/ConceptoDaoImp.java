@@ -28,11 +28,11 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
 
     @Override
     public List<Concepto> listarConcepto() {
-       Session session = Conexion.getSession();
+        Concepto con = null;
+        Session session = Conexion.getSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Concepto.class);
-        
-        ArrayList<Concepto> concepto = (ArrayList<Concepto>)criteria.list();
+        String sql = "from Concepto";
+        ArrayList<Concepto> concepto = (ArrayList<Concepto>)session.createQuery(sql).list();
         session.close();
         return concepto;
     }

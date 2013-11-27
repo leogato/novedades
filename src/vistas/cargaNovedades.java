@@ -105,9 +105,10 @@ public class cargaNovedades extends javax.swing.JDialog {
 //        if (usuario.getCargo() && usuario.getUltimoIngreso().equals(new Date())) {
 //        usuario.setCargo(false);
         String ultimoing = util.FechaUtil.getFechaString10DDMMAAAA(usuario.getUltimoIngreso());
-//        String ultimoing = usuario.getUltimoIngreso().toString();
-        System.out.println("ultimo: "+ultimoing);
-        String hoy= util.FechaUtil.getFechaString10DDMMAAAA(new Date());
+        Date fecha = util.FechaUtil.getFechaSinhora(date);
+        System.out.println("ultimo: "+fecha);
+//        String hoy = util.FechaUtil.getFechaString10DDMMAAAA(new Date());
+        Date hoy = util.FechaUtil.getFechaSinhora(date);
         System.out.println("hoy: "+ultimoing);
         System.out.println("Cargo?: "+usuario.getCargo());
         System.out.println("Cargo?: "+ultimoing.equals(hoy));
@@ -186,7 +187,7 @@ public class cargaNovedades extends javax.swing.JDialog {
 
         tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, "0 - Sin Novedad", null, null}
+                {null, null, null, "0 - Sin Novedad", "0", "-"}
             },
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
@@ -269,6 +270,8 @@ public class cargaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
+        int i;
+        try{
         ArrayList nov = null;
         Session session = Conexion.getSession();
         session.beginTransaction();
@@ -283,12 +286,12 @@ public class cargaNovedades extends javax.swing.JDialog {
 //        }else{
 //            getDatosTabla(WIDTH);
 //        }
-        
+     
         if (nov.isEmpty()){
             if(tblNovedadesUsr.isEditing()){
                 tblNovedadesUsr.getCellEditor().stopCellEditing();
                 System.out.println("Entro");
-                for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
+                for( i = 0;i < tblNovedadesUsr.getRowCount();i++){
                     System.out.println(i);
                     getDatosTabla(i);
 //                    novedad.setFecha(lblFecha.getText().toString);
@@ -299,7 +302,7 @@ public class cargaNovedades extends javax.swing.JDialog {
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
             }else{
-                for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
+                for( i = 0;i < tblNovedadesUsr.getRowCount();i++){
                     System.out.println(i);
                     getDatosTabla(i);
                     novedad.setFecha(date);
@@ -312,8 +315,24 @@ public class cargaNovedades extends javax.swing.JDialog {
             }
         }else{
             JOptionPane.showMessageDialog(rootPane, "LOS DATOS YA FUERON CARGADOS ANTERIORMENTE, INTENTE MAÑANA NUEVAMENTE");
+            cargarTablaNovedadesCompleta();
         }
         this.dispose();
+     }catch(NullPointerException ex){
+            System.out.println(ex);
+            for( i = 0;i < tblNovedadesUsr.getRowCount();i++){
+                    System.out.println(i);
+                    getDatosTablaNull(i);
+                    novedad.setCantidad(0);
+                    novedad.setObservacion("-");
+                    novedad.setFecha(date);
+                    usuario.setCargo(true);
+                    new NovedadDaoImp().addNovedad(novedad);
+                    new UsuarioDaoImp().upDateUsuario(usuario);
+                }
+            JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
+            this.dispose();
+     }
         
     }//GEN-LAST:event_btnCargarActionPerformed
 
@@ -348,9 +367,16 @@ public class cargaNovedades extends javax.swing.JDialog {
         novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 5).toString());
         System.out.println(lblFecha.getText());
         System.out.println();
-            
     }
     
+       private void getDatosTablaNull(int i){
+        e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString()));
+        novedad.setEmpleado(e);
+        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 3).toString()));
+        novedad.setConcepto(c);
+        System.out.println(lblFecha.getText());
+        System.out.println();
+    }
        
    public void llenaJComboBoxInvestigacion() {
         Session session = null;
@@ -391,7 +417,7 @@ public class cargaNovedades extends javax.swing.JDialog {
    }
 
     private void cargarTablaNovedadesCompleta() {
-        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad();
+        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(date);
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
     }

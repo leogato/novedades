@@ -9,6 +9,7 @@ import hibernateUtil.Conexion;
 import java.awt.Color;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.Label;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -32,12 +33,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.EmpresaDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -69,6 +76,7 @@ public class TablaNovedades extends javax.swing.JDialog {
     private Empleado empleado;
     JComboBox jcb = new JComboBox();
     java.awt.Frame parent;
+    
     
     
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
@@ -643,37 +651,95 @@ public class TablaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
-        Empresa emp = new EmpresaDaoImp().getEmpresa(WIDTH);
-        HSSFWorkbook libro = new HSSFWorkbook();//crea el libro
-        Map<String, CellStyle> styles = createStyles(libro);
-        HSSFSheet hoja = libro.createSheet("Hoja 1");//crea una hoja
-        HSSFRow f = hoja.createRow(0);
-        HSSFCell celda;
-        celda = f.createCell(0);
-
-        for (int j = 0; j < tblNovedades.getColumnCount(); j++) {//crea las cabeceras de las columnas(titulos)
-                    celda = f.createCell(j);//crea celdas dependiendo de la cantidad de columnas en la tabla
-                    celda.setCellValue(new HSSFRichTextString(tblNovedades.getColumnModel().getColumn(j).getHeaderValue().toString()));//insterta datos a las celdas
-                    celda.setCellStyle((CellStyle)styles.get("title"));
-//                            celda.setCellStyle((CellStyle)styles.get("fondo"));
+//            try {                                         
+            Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(tblNovedades.getValueAt(1, 6).toString().charAt(0))));
+            HSSFWorkbook libro;//crea el libro
+            libro = new HSSFWorkbook();
+            Map<String, CellStyle> styles = createStyles(libro);
+            HSSFCellStyle cs = (HSSFCellStyle) libro.createCellStyle();
+            cs.setDataFormat(HSSFDataFormat.getBuiltinFormat("MMMM-yyyy"));
+            HSSFSheet hoja = libro.createSheet("Novedades");//crea una hoja
+            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$B$2"));
+            HSSFRow f = hoja.createRow(0);
+            HSSFCell celda;
+            celda = f.createCell(0);
+//            hoja.addCell(new Label(0,0,emp.getNombre()));
+            celda.setCellValue(emp.getNombre());
+            celda.setCellStyle((CellStyle)styles.get("title"));
+            f = hoja.createRow(1);
+            celda = f.createCell(1);
+            celda.setCellValue(new Date(tblNovedades.getValueAt(0, 0).toString().substring(8,10)+"/"+tblNovedades.getValueAt(0, 0).toString().substring(5,7)+"/"+tblNovedades.getValueAt(0, 0).toString().substring(0,4)));
+            celda.setCellStyle(cs);
+            f = hoja.createRow(2);
+            celda = f.createCell(1);
+            celda.setCellValue("CONCEPTOS");
+            celda.setCellStyle((CellStyle)styles.get("item_left"));
+            hoja.addMergedRegion(CellRangeAddress.valueOf("$B$3:$C$3"));
+            
+            //Carga todos los conceptos de la tabla
+            Session sesion = Conexion.getSession();
+            Criteria crit = sesion.createCriteria(Concepto.class);
+            int k = 0;
+            int j = 3;
+            int i =0;
+            List<Concepto> list = crit.list();
+            System.out.println("Tamaño de list: "+list.size()/2);
+            for (Concepto con : list){
+                if(k == 0){
+                   f = hoja.createRow(j); 
+                   celda = f.createCell(k);
+                   celda.setCellValue(con.getCodCon()+"-"+con.getDescripcion());
+                   
+                   System.out.println("list: "+i);
+                   i++;
+                   j++;
+                }else{
+                    
+                    System.out.println("I: "+i);
+                    f = hoja.getRow(j);
+                    celda = f.createCell(k);
+                    celda.setCellValue(con.getCodCon()+"-"+con.getDescripcion());
+                    j++;
+                    i++;
                 }
-//        celda.setCellValue(new HSSFRichTextString(empleado.getSucursal().getEmpresa().getCodEmp()+"-"+empleado.getSucursal().getEmpresa().getNombre()));
-        for (int i = 0; i < tblNovedades.getRowCount(); i++) {
-            HSSFRow fila = hoja.createRow(i+1);//Crea filas dependiando de la cantidad que hayan en la tabla          
-                for (int j = 0; j < tblNovedades.getColumnCount(); j++) {//empieza a agregar datos de la tabla
-                    celda = fila.createCell(j);
-                    if(tblNovedades.getValueAt(i, j)!=null)
-                        celda.setCellValue(new HSSFRichTextString(tblNovedades.getValueAt(i, j).toString()));
-                        celda.setCellStyle((CellStyle)styles.get("fondo"));
+                if (i == 8){
+                    k++;
+                    j = 3;
+                    i = 0;
                 }
-            try {
-                FileOutputStream elFichero = new FileOutputStream("holamundo.xls");
-                libro.write(elFichero);
-                elFichero.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+//                System.out.println("COn: "+con.getCodCon()+"-"+con.getDescripcion());
+                hoja.autoSizeColumn(k);
+        
             }
-        }
+
+    //        for (int j = 0; j < tblNovedades.getColumnCount(); j++) {//crea las cabeceras de las columnas(titulos)
+    //                    celda = f.createCell(j);//crea celdas dependiendo de la cantidad de columnas en la tabla
+    //                    celda.setCellValue(new HSSFRichTextString(tblNovedades.getColumnModel().getColumn(j).getHeaderValue().toString()));//insterta datos a las celdas
+    //                    celda.setCellStyle((CellStyle)styles.get("title"));
+    ////                            celda.setCellStyle((CellStyle)styles.get("fondo"));
+    //                }
+    //        celda.setCellValue(new HSSFRichTextString(empleado.getSucursal().getEmpresa().getCodEmp()+"-"+empleado.getSucursal().getEmpresa().getNombre()));
+    //        for (int i = 0; i < tblNovedades.getRowCount(); i++) {
+    //            HSSFRow fila = hoja.createRow(i+1);//Crea filas dependiando de la cantidad que hayan en la tabla          
+    //                for (int j = 0; j < tblNovedades.getColumnCount(); j++) {//empieza a agregar datos de la tabla
+    //                    celda = fila.createCell(j);
+    //                    if(tblNovedades.getValueAt(i, j)!=null)
+    //                        celda.setCellValue(new HSSFRichTextString(tblNovedades.getValueAt(i, j).toString()));
+    //                        celda.setCellStyle((CellStyle)styles.get("fondo"));
+    //                }
+                try {
+                    FileOutputStream elFichero = new FileOutputStream("prueba.xls");
+                    libro.write(elFichero);
+                    elFichero.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+    //        }
+            
+//        } catch (IOException | WriteException | RowsExceededException ex) {
+//                Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+        
         
     }//GEN-LAST:event_btnExcelActionPerformed
 
@@ -933,6 +999,7 @@ private void deshabilitarFechas()
             Sheet hoja = libro.createSheet("Novedades");//Creo una HOJA
             hoja.setPrintGridlines(false);
             hoja.setDisplayGridlines(false);
+            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$B$1"));
       
 
             PrintSetup printSetup = hoja.getPrintSetup();
@@ -1058,28 +1125,27 @@ private void deshabilitarFechas()
      fc.setSelectedFile(null);
   }
   
-  private static Map<String, CellStyle> createStyles(Workbook wb)
+  private Map<String, CellStyle> createStyles(Workbook wb)
   {
     Map<String, CellStyle> styles = new HashMap();
     
     Font titleFont = wb.createFont();
-    titleFont.setFontHeightInPoints((short)16);
+    titleFont.setFontHeightInPoints((short)24);
 //    titleFont.setFontName("Trebuchet MS");
-    titleFont.setFontName("Algerian");
+    titleFont.setFontName("French Script MT");
     CellStyle style = wb.createCellStyle();
     style.setFont(titleFont);
     style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
     style.setBorderBottom((short)7);
-    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
-    
+    style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
     styles.put("title", style);
     
+      
     Font itemFont = wb.createFont();
-    itemFont.setFontHeightInPoints((short)9);
-    itemFont.setFontName("Trebuchet MS");
-//    itemFont.setFontName("Arial Black");
+    itemFont.setFontHeightInPoints((short)10);
+    itemFont.setFontName("Arial Black");
     style = wb.createCellStyle();
-    style.setAlignment((short)1);
+//    style.setAlignment((short)1);
     style.setFont(itemFont);
     styles.put("item_left", style);
     
