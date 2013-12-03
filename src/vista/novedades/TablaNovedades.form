@@ -169,6 +169,9 @@
                     <Property name="angulo" type="int" value="120"/>
                     <Property name="distanciaDeSombra" type="int" value="45"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="org.edisoncor.gui.button.ButtonIcon" name="btnPDF">
                   <Properties>
@@ -549,6 +552,9 @@
                 <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbConcepto">
                 </Component>
                 <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbEmpresa">
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbEmpresaItemStateChanged"/>
+                  </Events>
                 </Component>
                 <Component class="org.edisoncor.gui.label.LabelMetric" name="labelMetric4">
                   <Properties>

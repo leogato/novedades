@@ -15,6 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
+import pojo.Empresa;
 import pojo.Novedad;
 import pojo.Sucursal;
 import pojo.Usuario;
@@ -155,6 +156,24 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
                      "join fetch a.sucursal as s\n" +
                      "where s.codSuc = '"+e.getCodSuc()+"'";
         List<Novedad> lista = session.createQuery(sql).list();
+        return lista;
+    }
+    
+    public List<Novedad> listarNovedad(Empresa e, Date fechaInicio, Date fechaFin) {
+//        Empleado emp = new EmpleadoDaoImp().getEmpleado(e.getSucursal().getCodSuc());
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql = " from Novedad as n\n" +
+                "join fetch n.empleado as e\n" +
+                "join fetch e.sucursal as s\n" +
+                "join fetch s.empresa as em\n" +
+                "where em.codEmp = '"+e.getCodEmp()+"'";
+        List<Novedad> lista = session.createQuery(sql).list();
+//        Criteria criteria = session.createCriteria(Novedad.class);
+//        criteria.add(Restrictions.eq("empresa", e));
+//        criteria.add(Restrictions.ge("fecha", fechaInicio));
+//        criteria.add(Restrictions.le("fecha", fechaFin));
+//        List<Novedad> lista = criteria.list();
         return lista;
     }
     

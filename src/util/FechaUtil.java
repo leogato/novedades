@@ -1,5 +1,6 @@
 package util;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import static util.FechaUtil.getAnio;
 import static util.FechaUtil.getDia;
@@ -65,7 +66,7 @@ public class FechaUtil {
         return f;
     }
 
-    public static int getDia (Date fecha){
+    public static int getDia (Date fecha){//********DEVUELVE EL DIA DEL MES SELECCIONADO
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTime(fecha);
         
@@ -221,4 +222,65 @@ public class FechaUtil {
         
     }
      
+    public static long diferenciaEntreFechas(Date fecIni, Date fecFin){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+               
+	 
+	        // Establecer las fechas
+	        cal1.set(2006, 12, 30);
+	        cal2.set(2007, 5, 3);
+	 
+	        // conseguir la representacion de la fecha en milisegundos
+	        long milis1 = fecIni.getTime();
+	        long milis2 = fecFin.getTime();
+	 
+	        // calcular la diferencia en milisengundos
+	        long diff = milis2 - milis1;
+	 
+	        // calcular la diferencia en segundos
+	        long diffSeconds = diff / 1000;
+	 
+	        // calcular la diferencia en minutos
+	        long diffMinutes = diff / (60 * 1000);
+	 
+	        // calcular la diferencia en horas
+	        long diffHours = diff / (60 * 60 * 1000);
+	 
+	        // calcular la diferencia en dias
+	        long diffDays = (diff / (24 * 60 * 60 * 1000))+1;
+	 
+//	        System.out.println("En milisegundos: " + diff + " milisegundos.");
+//	        System.out.println("En segundos: " + diffSeconds + " segundos.");
+//	        System.out.println("En minutos: " + diffMinutes + " minutos.");
+//	        System.out.println("En horas: " + diffHours + " horas.");
+//	        System.out.println("En dias: " + diffDays + " dias.");
+                return diffDays;
+    }
+    public static int getDiasDelMes(int mes, int año){
+        switch(mes){
+        case 1:  // Enero
+        case 3:  // Marzo
+        case 5:  // Mayo
+        case 7:  // Julio
+        case 8:  // Agosto
+        case 10:  // Octubre
+        case 12: // Diciembre
+            return 31;
+        case 4:  // Abril
+        case 6:  // Junio
+        case 9:  // Septiembre
+        case 11: // Noviembre
+            return 30;
+        case 2:  // Febrero
+            if ( ((año%100 == 0) && (año%400 == 0)) ||
+                    ((año%100 != 0) && (año%  4 == 0))   )
+                return 29;  // Año Bisiesto
+            else
+                return 28;
+        default:
+            throw new java.lang.IllegalArgumentException(
+            "El mes debe estar entre 0 y 11");
+        }
+    }
 }

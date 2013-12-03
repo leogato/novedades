@@ -569,7 +569,14 @@ public class AltaEmpleado extends javax.swing.JDialog {
      public Empleado getDatosEmpleado(){
         
         Empleado empleado = new Empleado();
-        Sucursal sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+        Sucursal sucursal = null;
+        String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
+                System.out.println("Cod: "+cod);
+                if (cod.charAt(1) == '-'){
+                    sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+                }else{
+                    sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
+                }
         empleado.setSucursal(sucursal);
         System.out.println("Legajo "+Integer.parseInt(txtLegajo.getText()));
         empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
