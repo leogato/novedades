@@ -148,26 +148,29 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         return lista;
     }
     
-    public List<Novedad> listarNovedad(Sucursal e, Date fechaInicio, Date fechaFin) {
+    public List<Novedad> listarNovedad(Sucursal e, String fechaInicio, String fechaFin) {
         Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "from Novedad as n\n" +
                      "join fetch n.empleado a\n" +
                      "join fetch a.sucursal as s\n" +
-                     "where s.codSuc = '"+e.getCodSuc()+"'";
+                     "where s.codSuc = '"+e.getCodSuc()+"' and n.fecha >= '"+fechaInicio+"' and n.fecha <= '"+fechaFin+"'";
         List<Novedad> lista = session.createQuery(sql).list();
         return lista;
     }
     
-    public List<Novedad> listarNovedad(Empresa e, Date fechaInicio, Date fechaFin) {
+    public List<Novedad> listarNovedad(Empresa e, String fechaInicio, String fechaFin) {
 //        Empleado emp = new EmpleadoDaoImp().getEmpleado(e.getSucursal().getCodSuc());
+        System.out.println("Fecha Inicio en DAO: "+fechaInicio);
+        System.out.println("Fecha Fin en DAO: "+fechaFin);
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = " from Novedad as n\n" +
-                "join fetch n.empleado as e\n" +
-                "join fetch e.sucursal as s\n" +
-                "join fetch s.empresa as em\n" +
-                "where em.codEmp = '"+e.getCodEmp()+"'";
+        String sql = " from Novedad as n \n" +
+                "join fetch n.empleado as e \n" +
+                "join fetch e.sucursal as s \n" +
+                "join fetch s.empresa as em \n" +
+                "where em.codEmp = '"+e.getCodEmp()+"' and n.fecha >= '"+fechaInicio+"' and n.fecha <= '"+fechaFin+"'";
+//        "where em.codEmp = '"+e.getCodEmp()+"and n.fecha >= '20-11-2013' and n.fecha <= '22-11-2013'";
         List<Novedad> lista = session.createQuery(sql).list();
 //        Criteria criteria = session.createCriteria(Novedad.class);
 //        criteria.add(Restrictions.eq("empresa", e));

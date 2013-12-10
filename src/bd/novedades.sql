@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-11-2013 a las 02:44:14
+-- Tiempo de generación: 10-12-2013 a las 19:47:42
 -- Versión del servidor: 5.5.32
 -- Versión de PHP: 5.4.16
 
@@ -43,11 +43,13 @@ CREATE TABLE IF NOT EXISTS `concepto` (
 
 INSERT INTO `concepto` (`cod_con`, `descripcion`, `tipo`, `estado`, `cargaUser`) VALUES
 (0, 'Sin Novedad', 'CUALITATIVA', NULL, 1),
-(1, 'falta sin aviso', 'CUALITATIVA', NULL, 1),
-(2, 'tardanza', 'CUALITATIVA', NULL, 1),
-(3, 'feriado', 'CUALITATIVA', NULL, 1),
+(1, 'falta sin aviso', 'CUALITATIVA', NULL, 0),
+(2, 'tardanza', 'CUALITATIVA', NULL, 0),
+(3, 'feriado', 'CUALITATIVA', NULL, 0),
 (4, 'Adelanto Sueldo', 'CUANTITATIVA', NULL, 1),
-(5, 'Perdida de Celular', 'CUANTITATIVA', NULL, 0);
+(5, 'Perdida de Celular', 'CUANTITATIVA', NULL, 1),
+(7, 'HS EXTRA', 'CUANTITATIVA', NULL, 0),
+(8, 'ENFERMEDAD', 'CUALITATIVA', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -74,11 +76,13 @@ CREATE TABLE IF NOT EXISTS `empleado` (
 --
 
 INSERT INTO `empleado` (`LEGAJO`, `APELLIDO`, `NOMBRE`, `CUIT`, `COD_EMP`, `COD_SUC`, `convenio`, `tarea`, `estado`) VALUES
-(157, 'AINSTEIN', 'FACUNDO', '3232323', 0, 0, 'PROFESIONAL', 'INGENIERO', NULL),
-(233, 'Flores', 'Guillermo', '123123123123', 3, 1, 'cec', 'auditor', NULL),
-(236, 'FIGUEREDO', 'DANIELA', '2323233', 0, 0, 'PROFESIONAL', 'ABOGADA', NULL),
-(237, 'CAMPOS', 'LEONARDO', '23-31463692-9', 3, 1, 'nada', 'TECNICO', NULL),
-(238, 'pelaez', 'joel', '123123123123', 1, 0, 'cec', 'tec', NULL);
+(123, 'Lopez', 'Sandra', '324234234', 2, 5, 'CEC', 'RRHH', NULL),
+(157, 'Ainstein', 'Facundo', '232323232323', 1, 2, 'Ingeniero', 'Jefe de Sistemas', NULL),
+(231, 'romero', 'jose', '12312344', 2, 12, 'profesional', 'contador', NULL),
+(232, 'claure', 'ruben', '12312312', 1, 5, 'CEC', 'de todo', NULL),
+(233, 'Flores', 'Guillermo', '123123123123', 2, 12, 'cec', 'auditor', NULL),
+(237, 'Campos', 'Leonardo', '23-31463692-9', 1, 1, 'nada', 'TECNICO', NULL),
+(240, 'Figueredo', 'Daniela', '3232323232323', 2, 12, 'Profesional', 'Abogada', NULL);
 
 -- --------------------------------------------------------
 
@@ -100,9 +104,9 @@ CREATE TABLE IF NOT EXISTS `empresa` (
 --
 
 INSERT INTO `empresa` (`COD_EMP`, `NOMBRE`, `GERENTE`, `MAIL_GERENTE`, `estado`) VALUES
-(1, 'DM', 'Coco', 'coco', 1),
-(2, 'FM', 'Seba', 'seba', 1),
-(3, 'DP', 'Seba', 'seba', 1);
+(1, 'Daniel Manzur', 'Sebastian Dellamea', 'sdellamea@manzur-admin.com', 1),
+(2, 'Fernando Manzur', 'Sebastian Besin', 'sbesin@manzur-admin.com', 1),
+(3, 'Don Pedro', 'Sebastian Besin', 'sbesin@manzur-admin.com', 1);
 
 -- --------------------------------------------------------
 
@@ -116,20 +120,37 @@ CREATE TABLE IF NOT EXISTS `novedad` (
   `cantidad` int(5) DEFAULT NULL,
   `observacion` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
   `cod_con` int(3) NOT NULL,
-  `fecha` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
   `estado` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `cod_emp` (`legajo`,`cod_con`),
   KEY `cod_con` (`cod_con`),
   KEY `legajo` (`legajo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=181 ;
 
 --
 -- Volcado de datos para la tabla `novedad`
 --
 
 INSERT INTO `novedad` (`id`, `legajo`, `cantidad`, `observacion`, `cod_con`, `fecha`, `estado`) VALUES
-(32, 157, 1, 'a', 1, '10/10/2013', NULL);
+(152, 123, 0, '-', 0, '2013-11-20', NULL),
+(153, 232, 0, '-', 0, '2013-11-20', NULL),
+(157, 237, 0, '-', 2, '2013-11-20', NULL),
+(158, 231, 0, '-', 0, '2013-11-20', NULL),
+(159, 233, 0, '-', 4, '2013-11-20', NULL),
+(160, 240, 0, '-', 5, '2013-11-20', NULL),
+(165, 231, 300, 'Desc', 4, '2013-11-21', NULL),
+(166, 233, 0, '-', 0, '2013-11-21', NULL),
+(167, 240, 40, '-', 7, '2013-11-21', NULL),
+(168, 231, 151, '-', 5, '2013-11-22', NULL),
+(169, 233, 0, '-', 2, '2013-11-22', NULL),
+(170, 240, 0, '-', 8, '2013-11-22', NULL),
+(171, 123, 100, 'Descuento', 4, '2013-11-22', NULL),
+(172, 232, 350, 'Se lo Robaron', 5, '2013-11-22', NULL),
+(173, 123, 0, '-', 0, '2013-12-05', NULL),
+(174, 232, 0, '-', 0, '2013-12-05', NULL),
+(175, 237, 0, '-', 3, '2013-12-05', NULL),
+(180, 237, 0, '-', 0, '2013-12-06', NULL);
 
 -- --------------------------------------------------------
 
@@ -151,8 +172,26 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 --
 
 INSERT INTO `sucursal` (`cod_suc`, `nombre`, `cod_emp`, `estado`) VALUES
-(0, 'Daniel', 1, 0),
-(1, 'DP Jujuy', 3, 1);
+(1, 'Jujuy', 3, 1),
+(2, 'Maimará', 3, 0),
+(3, 'Humahuaca', 3, 1),
+(4, 'Abra Pampa', 3, 1),
+(5, 'La Quiaca', 3, 1),
+(6, 'Salta', 1, 0),
+(7, 'Jujuy', 1, 0),
+(8, 'Maimara', 1, 0),
+(9, 'Humahuaca', 1, 0),
+(10, 'Abra Pampa', 1, 0),
+(11, 'La Quiaca', 1, 0),
+(12, 'San Pedro', 2, 0),
+(13, 'Maimara', 2, 0),
+(14, 'Humahuaca', 2, 0),
+(15, 'Abra Pampa', 2, 0),
+(16, 'La Quiaca', 2, 0),
+(17, 'Colonia Sta Rosa', 2, 0),
+(18, 'TODAS', 3, 0),
+(19, 'TODAS', 1, 0),
+(20, 'TODAS', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -168,20 +207,23 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `DESCRIPCION` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `TIPO` varchar(13) COLLATE utf8_unicode_ci NOT NULL,
   `ESTADO` tinyint(1) DEFAULT NULL,
+  `cargo` tinyint(1) DEFAULT NULL,
+  `ultimoIngreso` date DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `LEGAJO` (`LEGAJO`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`ID`, `LEGAJO`, `USUARIO`, `CLAVE`, `DESCRIPCION`, `TIPO`, `ESTADO`) VALUES
-(1, 157, 'FAINSTEIN', '123', 'ING', 'ADMINISTRADOR', NULL),
-(2, 237, 'LCAMPOS', '123', 'TEC', 'ADMINISTRADOR', NULL),
-(4, 236, 'DFIGUEREDO', '123', 'abo', 'ADMINISTRADOR', NULL),
-(5, 233, 'GFlores', '123', 'auditoria', 'ADMINISTRADOR', NULL),
-(7, 238, 'jpelaez', '123', 'ing', 'COMUN', NULL);
+INSERT INTO `usuario` (`ID`, `LEGAJO`, `USUARIO`, `CLAVE`, `DESCRIPCION`, `TIPO`, `ESTADO`, `cargo`, `ultimoIngreso`) VALUES
+(2, 237, 'LCAMPOS', '123', 'TEC', 'ADMINISTRADOR', NULL, 1, '2013-12-09'),
+(5, 233, 'GFlores', '123', 'auditoria', 'ADMINISTRADOR', NULL, 1, '2013-11-22'),
+(8, 123, 'SLopez', '123', 'RRHH', 'COMUN', NULL, 1, '2013-12-05'),
+(9, 232, 'rclaure', '123', 'ruben', 'COMUN', NULL, NULL, NULL),
+(10, 231, 'jromero', '123', 'jose', 'COMUN', NULL, 1, '2013-11-20'),
+(11, 157, 'FAinstein', '123', 'facu', 'ADMINISTRADOR', NULL, NULL, NULL);
 
 --
 -- Restricciones para tablas volcadas

@@ -1,6 +1,7 @@
 package util;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import static util.FechaUtil.getAnio;
 import static util.FechaUtil.getDia;
@@ -10,6 +11,9 @@ import static util.FechaUtil.getMesString;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,12 +23,33 @@ public class FechaUtil {
     
     
      public static String getFechaString10DDMMAAAA (Date fecha){
+         String fec;
+         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");     
+         fec = sdf.format(fecha);
+         return fec;
+    }
+     
+     public static String getFechaString11AAAAMMDD (Date fecha){
         
          Date date = new Date();
-         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");     
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");     
          return sdf.format(fecha);
     }
  
+//     public static Date getFechaDate(String fecha) throws ParseException{
+//         Date date = null;
+//         System.out.println("Entre a parsear");
+//         date = new SimpleDateFormat("yyyy-MM-dd").(fecha);
+//         return date;
+//         
+//    }
+     
+     
+//     private String getWhereFecha() { 
+//         String desdeS= FechaUtil.getFechaString10AAAAMMDD(dateDesde.getDate());
+//         String hastaS= FechaUtil.getFechaString10AAAAMMDD(dateHasta.getDate()); 
+//         return "c.fecha<='" + hastaS + "' and c.fecha>='" + desdeS + "'"; }
+     
     /**
      * 
      * @param fecha  recibe una fecha de tipo date
@@ -39,17 +64,16 @@ public class FechaUtil {
         
         return f;
     }
-//    
-//    public static Date getFechaDDMMAAAA (Date fecha){
-//        String mifecha = fecha.toString();
-//        String dia = mifecha.substring(8, 10);
-//        String  mes = mifecha.substring(5, 7);
-//        String anio = mifecha.substring(0, 4);
-//        Date f = dia+"/"+mes+"/"+anio;
-//        
-//        return f;
-//    }
     
+    public static String FormateaFecha(String vFecha){
+        String vDia, vMes, vAno;
+        StringTokenizer tokens = new StringTokenizer(vFecha,"-");
+        vAno = tokens.nextToken();
+        vMes = tokens.nextToken();
+        vDia = tokens.nextToken();
+        return vDia+"-"+vMes+"-"+vAno;
+}
+//    
     
       /**
      * 
@@ -182,6 +206,7 @@ public class FechaUtil {
         return gc.get(Calendar.YEAR);
         
     }
+    
    
   
     /**
