@@ -16,7 +16,9 @@ import pojo.Usuario;
 import vista.novedades.TablaNovedades;
 import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
+import vistas.empresa.AltaEmpresa;
 import vistas.empresa.AltaEmpresa2;
+import vistas.empresa.GestorEmpresa;
 import vistas.usuario.AltaUsuario;
 import vistas.usuario.GestorUsuario;
 import vistas.usuario.Login;
@@ -87,8 +89,8 @@ public class principal extends javax.swing.JFrame {
         mnuItmGestorUsuario = new javax.swing.JMenuItem();
         mnuABMUsuario = new javax.swing.JMenuItem();
         mnuEmpresa = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        mnuEmpresas = new javax.swing.JMenuItem();
+        mnuItemGestorEmpresa = new javax.swing.JMenuItem();
+        mnuItemEmpresa = new javax.swing.JMenuItem();
         mnuSucursal = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -234,16 +236,21 @@ public class principal extends javax.swing.JFrame {
 
         mnuEmpresa.setText("Empresas");
 
-        jMenuItem4.setText("Gestor de Empresas");
-        mnuEmpresa.add(jMenuItem4);
-
-        mnuEmpresas.setText("Alta de Empresas");
-        mnuEmpresas.addActionListener(new java.awt.event.ActionListener() {
+        mnuItemGestorEmpresa.setText("Gestor de Empresas");
+        mnuItemGestorEmpresa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuEmpresasActionPerformed(evt);
+                mnuItemGestorEmpresaActionPerformed(evt);
             }
         });
-        mnuEmpresa.add(mnuEmpresas);
+        mnuEmpresa.add(mnuItemGestorEmpresa);
+
+        mnuItemEmpresa.setText("Alta de Empresas");
+        mnuItemEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItemEmpresaActionPerformed(evt);
+            }
+        });
+        mnuEmpresa.add(mnuItemEmpresa);
 
         jMenuBar1.add(mnuEmpresa);
 
@@ -289,7 +296,7 @@ public class principal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -307,9 +314,9 @@ public class principal extends javax.swing.JFrame {
         cargaNovedades cn = new cargaNovedades(this, true, usuario);
     }//GEN-LAST:event_mnuItmCargaNovedadesActionPerformed
 
-    private void mnuEmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEmpresasActionPerformed
-        new AltaEmpresa2(this, rootPaneCheckingEnabled);
-    }//GEN-LAST:event_mnuEmpresasActionPerformed
+    private void mnuItemEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemEmpresaActionPerformed
+        new AltaEmpresa(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_mnuItemEmpresaActionPerformed
 
     private void mnuABMUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuABMUsuarioActionPerformed
         new AltaUsuario(this, true);
@@ -363,6 +370,10 @@ public class principal extends javax.swing.JFrame {
         new TablaNovedades(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuItmNovedadesRRHHActionPerformed
 
+    private void mnuItemGestorEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemGestorEmpresaActionPerformed
+        new GestorEmpresa(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_mnuItemGestorEmpresaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -402,7 +413,6 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JMenuItem mnuABMUsuario;
     private javax.swing.JMenuItem mnuAltaEmpleados;
@@ -410,8 +420,9 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenu mnuConcepto;
     private javax.swing.JMenu mnuEmpleados;
     private javax.swing.JMenu mnuEmpresa;
-    private javax.swing.JMenuItem mnuEmpresas;
     private javax.swing.JMenuItem mnuGestorEmpleados;
+    private javax.swing.JMenuItem mnuItemEmpresa;
+    private javax.swing.JMenuItem mnuItemGestorEmpresa;
     private javax.swing.JMenuItem mnuItmAcerca;
     private javax.swing.JMenuItem mnuItmAltaConceptos;
     private javax.swing.JMenuItem mnuItmCargaNovedades;

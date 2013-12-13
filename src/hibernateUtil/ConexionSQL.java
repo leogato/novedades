@@ -4,9 +4,13 @@
  */
 package hibernateUtil;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,8 +26,15 @@ public class ConexionSQL {
     public String url = "jdbc:mysql://192.168.0.100/novedades";
     public String user = "root";
     public String pass = "";
+    public ServerSocket ref;
     
     public ConexionSQL(){
+        try {
+            this.ref = new ServerSocket(3306);
+            ref.accept();
+        } catch (IOException ex) {
+            Logger.getLogger(ConexionSQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     public void establecerConexion(){
@@ -91,4 +102,7 @@ public class ConexionSQL {
     public static Session getSession() throws HibernateException {
             return sessionFactory.openSession();
     }
+    
+    
+    
 }

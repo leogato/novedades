@@ -432,7 +432,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
      
     private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
           // permitir solo el ingreso de numero
-         char caracter = evt.getKeyChar();
+        char caracter = evt.getKeyChar();
         if(((caracter < '0') ||(caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
          evt.consume();  // ignorar el evento de teclado
       }

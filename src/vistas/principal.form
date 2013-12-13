@@ -168,17 +168,20 @@
             <Property name="text" type="java.lang.String" value="Empresas"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+            <MenuItem class="javax.swing.JMenuItem" name="mnuItemGestorEmpresa">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gestor de Empresas"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItemGestorEmpresaActionPerformed"/>
+              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuEmpresas">
+            <MenuItem class="javax.swing.JMenuItem" name="mnuItemEmpresa">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Alta de Empresas"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuEmpresasActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItemEmpresaActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -258,7 +261,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="panel1" alignment="0" max="32767" attributes="0"/>
+          <Component id="panel1" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>

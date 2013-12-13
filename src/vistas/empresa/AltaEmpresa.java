@@ -4,39 +4,61 @@
  */
 package vistas.empresa;
 
+import vistas.empleado.*;
+import pojo.Empleado;
+import novedades.dao.imp.EmpleadoDaoImp;
+import hibernateUtil.Conexion;
 import java.util.List;
-import pojo.Empresa;
+import javax.swing.JOptionPane;
 import novedades.dao.imp.EmpresaDaoImp;
+import novedades.dao.imp.SucursalDaoImp;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import pojo.Empresa;
+import pojo.Sucursal;
 
 /**
  *
- * @author usuario
+ * @author Leo
  */
 public class AltaEmpresa extends javax.swing.JDialog {
+//    public static final int MENU =1;
+    public static final int GESTOR_EMPLEADO =1;
     Empresa e = null;
-    /**
-     * Creates new form AltaEmpresa
-     */
+    int codigo;
+    private boolean BotonGuardarSelecciono=false;
+
+    public boolean isBotonGuardarSelecciono() {
+        return BotonGuardarSelecciono;
+    }
+    
+    
     public AltaEmpresa(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
-        List<Empresa> lista = new EmpresaDaoImp().listarEmpresa();
-        if (!lista.isEmpty()) {
-            e = lista.get(0);
-            System.out.println(e.getCodEmp());
-            txtCodEmpresa.setText(Integer.toString(e.getCodEmp()));
-            txtEmpresa.setText(e.getNombre());
-            txtGerente.setText(e.getGerente());
-//            txtFecIni.setText(e.getFechaInicio());
-            txtEmailGerente.setText(e.getMailGerente());
-            
-        }
-        this.setTitle("ALTA DE EMPRESAS");
-        this.setLocationRelativeTo(this);
-        this.setVisible(true);
-    }
+        btneEliminar.setVisible(false);
+        btneEliminar.setEnabled(false);
+        this.setTitle("NUEVO EMPRESA");
+        setLocationRelativeTo(this);
+        setVisible(true);
 
+    }
+    
+    public AltaEmpresa(java.awt.Frame parent, boolean modal,int codigo) {
+        super(parent, modal);
+        initComponents();
+        this.codigo = codigo;
+        btneEliminar.setVisible(true);
+        this.setTitle("EDITAR EMPRESA");
+//        configurarParaEditar();
+        setLocationRelativeTo(this); 
+        setVisible(true);
+        // no se realizara la carga de foto
+       
+        
+        
+    }
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,213 +68,168 @@ public class AltaEmpresa extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel1 = new org.edisoncor.gui.panel.Panel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtEmpresa = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtCodEmpresa = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtGerente = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        txtEmailGerente = new org.edisoncor.gui.textField.TextFieldRoundIcon();
-        panelShadow1 = new org.edisoncor.gui.panel.PanelShadow();
-        panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
+        elegirFichero = new javax.swing.JFileChooser();
+        pnlPrincipal = new org.edisoncor.gui.panel.Panel();
         btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
+        btneEliminar = new org.edisoncor.gui.button.ButtonIpod();
         btnCancelar = new org.edisoncor.gui.button.ButtonIpod();
-        btnModificar = new org.edisoncor.gui.button.ButtonIpod();
-        buttonIpod1 = new org.edisoncor.gui.button.ButtonIpod();
-        btnNuevo = new org.edisoncor.gui.button.ButtonIpod();
+        labelMetric11 = new org.edisoncor.gui.label.LabelMetric();
+        txtGerente = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtDenominacion = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        labelMetric10 = new org.edisoncor.gui.label.LabelMetric();
+        labelMetric9 = new org.edisoncor.gui.label.LabelMetric();
+        txtCodigo = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        labelMetric14 = new org.edisoncor.gui.label.LabelMetric();
+        txtMail = new org.edisoncor.gui.textField.TextFieldRoundIcon();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Altas, bajas y modificacions de Empresas");
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "ALTA, BAJA Y MODIFICACION DE EMPRESAS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
-        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EMPLEADO", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(204, 204, 204))); // NOI18N
+        pnlPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("CODIGO EMPRESA");
-
-        jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("EMPRESA");
-
-        jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("GERENTE");
-
-        jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("EMAIL GERENTE");
-
-        txtEmpresa.setBackground(new java.awt.Color(102, 102, 102));
-        txtEmpresa.setBorder(null);
-        txtEmpresa.setForeground(new java.awt.Color(255, 255, 255));
-        txtEmpresa.setCaretColor(new java.awt.Color(102, 102, 102));
-        txtEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtEmpresa.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
-
-        txtCodEmpresa.setBackground(new java.awt.Color(102, 102, 102));
-        txtCodEmpresa.setBorder(null);
-        txtCodEmpresa.setForeground(new java.awt.Color(255, 255, 255));
-        txtCodEmpresa.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCodEmpresa.setCaretColor(new java.awt.Color(102, 102, 102));
-        txtCodEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtCodEmpresa.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
-
-        txtGerente.setBackground(new java.awt.Color(102, 102, 102));
-        txtGerente.setBorder(null);
-        txtGerente.setForeground(new java.awt.Color(255, 255, 255));
-        txtGerente.setCaretColor(new java.awt.Color(102, 102, 102));
-        txtGerente.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtGerente.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
-
-        txtEmailGerente.setBackground(new java.awt.Color(102, 102, 102));
-        txtEmailGerente.setBorder(null);
-        txtEmailGerente.setForeground(new java.awt.Color(255, 255, 255));
-        txtEmailGerente.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtEmailGerente.setCaretColor(new java.awt.Color(102, 102, 102));
-        txtEmailGerente.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtEmailGerente.setFont(new java.awt.Font("Comic Sans MS", 1, 22)); // NOI18N
-
-        panelShadow1.setDistance(10);
-
-        panelTranslucidoComplete1.setColorPrimario(new java.awt.Color(102, 102, 102));
-        panelTranslucidoComplete1.setOpaque(false);
-
+        btnGuardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setToolTipText("");
+        btnGuardar.setText("GUARDAR");
+        btnGuardar.setAnimacion(false);
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
             }
         });
 
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btneEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
+        btneEliminar.setText("ELIMINAR");
+        btneEliminar.setAnimacion(false);
+        btneEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneEliminarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
+        btnCancelar.setText("ATRAS");
+        btnCancelar.setAnimacion(false);
+        btnCancelar.setDistanciaDeSombra(45);
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
             }
         });
 
-        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
-        btnModificar.setText("Modificar");
+        labelMetric11.setText("GERENTE");
 
-        buttonIpod1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
-        buttonIpod1.setText("Eliminar");
+        txtGerente.setBackground(new java.awt.Color(102, 102, 102));
+        txtGerente.setBorder(null);
+        txtGerente.setForeground(new java.awt.Color(255, 255, 255));
+        txtGerente.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtGerente.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtGerente.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
-        btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/adduser.png"))); // NOI18N
-        btnNuevo.setText("Nuevo");
-        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+        txtDenominacion.setBackground(new java.awt.Color(102, 102, 102));
+        txtDenominacion.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtDenominacion.setForeground(new java.awt.Color(255, 255, 255));
+        txtDenominacion.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDenominacion.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtDenominacion.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtDenominacion.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+
+        labelMetric10.setText("DENOMINACION");
+
+        labelMetric9.setText("CODIGO");
+
+        txtCodigo.setBackground(new java.awt.Color(255, 255, 0));
+        txtCodigo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCodigo.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtCodigo.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoActionPerformed(evt);
+                txtCodigoActionPerformed(evt);
+            }
+        });
+        txtCodigo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCodigoFocusLost(evt);
+            }
+        });
+        txtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodigoKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodigoKeyTyped(evt);
             }
         });
 
-        javax.swing.GroupLayout panelTranslucidoComplete1Layout = new javax.swing.GroupLayout(panelTranslucidoComplete1);
-        panelTranslucidoComplete1.setLayout(panelTranslucidoComplete1Layout);
-        panelTranslucidoComplete1Layout.setHorizontalGroup(
-            panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(buttonIpod1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        panelTranslucidoComplete1Layout.setVerticalGroup(
-            panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonIpod1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(13, Short.MAX_VALUE))
-        );
+        labelMetric14.setText("MAIL GERENTE");
 
-        javax.swing.GroupLayout panelShadow1Layout = new javax.swing.GroupLayout(panelShadow1);
-        panelShadow1.setLayout(panelShadow1Layout);
-        panelShadow1Layout.setHorizontalGroup(
-            panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-        panelShadow1Layout.setVerticalGroup(
-            panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow1Layout.createSequentialGroup()
-                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 13, Short.MAX_VALUE))
-        );
+        txtMail.setBackground(new java.awt.Color(102, 102, 102));
+        txtMail.setBorder(null);
+        txtMail.setForeground(new java.awt.Color(255, 255, 255));
+        txtMail.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtMail.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtMail.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
+        pnlPrincipal.setLayout(pnlPrincipalLayout);
+        pnlPrincipalLayout.setHorizontalGroup(
+            pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(labelMetric9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(236, 236, 236)
+                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(85, 85, 85)
+                        .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(85, 85, 85)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(109, 109, 109)
+                                .addComponent(txtDenominacion, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                    .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(146, 146, 146)
+                                    .addComponent(txtGerente, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createSequentialGroup()
+                                    .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlPrincipalLayout.setVerticalGroup(
+            pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(179, 179, 179)
-                                .addComponent(txtGerente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtEmailGerente, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(23, 23, 23))
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCodEmpresa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmpresa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelShadow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtCodEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2))
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(21, 21, 21)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMetric9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMetric10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDenominacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtGerente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtEmailGerente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addComponent(panelShadow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -260,104 +237,193 @@ public class AltaEmpresa extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+    private void txtCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyTyped
+        permitirSoloNumero(evt);
+    }//GEN-LAST:event_txtCodigoKeyTyped
+
+    private void txtCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyPressed
+
+    }//GEN-LAST:event_txtCodigoKeyPressed
+
+    private void txtCodigoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCodigoFocusLost
+
+        //        //validar el empleado
+        //
+        //         try{
+            //        Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
+            //         if (e!=null) {
+                //            JOptionPane.showMessageDialog(rootPane, "EL LEGAJO YA EXISTE, INTENTE NUEVAMENTE", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+                //            txtLegajo.setText("");
+                //            txtLegajo.requestFocus();
+                //        }else{
+                //             // es uno legajo nuevo , por defecto la clave sera la misma que su legajo
+                //             txtClave.setText(txtLegajo.getText());
+                //             txtClaveRepetir.setText(txtLegajo.getText());
+                //             txtApellido.requestFocus();
+                //         }
+            //        }catch(Exception eee){
+            //            if (!btnCancelarOperacion.isEnabled() ||txtLegajo.getText().trim().isEmpty() ) {
+                //            mensajero.mensajeError(this, "NO PUEDE ESTAR VACIEO EL CAMPO LEGAJO");
+                //            txtLegajo.setText("");
+                //            txtLegajo.requestFocus();
+                //        }
+            //        }
+    }//GEN-LAST:event_txtCodigoFocusLost
+
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnNuevoActionPerformed
+    }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // cancela la operacion actual
+        txtCodigo.setEnabled(false);//  esto  es para que no capture el evento foculost de txtlegajo
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btneEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneEliminarActionPerformed
+        int resp =JOptionPane.showConfirmDialog(rootPane,"ESTA SEGURO QUE DESEA ELIMINAR LA EMPRESA: \n"+txtCodigo.getText()+"-"+txtDenominacion.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
+        if (resp==JOptionPane.OK_OPTION) {
+            Empresa emp = new EmpresaDaoImp().getEmpresa(codigo);
+            new EmpresaDaoImp().deleteEmpresa(emp);
+            JOptionPane.showMessageDialog(rootPane, "LA ELIMINACION SE REALIZO CORRECTAMENTE ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btneEliminarActionPerformed
+
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (e==null) {
-        System.out.println("entro nuevo");
-        e= new Empresa();
-        e.setCodEmp(Integer.parseInt(txtCodEmpresa.getText()));
-        e.setNombre(txtEmpresa.getText());
-        e.setGerente(txtGerente.getText());
-        e.setMailGerente(txtEmailGerente.getText());
-        //    e.setFechaInicio(null);
-        //    e.setImagen(imagen);
-        new EmpresaDaoImp().addEmpresa(e);
-    } else {
-         System.out.println("entro a modificar");
 
-        e.setCodEmp(Integer.parseInt(txtCodEmpresa.getText()));
-        e.setNombre(txtEmpresa.getText());
-        e.setGerente(txtGerente.getText());
-        e.setMailGerente(txtEmailGerente.getText());
-        new EmpresaDaoImp().upDateEmpresa(e);
-        }
-        this.dispose();
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            if (codigo==0) {
+                // nuevo empleado
+                System.out.println("entro en nuevo");                
+                
+                if(validarEmpresaNueva()){
+                    System.out.println(validarEmpresaNueva());
+                    Empresa emp = getDatosEmpresa();
+                    new EmpresaDaoImp().addEmpresa(emp);
+                    this.dispose();
                 }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpresa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+                
+            } else {
+                //actualizar empleado
+                System.out.println("entro a modificar");                
+                
+                if (validarEmpresaActulizada()) {
+                    //obtengos los datos y creo el empelado
+                    Empresa e = getDatosEmpresa();
+                
+                    if (codigo != Integer.parseInt(txtCodigo.getText().trim())) {
+                        Empresa o = new EmpresaDaoImp().getEmpresa(codigo);
+                        List<Empresa> lista =new EmpresaDaoImp().listarEmpresa();
+                        new EmpresaDaoImp().upDateEmpresa(e);
+                        // aqui va borrar el empleado o   porque se modiico la clave primario
+                        new EmpresaDaoImp().deleteEmpresa(o);
+                        Empresa emplUp = new EmpresaDaoImp().getEmpresa(e.getCodEmp());
+                    }else{
+                        new EmpresaDaoImp().upDateEmpresa(e);
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AltaEmpresa dialog = new AltaEmpresa(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
                     }
-                });
-                dialog.setVisible(true);
+                    this.dispose();
+                }
+
             }
-        });
-    }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+     
+    private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
+          // permitir solo el ingreso de numero
+        char caracter = evt.getKeyChar();
+        if(((caracter < '0') ||(caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
+         evt.consume();  // ignorar el evento de teclado
+      }
+    }    
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
     private org.edisoncor.gui.button.ButtonIpod btnGuardar;
-    private org.edisoncor.gui.button.ButtonIpod btnModificar;
-    private org.edisoncor.gui.button.ButtonIpod btnNuevo;
-    private org.edisoncor.gui.button.ButtonIpod buttonIpod1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private org.edisoncor.gui.panel.Panel panel1;
-    private org.edisoncor.gui.panel.PanelShadow panelShadow1;
-    private org.edisoncor.gui.panel.PanelTranslucidoComplete panelTranslucidoComplete1;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtCodEmpresa;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmailGerente;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtEmpresa;
+    private org.edisoncor.gui.button.ButtonIpod btneEliminar;
+    private javax.swing.JFileChooser elegirFichero;
+    private org.edisoncor.gui.label.LabelMetric labelMetric10;
+    private org.edisoncor.gui.label.LabelMetric labelMetric11;
+    private org.edisoncor.gui.label.LabelMetric labelMetric14;
+    private org.edisoncor.gui.label.LabelMetric labelMetric9;
+    private org.edisoncor.gui.panel.Panel pnlPrincipal;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtCodigo;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtDenominacion;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtGerente;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtMail;
     // End of variables declaration//GEN-END:variables
+
+     private void limpiarVenanaEmpleado() {
+       txtDenominacion.setText("");
+       txtCodigo.setText("");
+       txtGerente.setText("");
+       //BOTON
+      // btnGuardar.setEnabled(true);
+       btneEliminar.setEnabled(false);
+       // falta par aque  el cursor se situe en el campo legajo por defecyto
+       txtCodigo.requestFocus();
+    }
+       
+    public boolean validarEmpresaActulizada(){
+        boolean todoOk=true;
+        Empresa empOriginal = new EmpresaDaoImp().getEmpresa(codigo); 
+        System.out.println("empleado original "+empOriginal.getCodEmp());
+        if (empOriginal.getCodEmp() != Integer.parseInt(txtCodigo.getText().trim())) {
+             // el empleado modifico el legajo
+            Empresa empLeg = new EmpresaDaoImp().getEmpresa(Integer.parseInt(txtCodigo.getText().trim()));  
+            if (empLeg!=null) {
+                 todoOk = false;
+                 JOptionPane.showMessageDialog(this, "LA EMPRESA YA EXISTE");
+             }
+         }
+        return todoOk;
+     }
+     
+     public boolean validarEmpresaNueva(){
+         boolean todoOk=false;
+         try{
+             Empresa empLeg = new EmpresaDaoImp().getEmpresa(Integer.parseInt(txtCodigo.getText().trim()));
+             System.out.println("Variable empLeg: "+empLeg);
+
+                 if (empLeg ==null){
+                     todoOk= true;
+                 }else{
+                     if (empLeg!=null) {
+                       JOptionPane.showMessageDialog(this, "LA EMPRESA YA EXISTE");
+                    } 
+                 }
+                 
+           }catch(Exception ex){
+              JOptionPane.showMessageDialog(this, "EL CAMPO CODIGO NO PUEDE ESTAR VACIO");
+              todoOk=false;
+         }   
+         return todoOk;
+     }
+     
+     public Empresa getDatosEmpresa(){
+        e = new Empresa();
+        e.setCodEmp(Integer.parseInt(txtCodigo.getText()));
+        e.setNombre(txtDenominacion.getText());
+        e.setGerente(txtGerente.getText());
+        e.setMailGerente(txtMail.getText());
+        return e;
+     }
+     
+//    private void configurarParaEditar() {
+//        Empresa emp = new EmpresaDaoImp().getEmpresa(codigo);
+//        txtCodigo.setText(String.valueOf(emp.getCodEmp()));
+//        txtDenominacion.setText(e.getNombre());
+//        txtGerente.setText(e.getGerente());
+//    }
 }

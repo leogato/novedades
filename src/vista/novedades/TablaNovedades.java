@@ -4,13 +4,11 @@
  */
 package vista.novedades;
 
-import com.sun.org.apache.xpath.internal.axes.AxesWalker;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import hibernateUtil.Conexion;
 import java.awt.Color;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.Label;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -18,31 +16,24 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.EmpresaDaoImp;
@@ -51,7 +42,6 @@ import novedades.dao.imp.SucursalDaoImp;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -64,7 +54,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.Criteria;
-import org.hibernate.EntityMode;
 import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
@@ -720,6 +709,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         
         HSSFWorkbook libro;//crea el libro
         libro = new HSSFWorkbook();
+        CellStyle style = libro.createCellStyle();
         Map<String, CellStyle> styles = createStyles(libro);
         HSSFCellStyle cs = (HSSFCellStyle) libro.createCellStyle();
         HSSFDataFormat df = libro.createDataFormat();
@@ -859,7 +849,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                     indice = 0;
                 }
                 iCol++;
-        }//***FIN DE CICLOPARA ESCRIBIR LOS DIAS BUSCADOS***\\
+        }//***FIN DE CICLO PARA ESCRIBIR LOS DIAS BUSCADOS***\\
         
         int empSelect = Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0)));
         int cantSuc = cmbSucursal.getItemCount();
@@ -929,7 +919,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                         
                         int cel2 = cel+o;
                         nxtFila = fila;
-                        
+                        //***MODULO PARA INSERTAR LAS NOVEDADES CUALITATIVAS SEGUN LOS DIAS BUSCADOS***\\
                         tblNovedades.getRowSorter().toggleSortOrder(0);//***ORDENA LAS COLUMNAS DEL JTABLE POR FECHA***\\
                         //***RECORRE LA FILAS DEL JTABLE ORDENADO POR FECHAS***\\
                         for(int p = 0;p < tblNovedades.getRowCount(); p++){
@@ -953,17 +943,21 @@ public class TablaNovedades extends javax.swing.JDialog {
                                         //IF PARA COMPARAR LAS FECHAS BUSCADAS CON LAS DEL JTABLE
                                         if(dia == valFecha){
                                             Concepto con = new ConceptoDaoImp().getConceptoHql(tblNovedades.getValueAt(p, 8).toString());
-                                            List<Concepto> conce = new ConceptoDaoImp().listarConcepto();
                                             f = hoja.getRow(fila);
                                             celda = f.createCell(cel2);
                                             celda.setCellValue(con.getCodCon());
-                                            for (int y = 0; y < conce.size(); y++){
-                                                if(con.getCodCon() == y){
-                                                    switch (y){
-                                                        
-                                                    }
+
+                                            //***RECORRE EL JTABLE PARA ASIGNARLE COLORES A LOS CONCEPTOS QUE VA ENCONTRANDO***\\    
+                                            for(int z = 0; z < tblNovedades.getRowCount();z++){
+                                                System.out.println("codCon: "+con.getCodCon());
+                                                
+                                                if (con.getCodCon() == z){
+                                                    System.out.println("Entro al IF");
+                                                    colores(z, libro, celda);
                                                 }
-                                            }
+                                            
+                                            }//FIN DE CICLO QUE ASIGNA COLOR
+                                            
                                         }else{
                                             cel2++;
                                         }//FIN IF DE COMPARACION DE FECHAS
@@ -1526,12 +1520,158 @@ private void deshabilitarFechas()
     return styles;
   }
   
-//  private void colores(){
-//      for(int i = 0;i < colores.length;i++){
-//          colores[i] = IndexedColors.values();
-//                  (BLACK, WHITE, RED, BRIGHT_GREEN, BLUE, YELLOW, PINK, TURQUOISE, DARK_RED, GREEN, DARK_BLUE, DARK_YELLOW, VIOLET, TEAL, GREY_25_PERCENT, GREY_50_PERCENT, CORNFLOWER_BLUE, MAROON, LEMON_CHIFFON, ORCHID, CORAL, ROYAL_BLUE, LIGHT_CORNFLOWER_BLUE, SKY_BLUE, LIGHT_TURQUOISE, LIGHT_GREEN, LIGHT_YELLOW, PALE_BLUE, ROSE, LAVENDER, TAN, LIGHT_BLUE, AQUA, LIME, GOLD, LIGHT_ORANGE, ORANGE, BLUE_GREY, GREY_40_PERCENT, DARK_TEAL, SEA_GREEN, DARK_GREEN, OLIVE_GREEN, BROWN, PLUM, INDIGO, GREY_80_PERCENT, AUTOMATIC);
-//      }
-//  }
+  private void colores(int i, HSSFWorkbook wb, HSSFCell celda){
+      System.out.println("Entro al switch");
+      Map<String, CellStyle> styles = new HashMap();
+      CellStyle style = wb.createCellStyle();
+      switch (i) {
+          case 0:
+            System.out.println("Entro "+i);
+            style.setAlignment((short)2);
+            style.setFillForegroundColor(IndexedColors.VIOLET.getIndex());
+            style.setFillPattern((short)1);
+            styles.put(String.valueOf(i), style);
+            celda.setCellStyle(style);
+          case 1:
+                System.out.println("Entro "+i);
+                style.setAlignment((short)2);
+                style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
+                style.setFillPattern((short)1);
+                styles.put(String.valueOf(i), style);
+                celda.setCellStyle(style);
+
+              break;
+          case 2:
+              System.out.println("Entro "+i);
+                style.setAlignment((short)2);
+                style.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+                style.setFillPattern((short)1);
+                styles.put(String.valueOf(i), style);
+                celda.setCellStyle(style);
+              break;
+          case 3:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.BLUE_GREY.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 4:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.TURQUOISE.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 5:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 6:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 7:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.GOLD.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 8:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;    
+          case 9:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;    
+          case 10:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 11:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 12:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.LIME.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;    
+          case 13:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.MAROON.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;    
+          case 14:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.ORCHID.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;    
+          case 15:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.PLUM.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
+          case 16:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.TEAL.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;    
+          default:
+              System.out.println("Entro "+i);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.RED.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              break;
+      }
+      
+      
+  }
   
 }
   

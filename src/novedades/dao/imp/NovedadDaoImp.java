@@ -135,6 +135,22 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
 //        session.close();
         return novedad;
     }
+    
+    public List<Novedad> listarNovedad(String fechaIni, int codSuc) {
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql = "from Novedad as n \n" +
+                     "join fetch n.empleado as e \n" +
+                     "join fetch e.sucursal as s\n" +
+                     "where n.fecha = '"+fechaIni+"' and s.codSuc ='"+codSuc+"'";
+//        Criteria criteria = session.createCriteria(Novedad.class);
+//        criteria.add(Restrictions.eq("usuario", codSuc));
+//        criteria.add( Restrictions.ge("fecha", fechaIni) );
+        List<Novedad> novedad = session.createQuery(sql).list();
+        session.getTransaction().commit();
+//        session.close();
+        return novedad;
+    }
 
     @Override
     public List<Novedad> listarNovedad(Empleado e, Date fechaInicio, Date fechaFin) {

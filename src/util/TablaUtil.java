@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import novedades.dao.imp.EmpleadoDaoImp;
 import pojo.Concepto;
 import pojo.Empleado;
+import pojo.Empresa;
 import pojo.Novedad;
 import pojo.Usuario;
 import vistas.cargaNovedades;
@@ -144,25 +145,27 @@ public class TablaUtil {
         }
 //        Conexion.getSessionFactory().close();
     }
-    public static void cargarNovedadesCompleta(DefaultTableModel modelo,List<Novedad> listaEmpleado,JTable tablaNovedades){
+    public static void cargarNovedadesCompleta(DefaultTableModel modelo, List<Novedad> listaEmpleado, JTable tablaNovedades){
         modelo = (DefaultTableModel) tablaNovedades.getModel();
         for (Novedad n : listaEmpleado){
-            Object[] filaAsistencia = {n.getEmpleado().getLegajo(),"","","",n.getCantidad(),n.getObservacion()};//,n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()}; 
+            Object[] filaAsistencia = {n.getEmpleado().getLegajo(),n.getEmpleado().getApellido(),n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()};//,n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()}; 
             modelo.addRow(filaAsistencia);
             //Cargar todas las novedades con fecha de hoy
         }
     }
     
-  public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
-    String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
-    modelo= new DefaultTableModel(null,titulos){
-        @Override// impleamento este metodo para que la tabla sea no editable
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-    tablaEmpleado.setModel(modelo);
- }  
+    public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
+        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
+        modelo= new DefaultTableModel(null,titulos){
+            @Override// impleamento este metodo para que la tabla sea no editable
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaEmpleado.setModel(modelo);
+    }  
+  
+    
   
   public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
     modelo =(DefaultTableModel) tablaEmpleado.getModel();
@@ -174,7 +177,30 @@ public class TablaUtil {
         }
     }
   
- public static void prepararTablaUsuario(DefaultTableModel modelo, JTable tablaUsuario){
+    public static void prepararTablaEmpresa(DefaultTableModel modelo, JTable tablaEmpresa){
+        String[] titulos = {"CODIGO","NOMBRE","GERENTE","MAIL","ESTADO"};
+        modelo= new DefaultTableModel(null,titulos){
+            @Override// impleamento este metodo para que la tabla sea no editable
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaEmpresa.setModel(modelo);
+    }  
+  
+    public static void cargarModeloEmpresa(DefaultTableModel modelo,List<Empresa>listaEmpresa,JTable tablaEmpresa){
+        modelo =(DefaultTableModel) tablaEmpresa.getModel();
+        if (listaEmpresa == null)
+            JOptionPane.showMessageDialog(tablaEmpresa, "Lista de usuario esta vacia, cargue un nuevo Empleado");
+            for ( Empresa e : listaEmpresa) {
+                Object[] filaEmpleado = {e.getCodEmp(),e.getNombre(),e.getGerente(),e.getMailGerente(),e.getEstado()};
+                modelo.addRow(filaEmpleado);
+            }
+            tablaEmpresa.setAutoCreateRowSorter(true);
+            tablaEmpresa.setAutoResizeMode(0);
+    }
+  
+    public static void prepararTablaUsuario(DefaultTableModel modelo, JTable tablaUsuario){
         
         String[] titulos = {"LEGAJO","USUARIO","DESCRIPCION","CLAVE","TIPO"};
        modelo= new DefaultTableModel(null,titulos){
