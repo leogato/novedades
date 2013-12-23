@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,6 +38,7 @@ import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.EmpresaDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
+import novedades.dao.imp.UsuarioDaoImp;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -60,6 +60,7 @@ import pojo.Empleado;
 import pojo.Empresa;
 import pojo.Novedad;
 import pojo.Sucursal;
+import pojo.Usuario;
 import util.FechaUtil;
 import util.TablaUtil;
 /**
@@ -73,19 +74,18 @@ public class TablaNovedades extends javax.swing.JDialog {
     JComboBox jcb = new JComboBox();
     java.awt.Frame parent;
     //Variables para crear el Excel//
-    int nxtRow;
+    int nxtRow, fila;
+    Novedad novedad = new Novedad();
+    Usuario usuario = new Usuario();
+    Date date1;
     private String auxFecIni;
     private String auxFecFin;
     private short colores[] = new short[48];
     
     
-    
-    
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-//        fechaInicio.setDate(new Date());
-//        String fechaInicio;
         fechaInicio.setDate(FechaUtil.getFechaSinhora(new Date()));
         fechaFin.setDate(new Date());
         deshabilitarFechas();
@@ -95,7 +95,6 @@ public class TablaNovedades extends javax.swing.JDialog {
         rdbHoy.setSelected(true);
         llenaCmbConcepto();
         llenaCmbEmpresa();
-//        llenaCmbSucursal();
         inactivarEmpSuc();
         btnExcel.setEnabled(false);
         
@@ -144,12 +143,11 @@ public class TablaNovedades extends javax.swing.JDialog {
         panel1 = new org.edisoncor.gui.panel.Panel();
         panelShadow1 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
-        btnCancelar = new org.edisoncor.gui.button.ButtonIcon();
-        btnPDF = new org.edisoncor.gui.button.ButtonIcon();
         btnImprimir = new org.edisoncor.gui.button.ButtonIcon();
         btnNuevo = new org.edisoncor.gui.button.ButtonIcon();
         btnGuardar = new org.edisoncor.gui.button.ButtonIcon();
         btnExcel = new org.edisoncor.gui.button.ButtonIcon();
+        btnCancelar = new org.edisoncor.gui.button.ButtonIcon();
         panelShadow2 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete2 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
         labelMetric1 = new org.edisoncor.gui.label.LabelMetric();
@@ -181,24 +179,6 @@ public class TablaNovedades extends javax.swing.JDialog {
 
         panelTranslucidoComplete1.setOpaque(false);
 
-        btnCancelar.setBackground(new java.awt.Color(51, 51, 51));
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
-        btnCancelar.setText("Atras");
-        btnCancelar.setToolTipText("");
-        btnCancelar.setAngulo(120);
-        btnCancelar.setDistanciaDeSombra(45);
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
-        btnPDF.setBackground(new java.awt.Color(51, 51, 51));
-        btnPDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pdf.png"))); // NOI18N
-        btnPDF.setText("PDF");
-        btnPDF.setAngulo(120);
-        btnPDF.setDistanciaDeSombra(45);
-
         btnImprimir.setBackground(new java.awt.Color(51, 51, 51));
         btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/imprimir.png"))); // NOI18N
         btnImprimir.setText("Imprimir");
@@ -215,12 +195,22 @@ public class TablaNovedades extends javax.swing.JDialog {
         btnNuevo.setText("Nuevo");
         btnNuevo.setAngulo(120);
         btnNuevo.setDistanciaDeSombra(45);
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setBackground(new java.awt.Color(51, 51, 51));
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
         btnGuardar.setText("Guardar");
         btnGuardar.setAngulo(120);
         btnGuardar.setDistanciaDeSombra(45);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnExcel.setBackground(new java.awt.Color(51, 51, 51));
         btnExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excel.png"))); // NOI18N
@@ -233,35 +223,44 @@ public class TablaNovedades extends javax.swing.JDialog {
             }
         });
 
+        btnCancelar.setBackground(new java.awt.Color(51, 51, 51));
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
+        btnCancelar.setText("Atras");
+        btnCancelar.setToolTipText("");
+        btnCancelar.setAngulo(120);
+        btnCancelar.setDistanciaDeSombra(45);
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTranslucidoComplete1Layout = new javax.swing.GroupLayout(panelTranslucidoComplete1);
         panelTranslucidoComplete1.setLayout(panelTranslucidoComplete1Layout);
         panelTranslucidoComplete1Layout.setHorizontalGroup(
             panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(btnPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(132, 132, 132)
+                .addGap(50, 50, 50)
                 .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
+                .addGap(177, 177, 177)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(152, 152, 152)
+                .addGap(172, 172, 172)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
                 .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(134, 134, 134)
+                .addGap(152, 152, 152)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addGap(53, 53, 53))
         );
         panelTranslucidoComplete1Layout.setVerticalGroup(
             panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTranslucidoComplete1Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -272,12 +271,13 @@ public class TablaNovedades extends javax.swing.JDialog {
         panelShadow1Layout.setHorizontalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelShadow1Layout.createSequentialGroup()
-                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 51, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(38, 38, 38))
         );
         panelShadow1Layout.setVerticalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelShadow1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelShadow1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelTranslucidoComplete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -572,9 +572,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -639,7 +637,9 @@ public class TablaNovedades extends javax.swing.JDialog {
                 } catch (Exception e) {
 //                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
                 }
-            }else if(cmbBusqueda.getSelectedIndex()== 2){
+                //***BUSQUEDA POR EMPRESA Y SUCURSAL***\\
+            }
+            if(cmbBusqueda.getSelectedIndex()== 2){
                 btnExcel.setEnabled(true);
                 inactivarBusqueda();
                 Empresa emp;
@@ -659,12 +659,16 @@ public class TablaNovedades extends javax.swing.JDialog {
                     auxFecFin = FechaUtil.getFechaString10DDMMAAAA(fechaFin.getDate());
                     
                     if(suc.getNombre().equals("TODAS")){
-                        /**/System.out.println("Todas");
+                        System.out.println("Todas");
                         emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
-                        listaNov = new NovedadDaoImp().listarNovedad(emp, auxFecIni, auxFecFin);
+                        listaNov = new NovedadDaoImp().listarNovedad(emp, FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
+                        System.out.println("ListNov en Todas: "+listaNov);
                     }else{
+                        System.out.println("Suc: "+suc.getNombre());
+                        System.out.println("fecha ini: "+auxFecIni);
+                        System.out.println("fecha fin: "+auxFecFin);
                         System.out.println("Por Sucursal");
-                        listaNov = new NovedadDaoImp().listarNovedad(suc, auxFecIni, auxFecFin);
+                        listaNov = new NovedadDaoImp().listarNovedad(suc, FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
                     }
                     
                 }else{
@@ -679,33 +683,37 @@ public class TablaNovedades extends javax.swing.JDialog {
                 }else{
                     JOptionPane.showMessageDialog(this, "NO EXISTE EL CONCEPTO","ERROR",JOptionPane.ERROR_MESSAGE);
                 }
-            }else{
+            }
+            if(cmbBusqueda.getSelectedIndex() == 0){
               // Busqueda asistencias de todos los empleados
                 listaNov = new NovedadDaoImp().listarNovedad(FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
-                }
+            }
           
         }else{  
                JOptionPane.showMessageDialog(this, "La fecha inicio no puedes ser mayor a la fecha Fin ","ERROR",JOptionPane.ERROR_MESSAGE);
             }
+        for(Novedad n : listaNov){
+                            System.out.println("Objetos en ListaNov: "+n.getEmpleado().getSucursal().getNombre());
+                        }
             TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
             TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
             tblNovedades.setAutoCreateRowSorter(true);
             
             //******LLENA UN COMBOBOX Y LO INSERTA EN LA JTABLE EN LA COLUMNA  8 (CONCEPTOS)
             llenaJComboBoxInvestigacion();
-            TableColumn tc = tblNovedades.getColumnModel().getColumn(8);
+            TableColumn tc = tblNovedades.getColumnModel().getColumn(9);
             TableCellEditor tce = new DefaultCellEditor(jcb);
             tc.setCellEditor(tce);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
         
-        int cel, o, dia,  valFecha, nxtFila, dias, indice, inicio, fin, cantDiasMes, nxtMes;
+        int cel, o, dia,  valFecha, nxtFila, dias, indice, inicio, fin, cantDiasMes, mes, anio, nxtMes;
         String concepto;
         String valor;
         String legajo, apellido, nombre, convenio, tarea;
         String fecha;
-        Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(tblNovedades.getValueAt(1, 6).toString().charAt(0))));
+        Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(tblNovedades.getValueAt(0, 6).toString().charAt(0))));
         
         HSSFWorkbook libro;//crea el libro
         libro = new HSSFWorkbook();
@@ -713,7 +721,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         Map<String, CellStyle> styles = createStyles(libro);
         HSSFCellStyle cs = (HSSFCellStyle) libro.createCellStyle();
         HSSFDataFormat df = libro.createDataFormat();
-        cs.setDataFormat(df.getFormat("MMMM-yyyy"));
+        cs.setDataFormat(df.getFormat("MMM-yyyy"));
         HSSFSheet hoja = libro.createSheet("Novedades");//crea una hoja
         hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$B$1"));
         HSSFRow f = hoja.createRow(0);
@@ -725,12 +733,12 @@ public class TablaNovedades extends javax.swing.JDialog {
         f = hoja.getRow(0);
         celda = f.createCell(4);
         celda.setCellValue(fechaInicio.getDate());
-        celda.setCellStyle(cs);
         celda = f.createCell(5);
         celda.setCellValue("HASTA");
+        celda.setCellStyle((CellStyle)styles.get("center"));
         celda = f.createCell(6);
         celda.setCellValue(fechaFin.getDate());
-        celda.setCellStyle(cs);
+        
         
         f = hoja.createRow(2);
         celda = f.createCell(0);
@@ -831,22 +839,34 @@ public class TablaNovedades extends javax.swing.JDialog {
         indice = 0;
         inicio = FechaUtil.getDia(fechaInicio.getDate());
         fin = FechaUtil.getDia(fechaFin.getDate());
-        cantDiasMes = FechaUtil.getDiasDelMes(FechaUtil.getMes(fechaInicio.getDate()),FechaUtil.getAnio(fechaInicio.getDate()));
+        mes = FechaUtil.getMes(fechaInicio.getDate());
+        anio = FechaUtil.getAnio(fechaInicio.getDate());
+        cantDiasMes = FechaUtil.getDiasDelMes(mes,anio);
+        
         nxtMes = 0;
         f = hoja.getRow(fila-1);
         
         //********ESCRIBE LOS DIAS QUE DESEO BUSCAR********//
         for(int ind = 0;ind < dias; ind++){
                 celda = f.createCell(iCol);
+                celda.setCellValue(inicio+indice);
+                celda.setCellStyle((CellStyle)styles.get("cabecera"));
                 if((inicio+indice) < (cantDiasMes)){
-                    celda.setCellValue(inicio+indice);
-                    celda.setCellStyle((CellStyle)styles.get("cabecera"));
+                    
                     indice++;
                 }else{
-                    celda.setCellValue(inicio+indice);
-                    celda.setCellStyle((CellStyle)styles.get("cabecera"));
                     inicio = 1;
                     indice = 0;
+                    mes = mes +1;
+                    if (mes == 13){
+                        mes = 1;
+                        anio = anio+1;
+                        cantDiasMes = FechaUtil.getDiasDelMes(mes, anio);
+                    }else{
+                        cantDiasMes = FechaUtil.getDiasDelMes(mes, anio);
+                    }
+                    
+                    
                 }
                 iCol++;
         }//***FIN DE CICLO PARA ESCRIBIR LOS DIAS BUSCADOS***\\
@@ -919,6 +939,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                         
                         int cel2 = cel+o;
                         nxtFila = fila;
+                        
                         //***MODULO PARA INSERTAR LAS NOVEDADES CUALITATIVAS SEGUN LOS DIAS BUSCADOS***\\
                         tblNovedades.getRowSorter().toggleSortOrder(0);//***ORDENA LAS COLUMNAS DEL JTABLE POR FECHA***\\
                         //***RECORRE LA FILAS DEL JTABLE ORDENADO POR FECHAS***\\
@@ -948,15 +969,15 @@ public class TablaNovedades extends javax.swing.JDialog {
                                             celda.setCellValue(con.getCodCon());
 
                                             //***RECORRE EL JTABLE PARA ASIGNARLE COLORES A LOS CONCEPTOS QUE VA ENCONTRANDO***\\    
-                                            for(int z = 0; z < tblNovedades.getRowCount();z++){
-                                                System.out.println("codCon: "+con.getCodCon());
-                                                
-                                                if (con.getCodCon() == z){
-                                                    System.out.println("Entro al IF");
-                                                    colores(z, libro, celda);
-                                                }
-                                            
-                                            }//FIN DE CICLO QUE ASIGNA COLOR
+//                                            for(int z = 0; z < tblNovedades.getRowCount();z++){
+//                                                System.out.println("codCon: "+con.getCodCon());
+//                                                
+//                                                if (con.getCodCon() == z){
+//                                                    System.out.println("Entro al IF");
+                                                    colores(con.getCodCon(), libro, celda);
+//                                                }
+//                                            
+//                                            }//FIN DE CICLO QUE ASIGNA COLOR
                                             
                                         }else{
                                             cel2++;
@@ -982,7 +1003,7 @@ public class TablaNovedades extends javax.swing.JDialog {
             
         //***ESCRIBE EL LIBRO***\\
         try {
-            FileOutputStream elFichero = new FileOutputStream("prueba.xls");
+            FileOutputStream elFichero = new FileOutputStream("prueba.xlsx");
             libro.write(elFichero);
             elFichero.close();
         } catch (Exception e) {
@@ -1046,6 +1067,36 @@ public class TablaNovedades extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        DefaultTableModel temp = (DefaultTableModel) tblNovedades.getModel();
+        Object nuevo[]= {"","",""};
+        temp.addRow(nuevo);
+        btnGuardar.setEnabled(true);
+        fila = temp.getRowCount()+1;
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        int id;
+        if(tblNovedades.isEditing()){
+                tblNovedades.getCellEditor().stopCellEditing();
+                for(int i = 0;i < tblNovedades.getRowCount();i++){
+                    id = Integer.parseInt(tblNovedades.getValueAt(i, 0).toString());
+                    novedad = new NovedadDaoImp().getNovedad(id);
+                    getDatosTabla(i);
+                    new NovedadDaoImp().upDateNovedad(novedad);
+                }
+                JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
+            }else{
+                for( int i = 0;i < tblNovedades.getRowCount();i++){
+                    id = Integer.parseInt(tblNovedades.getValueAt(i, 0).toString());
+                    novedad = new NovedadDaoImp().getNovedad(id);
+                    getDatosTabla(i);
+                    new NovedadDaoImp().upDateNovedad(novedad);
+                }
+                JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
+            }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1094,7 +1145,6 @@ public class TablaNovedades extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonIcon btnGuardar;
     private org.edisoncor.gui.button.ButtonIcon btnImprimir;
     private org.edisoncor.gui.button.ButtonIcon btnNuevo;
-    private org.edisoncor.gui.button.ButtonIcon btnPDF;
     private javax.swing.ButtonGroup buttonGroup1;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbBusqueda;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbConcepto;
@@ -1119,6 +1169,26 @@ public class TablaNovedades extends javax.swing.JDialog {
     private javax.swing.JTable tblNovedades;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtBusqueda;
     // End of variables declaration//GEN-END:variables
+    
+    private void getDatosTabla(int i){
+        String auxCant = String.valueOf(tblNovedades.getValueAt(i, 10));
+        String auxObs = String.valueOf(tblNovedades.getValueAt(i, 11));
+        Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedades.getValueAt(i, 2).toString()));
+        novedad.setEmpleado(e);
+        Concepto c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedades.getValueAt(i, 9).toString()));
+        novedad.setConcepto(c);
+        if(auxCant == null){
+            novedad.setCantidad(0);
+        }else{
+            novedad.setCantidad(Integer.parseInt(tblNovedades.getValueAt(i, 10).toString()));
+        }
+        if (auxObs == null){
+           novedad.setObservacion("-"); 
+        }else{
+            novedad.setObservacion(tblNovedades.getValueAt(i, 11).toString());
+        }
+        
+    }
     
     private void cargarTabla(List<Novedad> listaNovedad){
         listaNovedad = new NovedadDaoImp().listarNovedad();
@@ -1471,9 +1541,10 @@ private void deshabilitarFechas()
     styles.put("suma", style);
     
     style = wb.createCellStyle();
-    style.setAlignment((short)3);
+    style.setAlignment((short)2);
+//    style.setDataFormat((short)"dd-MMM");
     style.setFont(itemFont);
-    styles.put("item_right", style);
+    styles.put("center", style);
     
 
 //    style = wb.createCellStyle();

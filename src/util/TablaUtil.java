@@ -92,47 +92,101 @@ public class TablaUtil {
     public static void cargarModeloRRHH(DefaultTableModel modelo,List<Novedad> listaNovedad,JTable tablaOrdendelDia){
          modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
          for (Novedad a : listaNovedad) {
-//            Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+" "+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+" "+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getCodCon()+"-"+a.getConcepto().getDescripcion(),a.getCantidad(),a.getConcepto(),a.getObservacion()}; 
-             
-             Object[] filaNovedad = {a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getConvenio(),a.getEmpleado().getTarea(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+"-"+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getDescripcion(),a.getCantidad(),a.getObservacion()}; 
-        modelo.addRow(filaNovedad);
+             Object[] filaNovedad = {a.getId(),a.getFecha(),a.getEmpleado().getLegajo(),a.getEmpleado().getApellido(),a.getEmpleado().getNombre(),a.getEmpleado().getConvenio(),a.getEmpleado().getTarea(),a.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+a.getEmpleado().getSucursal().getEmpresa().getNombre(),a.getEmpleado().getSucursal().getCodSuc()+"-"+a.getEmpleado().getSucursal().getNombre(),a.getConcepto().getDescripcion(),a.getCantidad(),a.getObservacion()}; 
+            modelo.addRow(filaNovedad);
+            
         }
-//        Conexion.getSessionFactory().close();
+        tablaOrdendelDia.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablaOrdendelDia.getColumnModel().getColumn(0).setMinWidth(0);
+        tablaOrdendelDia.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
     
     public static void prepararTablaRRHH(DefaultTableModel modelo, JTable tablaConcepto){
-        String[] titulos = {"FECHA","LEGAJO","APELLIDO","NOMBRE","CONVENIO","TAREA","EMPRESA","SUCURSAL","CONCEPTO","CANTIDAD", "OBSERVACION"};
+        String[] titulos = {"ID","FECHA","LEGAJO","APELLIDO","NOMBRE","CONVENIO","TAREA","EMPRESA","SUCURSAL","CONCEPTO","CANTIDAD", "OBSERVACION"};
         modelo = new DefaultTableModel(null, titulos){
             @Override
             public boolean isCellEditable(int row, int col){
-                
-                if (col == 8){
+                if(col == 9){    
                     return true;
-                    
                 }else{
                     return false;
                 }
-            
             }
         };
         tablaConcepto.setModel(modelo);
     }
-    
-    public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades){
-        
-        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
-        modelo = new DefaultTableModel(null, titulos){
+//    public static void prepararTablaRRHH(DefaultTableModel modelo, JTable tablaConcepto){
+//        String[] titulos = {"FECHA","LEGAJO","APELLIDO","NOMBRE","CONVENIO","TAREA","EMPRESA","SUCURSAL","CONCEPTO","CANTIDAD", "OBSERVACION"};
+//        modelo = new DefaultTableModel(null, titulos){
 //            @Override
+//            public boolean isCellEditable(int row, int col){
+//                
+//                if (col == 8){
+//                    return true;
+//                    
+//                }else{
+//                    return false;
+//                }
+//            
+//            }
+//        };
+//        tablaConcepto.setModel(modelo);
+//    }
+    
+    public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades, String tipo){
+        System.out.println("Tipo: "+tipo);
+        final String aux = tipo;
+        System.out.println("aux: "+aux);
+        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
+        
+        modelo = new DefaultTableModel(null, titulos){
+            @Override
             public boolean isCellEditable(int row,int col){
                 boolean b = false;
-                if (col == 4){
+                System.out.println("col: "+col);
+                
+                if(col == 3){
                     b = true;
-                }else{
-                    
-                    b= true;
                 }
+                    
+                
                 return b;
             }
+       
+       
+//            public boolean isCellEditable(int row, int col){
+//                System.out.println("Entro!");
+//                boolean b = false;
+//                    if (aux.equals("CUANTITATIVA")){
+//                        if (col == 4){
+//                            b= true;
+//                        }else if(col == 5){
+//                            b = true;
+//                        }
+//                    }
+//                    return b;
+//            }
+                
+        };
+        tablaNovedades.setModel(modelo);
+    }
+    public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades){
+        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
+        
+        modelo = new DefaultTableModel(null, titulos){
+            @Override
+            public boolean isCellEditable(int row,int col){
+                boolean b = false;
+                if(col == 4){
+                        b = true;
+                    }else if (col == 5){
+                        b= true;
+                    }else if(col == 3){
+                        b = true;
+                    }
+                return b;
+            }
+                
         };
         tablaNovedades.setModel(modelo);
     }

@@ -46,6 +46,7 @@ public class cargaNovedades extends javax.swing.JDialog {
     int legajo = 0;
     String auxCant;
     String auxObs;
+    String tipo;
     Date date = new Date();
     String hoy;
     DateFormat df = DateFormat.getDateInstance();
@@ -76,11 +77,13 @@ public class cargaNovedades extends javax.swing.JDialog {
                  tblNovedadesUsr.getModel().isCellEditable(fila, 4);
                 }
             }
-
+            
+            
             private boolean isCualitiva(String descrip) {
                 boolean b = false;
                 Concepto c = new ConceptoDaoImp().getConceptoHql(descrip);
-                System.out.println("Descripcion "+c.getTipo());
+                tipo = c.getTipo();
+                System.out.println("Descripcion "+tipo);
                 if ("CUALITATIVA".equalsIgnoreCase(c.getTipo())) {
                    b = true;  
                 } 
@@ -91,18 +94,12 @@ public class cargaNovedades extends javax.swing.JDialog {
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
+        
         tblNovedadesUsr.setAutoCreateRowSorter(true);
         lblFecha.setText(sdf.format(date));
         ultimaCarga = new Date(sdf.format(date));
         lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
         lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
-
-        // si el usuario ya cargo novedad cuando ingrese a esta ventana solo puede ver y no cargar 
-        // en sintesis se debe inhabilitar el boton carga
-//        if (usuario.getCargo() && usuario.getUltimoIngreso().equals(new Date())) {
-//            usuario.setCargo(false);
-//            btnCargar.setEnabled(true);
-//        }
         
         String ultimoing = util.FechaUtil.getFechaString10DDMMAAAA(usuario.getUltimoIngreso());
         Date fecha = util.FechaUtil.getFechaSinhora(date);
@@ -273,17 +270,12 @@ public class cargaNovedades extends javax.swing.JDialog {
         session.getTransaction().commit();
         session.close();
         System.out.println("nov: "+nov);
-//        tblNovedadesUsr.getCellEditor().stopCellEditing();
-//        if (lblFecha.getText() == novedad.getFecha()){
-//            JOptionPane.showMessageDialog(rootPane, "LOS DATOS YA FUERON CARGADOS");
-//        }else{
-//            getDatosTabla(WIDTH);
-//        }
         
         if (nov.isEmpty()){
             if(tblNovedadesUsr.isEditing()){
                 tblNovedadesUsr.getCellEditor().stopCellEditing();
                 System.out.println("Entro");
+                
                 for( i = 0;i < tblNovedadesUsr.getRowCount();i++){
                     System.out.println(i);
                     
@@ -294,13 +286,15 @@ public class cargaNovedades extends javax.swing.JDialog {
                     new NovedadDaoImp().addNovedad(novedad);
                     new UsuarioDaoImp().upDateUsuario(usuario);
                 }
+                
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
             }else{
                 for( i = 0;i < tblNovedadesUsr.getRowCount();i++){
                     System.out.println(i);
                     getDatosTabla(i);
                     novedad.setFecha(date);
-                    novedad.setFecha((date));
+//                    novedad.setFecha(date);
+//                    novedad.setFecha((date));
                     usuario.setCargo(true);
                     new NovedadDaoImp().addNovedad(novedad);
                     new UsuarioDaoImp().upDateUsuario(usuario);
@@ -348,8 +342,9 @@ public class cargaNovedades extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void cargarTablaNovedades(){
+        System.out.println("Tipo antes: "+tipo);
         List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
+        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
         util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
     }
      

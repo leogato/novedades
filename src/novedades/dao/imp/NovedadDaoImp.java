@@ -83,23 +83,24 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         session.getTransaction().commit();
         session.close();
     }
-
-    public List<Novedad> listarNovedad(String cad){
-       Session session = Conexion.getSession();
-        session.beginTransaction();
-        Criteria criteria = session.createCriteria(Novedad.class);
-        ArrayList<Novedad> novedad = (ArrayList<Novedad>)criteria.list();
-        session.close();
-        return novedad;
-    }
     
-    public Novedad getFecha(String fec){
+    @Override
+   public void upDateNovedad(Novedad n) {
        Session session = Conexion.getSession();
         session.beginTransaction();
-        Novedad con = (Novedad) session.get(Novedad.class,fec);
+        session.update(n);
         session.getTransaction().commit();
         session.close();
-        return con; 
+    }
+
+    @Override
+    public Novedad getNovedad(int id){
+       Session session = Conexion.getSession();
+        session.beginTransaction();
+        Novedad nov = (Novedad) session.get(Novedad.class,id);
+        session.getTransaction().commit();
+        session.close();
+        return nov; 
     }
 
     @Override
@@ -113,6 +114,7 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         return novedad;
     }
     
+    @Override
     public List<Novedad> listarNovedad(Date fechaIni, Date fechaFin) {
         Session session = Conexion.getSession();
         session.beginTransaction();
@@ -121,21 +123,10 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         criteria.add( Restrictions.le("fecha", fechaFin) ); 
         List<Novedad> novedad = (List<Novedad>)criteria.list();
         session.getTransaction().commit();
-//        session.close();
         return novedad;
     }
     
-    public List<Novedad> listarNovedad(Date fechaIni) {
-        Session session = Conexion.getSession();
-        session.beginTransaction();
-        Criteria criteria = session.createCriteria(Novedad.class);
-        criteria.add( Restrictions.ge("fecha", fechaIni) );
-        List<Novedad> novedad = (List<Novedad>)criteria.list();
-        session.getTransaction().commit();
-//        session.close();
-        return novedad;
-    }
-    
+    @Override
     public List<Novedad> listarNovedad(String fechaIni, int codSuc) {
         Session session = Conexion.getSession();
         session.beginTransaction();
@@ -143,12 +134,8 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
                      "join fetch n.empleado as e \n" +
                      "join fetch e.sucursal as s\n" +
                      "where n.fecha = '"+fechaIni+"' and s.codSuc ='"+codSuc+"'";
-//        Criteria criteria = session.createCriteria(Novedad.class);
-//        criteria.add(Restrictions.eq("usuario", codSuc));
-//        criteria.add( Restrictions.ge("fecha", fechaIni) );
         List<Novedad> novedad = session.createQuery(sql).list();
         session.getTransaction().commit();
-//        session.close();
         return novedad;
     }
 
@@ -164,38 +151,49 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         return lista;
     }
     
-    public List<Novedad> listarNovedad(Sucursal e, String fechaInicio, String fechaFin) {
+    @Override
+    public List<Novedad> listarNovedad(Sucursal s, Date fechaInicio, Date fechaFin) {
+        java.sql.Date parseIni, parseFin;
         Session session = Conexion.getSession();
         session.beginTransaction();
+        System.out.println("cod suc: "+s.getCodSuc());
+        System.out.println("fechaInicio: "+fechaInicio);
+        System.out.println("fechaFin: "+fechaFin);
+        parseIni = new java.sql.Date(fechaInicio.getTime());
+        parseFin = new java.sql.Date (fechaFin.getTime());
+        System.out.println("fechaInicio: "+parseIni);
+        System.out.println("fechaFin: "+parseFin);
         String sql = "from Novedad as n\n" +
-                     "join fetch n.empleado a\n" +
-                     "join fetch a.sucursal as s\n" +
-                     "where s.codSuc = '"+e.getCodSuc()+"' and n.fecha >= '"+fechaInicio+"' and n.fecha <= '"+fechaFin+"'";
+                     "join fetch n.empleado e\n" +
+                     "join fetch e.sucursal as s\n" +
+                     "where s.codSuc = '"+s.getCodSuc()+"' and n.fecha >= '"+parseIni+"' and n.fecha <= '"+parseFin+"'";
         List<Novedad> lista = session.createQuery(sql).list();
-        return lista;
+        for (Novedad n : lista){
+            System.out.println("lista: "+n.getEmpleado().getSucursal().getNombre());
+        }
+        return lista; 
+        /**/
     }
     
-    public List<Novedad> listarNovedad(Empresa e, String fechaInicio, String fechaFin) {
-//        Empleado emp = new EmpleadoDaoImp().getEmpleado(e.getSucursal().getCodSuc());
+    @Override
+    public List<Novedad> listarNovedad(Empresa e, Date fechaInicio, Date fechaFin) {
+        java.sql.Date parseIni, parseFin;
         System.out.println("Fecha Inicio en DAO: "+fechaInicio);
         System.out.println("Fecha Fin en DAO: "+fechaFin);
         Session session = Conexion.getSession();
         session.beginTransaction();
+        parseIni = new java.sql.Date(fechaInicio.getTime());
+        parseFin = new java.sql.Date (fechaFin.getTime());
         String sql = " from Novedad as n \n" +
                 "join fetch n.empleado as e \n" +
                 "join fetch e.sucursal as s \n" +
                 "join fetch s.empresa as em \n" +
-                "where em.codEmp = '"+e.getCodEmp()+"' and n.fecha >= '"+fechaInicio+"' and n.fecha <= '"+fechaFin+"'";
-//        "where em.codEmp = '"+e.getCodEmp()+"and n.fecha >= '20-11-2013' and n.fecha <= '22-11-2013'";
+                "where em.codEmp = '"+e.getCodEmp()+"' and n.fecha >= '"+parseIni+"' and n.fecha <= '"+parseFin+"'";
         List<Novedad> lista = session.createQuery(sql).list();
-//        Criteria criteria = session.createCriteria(Novedad.class);
-//        criteria.add(Restrictions.eq("empresa", e));
-//        criteria.add(Restrictions.ge("fecha", fechaInicio));
-//        criteria.add(Restrictions.le("fecha", fechaFin));
-//        List<Novedad> lista = criteria.list();
         return lista;
     }
     
+    @Override
      public List<Novedad> listarNovedad(Concepto e, Date fechaInicio, Date fechaFin) {
         Session session = Conexion.getSession();
         session.beginTransaction();
@@ -206,5 +204,5 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
         List<Novedad> lista = criteria.list();
         return lista;
     }
-    
+     
 }

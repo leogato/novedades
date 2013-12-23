@@ -10,7 +10,6 @@ import java.util.List;
 import novedades.dao.UsuarioDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import pojo.Usuario;
 
 /**

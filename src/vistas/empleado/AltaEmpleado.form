@@ -398,6 +398,9 @@
               <Color blue="0" green="66" red="ff" type="rgb"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbEmpresaItemStateChanged"/>
+          </Events>
         </Component>
         <Component class="org.edisoncor.gui.comboBox.ComboBoxRound" name="cmbSucursal">
           <Properties>
@@ -411,6 +414,9 @@
               <Color blue="0" green="66" red="ff" type="rgb"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbSucursalItemStateChanged"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

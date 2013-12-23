@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-12-2013 a las 19:47:42
+-- Tiempo de generación: 19-12-2013 a las 20:51:14
 -- Versión del servidor: 5.5.32
 -- Versión de PHP: 5.4.16
 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `MAIL_GERENTE` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `estado` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`COD_EMP`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Volcado de datos para la tabla `empresa`
@@ -106,7 +106,8 @@ CREATE TABLE IF NOT EXISTS `empresa` (
 INSERT INTO `empresa` (`COD_EMP`, `NOMBRE`, `GERENTE`, `MAIL_GERENTE`, `estado`) VALUES
 (1, 'Daniel Manzur', 'Sebastian Dellamea', 'sdellamea@manzur-admin.com', 1),
 (2, 'Fernando Manzur', 'Sebastian Besin', 'sbesin@manzur-admin.com', 1),
-(3, 'Don Pedro', 'Sebastian Besin', 'sbesin@manzur-admin.com', 1);
+(3, 'Don Pedro', 'Sebastian Besin', 'sbesin@manzur-admin.com', 1),
+(4, 'SISTEMAS', 'LEO', 'LEO', NULL);
 
 -- --------------------------------------------------------
 
@@ -126,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `novedad` (
   KEY `cod_emp` (`legajo`,`cod_con`),
   KEY `cod_con` (`cod_con`),
   KEY `legajo` (`legajo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=181 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=184 ;
 
 --
 -- Volcado de datos para la tabla `novedad`
@@ -150,7 +151,10 @@ INSERT INTO `novedad` (`id`, `legajo`, `cantidad`, `observacion`, `cod_con`, `fe
 (173, 123, 0, '-', 0, '2013-12-05', NULL),
 (174, 232, 0, '-', 0, '2013-12-05', NULL),
 (175, 237, 0, '-', 3, '2013-12-05', NULL),
-(180, 237, 0, '-', 0, '2013-12-06', NULL);
+(180, 237, 0, '-', 0, '2013-12-06', NULL),
+(181, 237, 0, '-', 2, '2013-12-13', NULL),
+(182, 123, 300, '-', 4, '2013-12-13', NULL),
+(183, 232, 500, '-', 5, '2013-12-13', NULL);
 
 -- --------------------------------------------------------
 
@@ -218,9 +222,9 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 
 INSERT INTO `usuario` (`ID`, `LEGAJO`, `USUARIO`, `CLAVE`, `DESCRIPCION`, `TIPO`, `ESTADO`, `cargo`, `ultimoIngreso`) VALUES
-(2, 237, 'LCAMPOS', '123', 'TEC', 'ADMINISTRADOR', NULL, 1, '2013-12-09'),
+(2, 237, 'LCAMPOS', '123', 'TEC', 'ADMINISTRADOR', NULL, 1, '2013-12-19'),
 (5, 233, 'GFlores', '123', 'auditoria', 'ADMINISTRADOR', NULL, 1, '2013-11-22'),
-(8, 123, 'SLopez', '123', 'RRHH', 'COMUN', NULL, 1, '2013-12-05'),
+(8, 123, 'SLopez', '123', 'RRHH', 'COMUN', NULL, 1, '2013-12-13'),
 (9, 232, 'rclaure', '123', 'ruben', 'COMUN', NULL, NULL, NULL),
 (10, 231, 'jromero', '123', 'jose', 'COMUN', NULL, 1, '2013-11-20'),
 (11, 157, 'FAinstein', '123', 'facu', 'ADMINISTRADOR', NULL, NULL, NULL);

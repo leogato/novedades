@@ -14,8 +14,8 @@ import java.net.Socket;
  */
 public class Cliente {
 
-    static final String HOST = "192.168.0.100";
-    static final int PUERTO=3306;
+    static final String HOST = "localhost";
+    static final int PUERTO=5000;
 
     public Cliente( ) {
 

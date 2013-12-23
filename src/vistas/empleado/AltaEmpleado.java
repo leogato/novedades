@@ -21,15 +21,8 @@ import pojo.Sucursal;
  * @author Leo
  */
 public class AltaEmpleado extends javax.swing.JDialog {
-//    public static final int MENU =1;
+
     public static final int GESTOR_EMPLEADO =1;
-    
-    
-   
-//    byte[] imgByte;
-//    private String pathFoto;
-//    int resp;// respuesta  si agrego o no una foto el empleado,  
-//    private boolean seleccionofoto=false;
     private int legajo=0;
     private boolean BotonGuardarSelecciono=false;
     private String nombredelarchivo;
@@ -48,7 +41,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         llenaCmbEmpresa();
-        llenaCmbSucursal();
+//        llenaCmbSucursal();
         btneEliminar.setVisible(false);
         btneEliminar.setEnabled(false);
         this.setTitle("NUEVO EMPLEADO");
@@ -64,7 +57,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         llenaCmbEmpresa();
-        llenaCmbSucursal();
+//        llenaCmbSucursal();
         this.legajo = legajo;
         btneEliminar.setVisible(true);
         this.setTitle("EDITAR EMPLEADO");
@@ -220,10 +213,20 @@ public class AltaEmpleado extends javax.swing.JDialog {
         cmbEmpresa.setBackground(new java.awt.Color(102, 102, 102));
         cmbEmpresa.setForeground(new java.awt.Color(255, 255, 255));
         cmbEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        cmbEmpresa.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbEmpresaItemStateChanged(evt);
+            }
+        });
 
         cmbSucursal.setBackground(new java.awt.Color(102, 102, 102));
         cmbSucursal.setForeground(new java.awt.Color(255, 255, 255));
         cmbSucursal.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        cmbSucursal.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSucursalItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -347,27 +350,26 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
     private void txtLegajoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLegajoFocusLost
 
-        //        //validar el empleado
-        //
-        //         try{
-            //        Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
-            //         if (e!=null) {
-                //            JOptionPane.showMessageDialog(rootPane, "EL LEGAJO YA EXISTE, INTENTE NUEVAMENTE", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
-                //            txtLegajo.setText("");
-                //            txtLegajo.requestFocus();
-                //        }else{
-                //             // es uno legajo nuevo , por defecto la clave sera la misma que su legajo
-                //             txtClave.setText(txtLegajo.getText());
-                //             txtClaveRepetir.setText(txtLegajo.getText());
-                //             txtApellido.requestFocus();
-                //         }
-            //        }catch(Exception eee){
-            //            if (!btnCancelarOperacion.isEnabled() ||txtLegajo.getText().trim().isEmpty() ) {
-                //            mensajero.mensajeError(this, "NO PUEDE ESTAR VACIEO EL CAMPO LEGAJO");
-                //            txtLegajo.setText("");
-                //            txtLegajo.requestFocus();
-                //        }
-            //        }
+                //validar el empleado
+        
+                 try{
+                    Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
+                     if (e!=null) {
+                            JOptionPane.showMessageDialog(rootPane, "EL LEGAJO YA EXISTE, INTENTE NUEVAMENTE", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+                            txtLegajo.setText("");
+                            txtLegajo.requestFocus();
+                        }else{
+                             // es uno legajo nuevo , por defecto la clave sera la misma que su legajo
+                             txtLegajo.setText(txtLegajo.getText());
+                             txtApellido.requestFocus();
+                         }
+                    }catch(Exception eee){
+                        if (!btnCancelar.isEnabled() ||txtLegajo.getText().trim().isEmpty() ) {
+                            JOptionPane.showMessageDialog(this, "NO PUEDE ESTAR VACIEO EL CAMPO LEGAJO");
+                            txtLegajo.setText("");
+                            txtLegajo.requestFocus();
+                        }
+                    }
     }//GEN-LAST:event_txtLegajoFocusLost
 
     private void txtLegajoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLegajoActionPerformed
@@ -429,6 +431,14 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
             }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void cmbSucursalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSucursalItemStateChanged
+        
+    }//GEN-LAST:event_cmbSucursalItemStateChanged
+
+    private void cmbEmpresaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEmpresaItemStateChanged
+        llenaCmbSucursal(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
+    }//GEN-LAST:event_cmbEmpresaItemStateChanged
      
     private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
           // permitir solo el ingreso de numero
@@ -531,7 +541,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
      */
        
      public boolean validarEmpleadoActulizado(){
-        boolean todoOk=true;
+        boolean todoOk = true;
         Empleado empOriginal = new EmpleadoDaoImp().getEmpleado(legajo); 
         System.out.println("empleado original "+empOriginal.getLegajo());
         if (empOriginal.getLegajo() !=Integer.parseInt(txtLegajo.getText().trim())) {
@@ -656,22 +666,24 @@ public class AltaEmpleado extends javax.swing.JDialog {
         }
     }
 
-    private void llenaCmbSucursal() {
-        Session sesion = null;
-        Empresa su = new EmpresaDaoImp().getEmpresa(cmbEmpresa.getSelectedItem().toString().charAt(0));
-        try {
+    private void llenaCmbSucursal(int codEmp) {
+//        Empresa emp = new EmpresaDaoImp().getEmpresa(cmbEmpresa.getSelectedItem().toString().charAt(0));
+        Session sesion;
+        System.out.println("codEmp: "+codEmp);
+        try{
             sesion = Conexion.getSession();
-            String sql = "from Empresa where codEmp = '"+su+"'";
-            sesion.beginTransaction();
-            Criteria crit = sesion.createCriteria(Sucursal.class);
-            List<Sucursal> rsConcepto = crit.list();// SELECT * FROM TABLA
+            String sql = "from Sucursal as s join fetch s.empresa as e where e.codEmp = '"+codEmp+"'";
+//            Criteria crit = sesion.createCriteria(Sucursal.class);
+//            List<Sucursal> rsSucursal = crit.list();
+            List<Sucursal> rsSucursal = (List<Sucursal>)sesion.createQuery(sql).list();
+            System.out.println("rsSucursal: "+rsSucursal);
             cmbSucursal.removeAllItems();
-            for (Sucursal suc : rsConcepto) {
-                cmbSucursal.addItem(suc.getCodSuc()+ "-" + suc.getNombre());
+            for(Sucursal suc : rsSucursal){
+                cmbSucursal.addItem(suc.getCodSuc()+"-"+suc.getNombre());
             }
-//            sesion.close();
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            sesion.close();
+        }catch(Exception e){
+            System.out.println(e);
         }
     }
 }
