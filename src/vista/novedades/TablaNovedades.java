@@ -63,6 +63,7 @@ import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
 import util.TablaUtil;
+import vistas.cargaNovedades;
 /**
  *
  * @author usuario
@@ -1068,11 +1069,26 @@ public class TablaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        DefaultTableModel temp = (DefaultTableModel) tblNovedades.getModel();
-        Object nuevo[]= {"","",""};
-        temp.addRow(nuevo);
-        btnGuardar.setEnabled(true);
-        fila = temp.getRowCount()+1;
+//        DefaultTableModel temp = (DefaultTableModel) tblNovedades.getModel();
+//        Object nuevo[]= {"","",""};
+//        temp.addRow(nuevo);
+//        btnGuardar.setEnabled(true);
+//        fila = temp.getRowCount()+1;
+        String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
+                Sucursal suc;
+                Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
+                if (cod.charAt(1) == '-'){
+                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+                }else{
+                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
+                }
+                
+                if(suc!=null){
+                    System.out.println("Entro a aux");
+                    auxFecIni = FechaUtil.getFechaString10DDMMAAAA(fechaInicio.getDate());
+                }
+                System.out.println("Suc: "+suc.getCodSuc());
+                new cargaNovedades(parent, rootPaneCheckingEnabled, suc, fechaInicio.getDate(), emp);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed

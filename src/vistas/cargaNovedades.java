@@ -26,7 +26,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
+import pojo.Empresa;
 import pojo.Novedad;
+import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
 //import vista.novedades.prueba;
@@ -43,10 +45,12 @@ public class cargaNovedades extends javax.swing.JDialog {
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
     private Usuario usuario= new Usuario();
+    private Sucursal sucursal = new Sucursal();
     int legajo = 0;
     String auxCant;
     String auxObs;
     String tipo;
+    Date fecha;
     Date date = new Date();
     String hoy;
     DateFormat df = DateFormat.getDateInstance();
@@ -64,11 +68,13 @@ public class cargaNovedades extends javax.swing.JDialog {
         hoy = FechaUtil.getFechaString11AAAAMMDD(date);
         cargo();
         llenaJComboBoxInvestigacion();
-         jcb.addActionListener(new java.awt.event.ActionListener() {
+        
+        jcb.addActionListener(new java.awt.event.ActionListener() {
+            
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbFiltroActionPerformed(evt);
             }
-
+            
             private void jcbFiltroActionPerformed(ActionEvent evt) {
                 if(!isCualitiva(jcb.getSelectedItem().toString())){
                    // bloquear las columna 4
@@ -77,7 +83,6 @@ public class cargaNovedades extends javax.swing.JDialog {
                  tblNovedadesUsr.getModel().isCellEditable(fila, 4);
                 }
             }
-            
             
             private boolean isCualitiva(String descrip) {
                 boolean b = false;
@@ -89,6 +94,7 @@ public class cargaNovedades extends javax.swing.JDialog {
                 } 
                 return b;
             }
+            
         });
         
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
@@ -100,28 +106,33 @@ public class cargaNovedades extends javax.swing.JDialog {
         ultimaCarga = new Date(sdf.format(date));
         lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
         lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
-        
-        String ultimoing = util.FechaUtil.getFechaString10DDMMAAAA(usuario.getUltimoIngreso());
         Date fecha = util.FechaUtil.getFechaSinhora(date);
         System.out.println("ultimo: "+fecha);
-//        String hoy = util.FechaUtil.getFechaString10DDMMAAAA(new Date());
-//        hoy = util.FechaUtil.getFechaSinhora(date);
-//        System.out.println("Ultimo Ingreso: "+ultimoing);
-//        System.out.println("Cargo?: "+usuario.getCargo());
-//        System.out.println("ultimo ingreso = hoy?: "+ultimoing.equals(hoy));
-//        System.out.println("Hoy: "+hoy);
-////       
-        Usuario usr  = new UsuarioDaoImp().getUsuario(usuario.getId());
-        Date fechaCarga = usr.getUltimoIngreso();
-//        System.out.println("fechaCarga: "+fechaCarga);
-//
-//        System.out.println("ultimoing.equals(hoy): "+ultimoing.equals(hoy));
-//        System.out.println("usuario.getCargo() :"+usuario.getCargo());
-        
         setLocationRelativeTo(this);
         setVisible(true);
-        
         usuario.setUltimoIngreso(new Date());
+    }
+   
+   public cargaNovedades(java.awt.Frame parent, boolean modal, Sucursal sucursal, Date fecha, Empresa emp) {
+        super(parent, modal);
+        initComponents();
+        this.sucursal = sucursal;
+        System.out.println("Sucursal: "+sucursal);
+        this.fecha = fecha;
+        System.out.println("Fecha: "+fecha);
+        cargarTablaNovedadesRRHH();
+        btnCargar.setEnabled(true);
+        llenaJComboBoxInvestigacioRRHH();
+        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(3);
+        TableCellEditor tce = new DefaultCellEditor(jcb);
+        tc.setCellEditor(tce);
+        
+        tblNovedadesUsr.setAutoCreateRowSorter(true);
+        lblFecha.setText(sdf.format(fecha));
+        lblEmpresa.setText(emp.getCodEmp()+"-"+emp.getNombre());
+        lblSucursal.setText(sucursal.getCodSuc()+"-"+sucursal.getNombre());
+        setLocationRelativeTo(this);
+        setVisible(true);
     }
            
     public cargaNovedades(){
@@ -341,12 +352,7 @@ public class cargaNovedades extends javax.swing.JDialog {
     private javax.swing.JTable tblNovedadesUsr;
     // End of variables declaration//GEN-END:variables
 
-    private void cargarTablaNovedades(){
-        System.out.println("Tipo antes: "+tipo);
-        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
-        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
-    }
+    
      
     private void getDatosTabla(int i){
         auxCant = (String) tblNovedadesUsr.getValueAt(i, 4);
@@ -406,7 +412,24 @@ public class cargaNovedades extends javax.swing.JDialog {
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-   }      
+   }
+   
+   public void llenaJComboBoxInvestigacioRRHH() {
+        Session session = null;
+        int i = 0;
+        try {
+                session = Conexion.getSession();
+                Criteria crit = session.createCriteria(Concepto.class);
+                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+                jcb.removeAllItems();
+                for (Concepto inv : rsConcepto) {
+                    jcb.addItem(inv.getDescripcion());
+                }
+                session.close();
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+   }
    
    public void cargaCantidad(){
 //       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
@@ -415,6 +438,12 @@ public class cargaNovedades extends javax.swing.JDialog {
 //           tblNovedadesUsr.set;
        }
    }
+   
+   private void cargarTablaNovedades(){
+        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
+        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
+        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
+    }
 
     private void cargarTablaNovedadesCompleta() {
         System.out.println("CodSuc: "+usuario.getEmpleado().getSucursal().getCodSuc());
@@ -423,6 +452,17 @@ public class cargaNovedades extends javax.swing.JDialog {
         List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fecha, usuario.getEmpleado().getSucursal().getCodSuc());
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
+    }
+    
+      private void cargarTablaNovedadesRRHH() {
+//        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
+          System.out.println("Fecha y codigo: "+fecha+" "+sucursal.getCodSuc());
+          String aux = FechaUtil.getFechaString11AAAAMMDD(fecha);
+        List<Novedad> listaNovSuc = new NovedadDaoImp().listarNovedad(aux, sucursal.getCodSuc());
+          System.out.println("Codigo de suc: "+sucursal.getCodSuc());
+        System.out.println("listaNovSuc: "+listaNovSuc);
+        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
+        util.TablaUtil.cargarNovedadesCompleta(modelo, listaNovSuc, tblNovedadesUsr);
     }
     
     private void cargo(){//RESTRINGE LA CARGA DE NOVEDADES SI ES QUE NO HAY NOVEDADES AUN

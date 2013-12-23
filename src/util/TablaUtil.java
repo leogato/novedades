@@ -53,22 +53,6 @@ public class TablaUtil {
      * @param tablaAsamblea tabla donde contiene toda la informacion de las asambleas
      */
     
-//    public static void cargarModeloAsistencia(DefaultTableModel modelo,Set<Asistencia> listaOrdenDia,JTable tablaOrdendelDia){
-//         modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
-//       for (Iterator it = listaOrdenDia.iterator(); it.hasNext();) {
-//        Asistencia a = (Asistencia) it.next();
-//        // extraigo de la asistencia el legajo y nombre del empleado
-//        Object[] empl = new AsistenciaDaoImp().getLegajoYNombreEmpleadoDeAsis(a.getIdAsistencia());
-//        String fecha= FechaUtil.getDateDDMMAAAA(a.getFecha());
-//        Object[] filaAsistencia = {a.getIdAsistencia(),empl[0],empl[1],a.getEstado(),fecha,FechaUtil.getHora(a.getHora())}; 
-//        modelo.addRow(filaAsistencia);
-//             
-//    }
-//       // hago que la columna 0 no sea visible
-//        tablaOrdendelDia.getColumnModel().getColumn(0).setMaxWidth(0);
-//        tablaOrdendelDia.getColumnModel().getColumn(0).setMinWidth(0);
-//        tablaOrdendelDia.getColumnModel().getColumn(0).setPreferredWidth(0);
-//}
     public static void cargarModeloConcepto(DefaultTableModel modelo,List<Concepto> listaConcepto,JTable tablaOrdendelDia){
          modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
          for (Concepto a : listaConcepto) {
@@ -144,32 +128,15 @@ public class TablaUtil {
             public boolean isCellEditable(int row,int col){
                 boolean b = false;
                 System.out.println("col: "+col);
-                
-                if(col == 3){
+                if(col == 3 || col == 4 || col == 5){
                     b = true;
                 }
-                    
-                
                 return b;
             }
-       
-       
-//            public boolean isCellEditable(int row, int col){
-//                System.out.println("Entro!");
-//                boolean b = false;
-//                    if (aux.equals("CUANTITATIVA")){
-//                        if (col == 4){
-//                            b= true;
-//                        }else if(col == 5){
-//                            b = true;
-//                        }
-//                    }
-//                    return b;
-//            }
-                
         };
         tablaNovedades.setModel(modelo);
     }
+    
     public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades){
         String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
         

@@ -93,6 +93,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         return lista;
     }
     
+    @Override
         public List<Empleado> listarEmpleado(int codEmp, int codSuc){
             Session session = Conexion.getSession();
             session.beginTransaction();

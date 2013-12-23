@@ -18,23 +18,15 @@ import pojo.Sucursal;
  * @author usuario
  */
 public interface NovedadDao {
-  List<Novedad> listarNovedad(Empleado o);
-  List<Novedad> listarNovedad();
   
-  public List<Novedad> listarNovedad(Date fechaIni, Date fechaFin);
-  
-  public Empleado getEmpleado(Empleado a);
-  public Novedad getNovedad(int id);
-  public void deleteEmpleado(Empleado a);
-  public void upDateEmpleado(Empleado a);
-  public Concepto getConcepto(Concepto e);
-  public void addNovedad(Novedad n);
-  public void upDateNovedad(Novedad n);
-  
-  List<Novedad> listarNovedad(Empleado e, Date fechaInicio, Date fechaFin);
-  public List<Novedad> listarNovedad(String fechaIni, int codSuc);
-  public List<Novedad> listarNovedad(Sucursal s, Date fechaInicio, Date fechaFin);
-  public List<Novedad> listarNovedad(Empresa e, Date fechaInicio, Date fechaFin);
-  public List<Novedad> listarNovedad(Concepto e, Date fechaInicio, Date fechaFin);
-//  public Novedad getNovedad(int idConcepto);
+    public void addNovedad(Novedad n);
+    public void upDateNovedad(Novedad n);
+    public Novedad getNovedad(int id);
+    List<Novedad> listarNovedad();
+    public List<Novedad> listarNovedad(Date fechaIni, Date fechaFin);
+    public List<Novedad> listarNovedad(String fechaIni, int codSuc);
+    List<Novedad> listarNovedad(Empleado e, Date fechaInicio, Date fechaFin);
+    public List<Novedad> listarNovedad(Sucursal s, Date fechaInicio, Date fechaFin);
+    public List<Novedad> listarNovedad(Empresa e, Date fechaInicio, Date fechaFin);
+    public List<Novedad> listarNovedad(Concepto e, Date fechaInicio, Date fechaFin);
 }
