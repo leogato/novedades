@@ -6,7 +6,6 @@ package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import novedades.dao.EmpleadoDao;
@@ -14,7 +13,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
-import pojo.Usuario;
 
 /**
  *

@@ -38,7 +38,6 @@ import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.EmpresaDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
-import novedades.dao.imp.UsuarioDaoImp;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -63,7 +62,7 @@ import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
 import util.TablaUtil;
-import vistas.cargaNovedades;
+import vistas.cargaRRHH;
 /**
  *
  * @author usuario
@@ -79,10 +78,8 @@ public class TablaNovedades extends javax.swing.JDialog {
     Novedad novedad = new Novedad();
     Usuario usuario = new Usuario();
     Date date1;
-    private String auxFecIni;
-    private String auxFecFin;
-    private short colores[] = new short[48];
-    
+    String auxFecIni, auxFecFin;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -98,17 +95,11 @@ public class TablaNovedades extends javax.swing.JDialog {
         llenaCmbEmpresa();
         inactivarEmpSuc();
         btnExcel.setEnabled(false);
-        
-        
-        
-
-//        cargarTabla();
-//        String[] datos = {"0-Sin Noveadad","1-Falta con aviso","2-Tardanza","3-Anticipo"};
                
         //el dispatcher se registra en forma global, por lo que es recomendable hacerlo dentro del frame principal
-//primero obtenemos le FocusManager (que a su vez es el KeyEventDispatcher)
+        //primero obtenemos le FocusManager (que a su vez es el KeyEventDispatcher)
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-//y enseguida registramos nuestro dispatcher
+        //y enseguida registramos nuestro dispatcher
         manager.addKeyEventDispatcher(new KeyEventDispatcher(){
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
@@ -612,15 +603,7 @@ public class TablaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_rdbFechaActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        System.out.println("Cantidad de dias entre una fecha y otra: "+FechaUtil.diferenciaEntreFechas(fechaInicio.getDate(), fechaFin.getDate()));
-        List<Concepto> conce = (List) new ConceptoDaoImp().listarConcepto();
-        System.out.println("Total de conceptos"+conce.size());
-        
-        for(IndexedColors c : IndexedColors.values()){
-            System.out.println("c: "+c);
-        }
-        System.out.println("----------------------------------------------------------------------------");
-        
+
         listaNov = new  ArrayList<Novedad>();
         //********VERIFICA QUE LA FECHA DE INICIO NO SEA MAYOR QUE LA FECHA DE FIN********\\
         if (fechaInicio.getDate().getTime()<=fechaFin.getDate().getTime()) {
@@ -640,13 +623,13 @@ public class TablaNovedades extends javax.swing.JDialog {
                 }
                 //***BUSQUEDA POR EMPRESA Y SUCURSAL***\\
             }
+           
             if(cmbBusqueda.getSelectedIndex()== 2){
                 btnExcel.setEnabled(true);
                 inactivarBusqueda();
                 Empresa emp;
                 Sucursal suc;
                 String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
-                System.out.println("Cod: "+cod);
                 
                 if (cod.charAt(1) == '-'){
                     suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
@@ -660,15 +643,9 @@ public class TablaNovedades extends javax.swing.JDialog {
                     auxFecFin = FechaUtil.getFechaString10DDMMAAAA(fechaFin.getDate());
                     
                     if(suc.getNombre().equals("TODAS")){
-                        System.out.println("Todas");
                         emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
                         listaNov = new NovedadDaoImp().listarNovedad(emp, FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
-                        System.out.println("ListNov en Todas: "+listaNov);
                     }else{
-                        System.out.println("Suc: "+suc.getNombre());
-                        System.out.println("fecha ini: "+auxFecIni);
-                        System.out.println("fecha fin: "+auxFecFin);
-                        System.out.println("Por Sucursal");
                         listaNov = new NovedadDaoImp().listarNovedad(suc, FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
                     }
                     
@@ -693,9 +670,6 @@ public class TablaNovedades extends javax.swing.JDialog {
         }else{  
                JOptionPane.showMessageDialog(this, "La fecha inicio no puedes ser mayor a la fecha Fin ","ERROR",JOptionPane.ERROR_MESSAGE);
             }
-        for(Novedad n : listaNov){
-                            System.out.println("Objetos en ListaNov: "+n.getEmpleado().getSucursal().getNombre());
-                        }
             TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
             TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
             tblNovedades.setAutoCreateRowSorter(true);
@@ -709,12 +683,13 @@ public class TablaNovedades extends javax.swing.JDialog {
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
         
-        int cel, o, dia,  valFecha, nxtFila, dias, indice, inicio, fin, cantDiasMes, mes, anio, nxtMes;
+        int cel, o, dia,  valFecha = 0, nxtFila, dias, indice, inicio, fin, cantDiasMes, mes, anio, nxtMes;
+        int mesIni, fecAnt = 0;
         String concepto;
         String valor;
         String legajo, apellido, nombre, convenio, tarea;
         String fecha;
-        Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(tblNovedades.getValueAt(0, 6).toString().charAt(0))));
+        Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(tblNovedades.getValueAt(0, 7).toString().charAt(0))));
         
         HSSFWorkbook libro;//crea el libro
         libro = new HSSFWorkbook();
@@ -733,12 +708,16 @@ public class TablaNovedades extends javax.swing.JDialog {
         
         f = hoja.getRow(0);
         celda = f.createCell(4);
-        celda.setCellValue(fechaInicio.getDate());
+        String fechita = sdf.format(fechaInicio.getDate());
+        celda.setCellValue(fechita);
+        celda.setCellStyle((CellStyle)styles.get("center"));
         celda = f.createCell(5);
         celda.setCellValue("HASTA");
         celda.setCellStyle((CellStyle)styles.get("center"));
         celda = f.createCell(6);
-        celda.setCellValue(fechaFin.getDate());
+        fechita = sdf.format(fechaFin.getDate());
+        celda.setCellStyle((CellStyle)styles.get("center"));
+        celda.setCellValue(fechita);
         
         
         f = hoja.createRow(2);
@@ -765,7 +744,6 @@ public class TablaNovedades extends javax.swing.JDialog {
                j++;
                nxtRow = j+1;//********VARIABLE QUE NOS OTORGA LA PROXIMA FILA PARA ESCRIBIR, DEBAJO DE LOS CONCEPTOS********//
             }else{
-                System.out.println("I: "+i);
                 f = hoja.getRow(j);
                 celda = f.createCell(k);
                 celda.setCellValue(con.getCodCon()+"-"+con.getDescripcion());
@@ -815,25 +793,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                 hoja.autoSizeColumn(iCol);
                 iCol++;
                 cantCuanti++;
-//                    for(int l = 0; l < tblNovedades.getRowCount(); l++){
-//                        System.out.println("Entré");
-//                        System.out.println("tabla: "+tblNovedades.getValueAt(l, 8));
-//                        System.out.println("Concepto: "+con.getDescripcion());
-//                        if (con.getDescripcion().equals(tblNovedades.getValueAt(l, 8))){
-//                            System.out.println("Contenido de columna 8"+tblNovedades.getValueAt(id, 8));
-//                            int cant = Integer.parseInt(tblNovedades.getValueAt(id, 9).toString());
-//                            suma = suma + cant;
-//                            id++;//PERMITE QUE VAYA RECORRIENDO LAS COLUMNAS DE CANTIDAD DE TABLA NOVEDADES// 
-//                            celda = fil.createCell(q);
-//                            celda.setCellValue(suma);
-//                            q++;//VA CAMBIANDO LA COLUMNA DEPENDIENDO DEL CONCEPTO ENCONTRADO//...CREO
-//                            fil = hoja.getRow(fila);
-//    //                        fila++;
-//
-//                        }
-//                    }
             }//***FIN IF QUE COMPARA CONCEPTOS PARA SACAR LAS CUANTITATIVAS
-            System.out.println("Cantidad: "+cantCuanti);
         }//***TERMINA EL CICLO DE LLENADO DE CUANTITATIVAS
         
         dias = Integer.parseInt(String.valueOf(FechaUtil.diferenciaEntreFechas(fechaInicio.getDate(), fechaFin.getDate())));
@@ -862,12 +822,8 @@ public class TablaNovedades extends javax.swing.JDialog {
                     if (mes == 13){
                         mes = 1;
                         anio = anio+1;
-                        cantDiasMes = FechaUtil.getDiasDelMes(mes, anio);
-                    }else{
-                        cantDiasMes = FechaUtil.getDiasDelMes(mes, anio);
                     }
-                    
-                    
+                    cantDiasMes = FechaUtil.getDiasDelMes(mes, anio);
                 }
                 iCol++;
         }//***FIN DE CICLO PARA ESCRIBIR LOS DIAS BUSCADOS***\\
@@ -885,29 +841,27 @@ public class TablaNovedades extends javax.swing.JDialog {
         convenio = "vacio";
         tarea = "vacio";
         fecha = "vacio";
-        SimpleDateFormat sdf;
-        SimpleDateFormat sdf1;
 //        hoja.addMergedRegion(CellRangeAddress.valueOf("$A$12:$C$12"));
-        tblNovedades.getRowSorter().toggleSortOrder(7);//***ORDENA POR COLUMNA SUCURSAL***//
+        tblNovedades.getRowSorter().toggleSortOrder(8);//***ORDENA POR COLUMNA SUCURSAL***//
         
         //********MODULO PARA ESCRIBIR UNA SUCURSAL********//
         for(int ind = 0; ind < tblNovedades.getRowCount(); ind++){
-            if(!valor.equals(tblNovedades.getValueAt(ind, 7).toString())){
-                valor = tblNovedades.getValueAt(ind, 7).toString();
+            if(!valor.equals(tblNovedades.getValueAt(ind, 8).toString())){
+                valor = tblNovedades.getValueAt(ind, 8).toString();
                 f = hoja.createRow(fila);
                 celda = f.createCell(0);
                 celda.setCellValue(valor);
                 fila++;
-                tblNovedades.getRowSorter().toggleSortOrder(1);//******ORDENA POR LEGAJO
+                tblNovedades.getRowSorter().toggleSortOrder(2);//******ORDENA POR LEGAJO
                 
                 //********MODULO PARA ESCRIBIR TODOS LOS EMPLEADOS DE ESA SUCURSAL QUE TENGAN NOVEDADES********//
                 for(int m = 0; m < tblNovedades.getRowCount();m++){
-                    if(!legajo.equals(tblNovedades.getValueAt(m, 1).toString())&& valor.equals(tblNovedades.getValueAt(m, 7))){
-                        legajo = tblNovedades.getValueAt(m, 1).toString();
-                        apellido = tblNovedades.getValueAt(m,2).toString();
-                        nombre = tblNovedades.getValueAt(m,3).toString();
-                        convenio = tblNovedades.getValueAt(m,4).toString();
-                        tarea = tblNovedades.getValueAt(m,5).toString();
+                    if(!legajo.equals(tblNovedades.getValueAt(m, 2).toString())&& valor.equals(tblNovedades.getValueAt(m, 8))){
+                        legajo = tblNovedades.getValueAt(m, 2).toString();
+                        apellido = tblNovedades.getValueAt(m,3).toString();
+                        nombre = tblNovedades.getValueAt(m,4).toString();
+                        convenio = tblNovedades.getValueAt(m,5).toString();
+                        tarea = tblNovedades.getValueAt(m,6).toString();
                         f = hoja.createRow(fila);
                         celda = f.createCell(0);
                         celda.setCellValue(legajo);
@@ -917,9 +871,9 @@ public class TablaNovedades extends javax.swing.JDialog {
                         celda.setCellValue(convenio);
                         celda = f.createCell(3);
                         celda.setCellValue(tarea);
-                        hoja.autoSizeColumn(1);
                         hoja.autoSizeColumn(2);
                         hoja.autoSizeColumn(3);
+                        hoja.autoSizeColumn(4);
                         //********MODULO PARA SUMAR LAS NOVEDADES CUANTITATIVAS DE CADA EMPLEADO********//
                         for( o = 0; o < cantCuanti; o++){//***RECORRE LAS COLUMNAS DEPENDIENDO DE CUANTOS CONCEPTOS CUANTITATIVOS HAYAN
                             suma = 0;
@@ -927,8 +881,8 @@ public class TablaNovedades extends javax.swing.JDialog {
                                 f = hoja.getRow(13);//***GETROW HACE REFERENCIA A LA FILA YA CREADA PARA VOLVER A ESCRIBIR EN ELLA***\\
                                 celda = f.getCell(cel+o);
                                 concepto = celda.getStringCellValue();
-                                if(concepto.equals(tblNovedades.getValueAt(n, 8).toString())&&legajo.equals(tblNovedades.getValueAt(n, 1).toString())){
-                                    suma = suma + Integer.parseInt(tblNovedades.getValueAt(n, 9).toString());
+                                if(concepto.equals(tblNovedades.getValueAt(n, 9).toString())&&legajo.equals(tblNovedades.getValueAt(n, 2).toString())){
+                                    suma = suma + Integer.parseInt(tblNovedades.getValueAt(n, 10).toString());
                                 }//FIN DE IF QUE CONSULTA POR CONCEPTO Y LEGAJO
                             }//TERMINA EL FOR QUE RECORRE LAS COLUMNAS
                             
@@ -942,69 +896,66 @@ public class TablaNovedades extends javax.swing.JDialog {
                         nxtFila = fila;
                         
                         //***MODULO PARA INSERTAR LAS NOVEDADES CUALITATIVAS SEGUN LOS DIAS BUSCADOS***\\
-                        tblNovedades.getRowSorter().toggleSortOrder(0);//***ORDENA LAS COLUMNAS DEL JTABLE POR FECHA***\\
+                        tblNovedades.getRowSorter().toggleSortOrder(1);//***ORDENA LAS COLUMNAS DEL JTABLE POR FECHA***\\
                         //***RECORRE LA FILAS DEL JTABLE ORDENADO POR FECHAS***\\
+                        mesIni = FechaUtil.getMes(fechaInicio.getDate());
                         for(int p = 0;p < tblNovedades.getRowCount(); p++){
                             
                             //***PREGUNTA SI EL LEGAJO EN EL EXCEL ES IGUAL AL DEL JTABLE
-                            if (legajo.equals(tblNovedades.getValueAt(p, 1).toString())){
-                                
+                            if (legajo.equals(tblNovedades.getValueAt(p, 2).toString())){
                                 try {
-                                    fecha = tblNovedades.getValueAt(p, 0).toString();
+                                    fecha = tblNovedades.getValueAt(p, 1).toString();
                                     String aux = FechaUtil.FormateaFecha(fecha);
                                     sdf = new SimpleDateFormat("dd-MM-yyyy");
                                     Date date = sdf.parse(aux);
                                     dia = FechaUtil.getDia(date);
                                     
                                     //***CICLO PARA ESCRIBIR LAS NOVEDADES CUALITATIVAS DE LOS EMPLEADOS QUE TUVIERAN***\\
+                                    fecAnt = 0;
+                                    
+                                    int mes2 = FechaUtil.getMes(date);
                                     do{
+                                        
                                         f = hoja.getRow(13);
                                         celda = f.getCell(cel2);
                                         valFecha = (int) celda.getNumericCellValue();
-                                        
+                                        if(valFecha < fecAnt){
+                                                mesIni = mesIni + 1;
+                                            }
                                         //IF PARA COMPARAR LAS FECHAS BUSCADAS CON LAS DEL JTABLE
-                                        if(dia == valFecha){
-                                            Concepto con = new ConceptoDaoImp().getConceptoHql(tblNovedades.getValueAt(p, 8).toString());
+                                        if(dia == valFecha && mes2 == mesIni){
+                                            Concepto con = new ConceptoDaoImp().getConceptoHql(tblNovedades.getValueAt(p, 9).toString());
                                             f = hoja.getRow(fila);
                                             celda = f.createCell(cel2);
                                             celda.setCellValue(con.getCodCon());
-
-                                            //***RECORRE EL JTABLE PARA ASIGNARLE COLORES A LOS CONCEPTOS QUE VA ENCONTRANDO***\\    
-//                                            for(int z = 0; z < tblNovedades.getRowCount();z++){
-//                                                System.out.println("codCon: "+con.getCodCon());
-//                                                
-//                                                if (con.getCodCon() == z){
-//                                                    System.out.println("Entro al IF");
-                                                    colores(con.getCodCon(), libro, celda);
-//                                                }
-//                                            
-//                                            }//FIN DE CICLO QUE ASIGNA COLOR
-                                            
+                                            colores(con.getCodCon(), libro, celda);
                                         }else{
                                             cel2++;
+                                            
+                                            fecAnt = valFecha;
                                         }//FIN IF DE COMPARACION DE FECHAS
-                                    }while(dia != valFecha);//***FIN DE CICLO DO WHILE
-
+                                    }while(dia != valFecha || mes2 != mesIni);//***FIN DE CICLO DO WHILE
+                                    
                                 } catch (ParseException ex) {
                                     Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }//***FIN DE IF QUE COMPARA LEGAJOS
                         }//***FIN DE CICLO QUE RECORRE FILAS ORDENADAS
 
-                        tblNovedades.getRowSorter().toggleSortOrder(1);//ORDENA LA TABLA POR LEGAJO
+                        tblNovedades.getRowSorter().toggleSortOrder(2);//ORDENA LA TABLA POR LEGAJO
                         
                         fila++; //INCREMENTA LA FILA EN 1
                     }//FIN DE IF DONDE CONSULTA POR LEGAJO Y VALOR
 
                 }//TERMINA EL MODULO PARA ESCRIBIR TODOS LOS EMPLEADOS
-                tblNovedades.getRowSorter().toggleSortOrder(7);//ORDENA LA TABLA POR SUCURSAL      
+                tblNovedades.getRowSorter().toggleSortOrder(8);//ORDENA LA TABLA POR SUCURSAL      
             }//FIN DE IF QUE CONSULTA POR UN VALOR DENTRO DE LA JTABLE
 
         }//FIN DE MODULO PARA ESCRIBIR TODAS LAS SUCURSALES
             
         //***ESCRIBE EL LIBRO***\\
         try {
-            FileOutputStream elFichero = new FileOutputStream("prueba.xlsx");
+            FileOutputStream elFichero = new FileOutputStream("prueba.xls");
             libro.write(elFichero);
             elFichero.close();
         } catch (Exception e) {
@@ -1069,26 +1020,18 @@ public class TablaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-//        DefaultTableModel temp = (DefaultTableModel) tblNovedades.getModel();
-//        Object nuevo[]= {"","",""};
-//        temp.addRow(nuevo);
-//        btnGuardar.setEnabled(true);
-//        fila = temp.getRowCount()+1;
+
         String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
-                Sucursal suc;
-                Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
-                if (cod.charAt(1) == '-'){
-                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
-                }else{
-                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
-                }
-                
-                if(suc!=null){
-                    System.out.println("Entro a aux");
-                    auxFecIni = FechaUtil.getFechaString10DDMMAAAA(fechaInicio.getDate());
-                }
-                System.out.println("Suc: "+suc.getCodSuc());
-                new cargaNovedades(parent, rootPaneCheckingEnabled, suc, fechaInicio.getDate(), emp);
+        Sucursal suc;
+        Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
+        if (cod.charAt(1) == '-'){
+            suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+        }else{
+            suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
+        }
+        auxFecIni = FechaUtil.getFechaString10DDMMAAAA(fechaInicio.getDate());
+        new cargaRRHH(parent, rootPaneCheckingEnabled, suc, fechaInicio.getDate(), emp);
+        btnBuscarActionPerformed(evt);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -1206,26 +1149,18 @@ public class TablaNovedades extends javax.swing.JDialog {
         
     }
     
-    private void cargarTabla(List<Novedad> listaNovedad){
-        listaNovedad = new NovedadDaoImp().listarNovedad();
-        util.TablaUtil.prepararTablaRRHH(modelo, tblNovedades);
-        util.TablaUtil.cargarModeloRRHH(modelo, listaNovedad, tblNovedades);
-    }
-    
     public void llenaCmbConcepto() {
         Session sesion;
         try {
             sesion = Conexion.getSession();
             Criteria crit = sesion.createCriteria(Concepto.class);
             List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
-            System.out.println("rsConcepto: "+rsConcepto);
             cmbConcepto.removeAllItems();
             for (Concepto con : rsConcepto) {
                 cmbConcepto.addItem(con.getDescripcion());
             }
             sesion.close();
-        } catch (Exception e) {
-        }
+        }catch (Exception e) {}
     }
     
     private void llenaCmbEmpresa(){
@@ -1234,10 +1169,7 @@ public class TablaNovedades extends javax.swing.JDialog {
             sesion = Conexion.getSession();
             sesion.beginTransaction();
             String sql = "from Empresa";
-//            Criteria crit = sesion.createCriteria(Empresa.class);
-//            List<Empresa> rsEmpresa = crit.list();
             List<Empresa> rsEmpresa = (List<Empresa>)sesion.createQuery(sql).list();
-            System.out.println("rsEmpresa: "+rsEmpresa);
             cmbEmpresa.removeAllItems();
             for(Empresa emp : rsEmpresa){
                 cmbEmpresa.addItem(emp.getCodEmp()+"-"+emp.getNombre());
@@ -1252,10 +1184,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         try{
             sesion = Conexion.getSession();
             String sql = "from Sucursal as s join fetch s.empresa as e where e.codEmp = '"+codEmp+"'";
-//            Criteria crit = sesion.createCriteria(Sucursal.class);
-//            List<Sucursal> rsSucursal = crit.list();
             List<Sucursal> rsSucursal = (List<Sucursal>)sesion.createQuery(sql).list();
-            System.out.println("rsSucursal: "+rsSucursal);
             cmbSucursal.removeAllItems();
             for(Sucursal suc : rsSucursal){
                 cmbSucursal.addItem(suc.getCodSuc()+"-"+suc.getNombre());
@@ -1282,199 +1211,166 @@ public class TablaNovedades extends javax.swing.JDialog {
     private void inactivarBusqueda(){
          // dejar no editable el txtbusqueda y no activo el boton busqueda
         txtBusqueda.setEditable(false);
-
         //borro el contendido de la caja de texto
         txtBusqueda.setText("");
         txtBusqueda.setBackground(Color.DARK_GRAY);
-        
-        
-        
-      
-//        btnBusquedaPersonal.setEnabled(false);
     }
-    private void activarBusqueda(){
-       txtBusqueda.setEditable(false);
-       cmbEmpresa.setEditable(true);
-       cmbSucursal.setEditable(true);
-       //obtnego el foco
-       cmbEmpresa.requestFocus();
-//       txtSucursal.requestFocus();
-       //cambio el color
-       txtBusqueda.setBackground(Color.darkGray);
-       cmbSucursal.setBackground(Color.white);
-       cmbEmpresa.setBackground(Color.WHITE);
-//       btnBusquedaPersonal.setEnabled(true);
-         
-    }
-    private void activarLegajo(){
-        txtBusqueda.setEditable(true);
-        cmbSucursal.setEditable(false);
-        cmbEmpresa.setEditable(false);
-        txtBusqueda.requestFocus();
-        txtBusqueda.setBackground(Color.white);
-        cmbSucursal.setBackground(Color.DARK_GRAY);
-    }
-    
-private void habilitarFechas()
-{
+
+    private void habilitarFechas(){
     fechaInicio.setEnabled(true);
     fechaFin.setEnabled(true);
+    }
     
-}
-private void deshabilitarFechas()
-{
-    fechaInicio.setEnabled(false);
-    fechaFin.setEnabled(false);
-}
+    private void deshabilitarFechas(){
+        fechaInicio.setEnabled(false);
+        fechaFin.setEnabled(false);
+    }
 
-    private void llenaJComboBoxInvestigacion() {
+    private void llenaJComboBoxInvestigacion(){
         Session session = null;
         try {
                 session = Conexion.getSession();
                 Criteria crit = session.createCriteria(Concepto.class);
                 List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
-                System.out.println("Entre a llenaCMB");
                 for (Concepto inv : rsConcepto) {
-                    System.out.println("desc "+inv.getDescripcion());
                     jcb.addItem(inv.getDescripcion());
                 }
-                System.out.println("Salte el For");
                 session.close();
         } catch (Exception e) {
         }
     }
     
-    public void Excel(){
-        Workbook libro = new HSSFWorkbook();//Creo el LIBRO donde guardare las HOJAS
-            Map<String, CellStyle> styles = createStyles(libro);//Crea un ESTILO para la hoja
-            Sheet hoja = libro.createSheet("Novedades");//Creo una HOJA
-            hoja.setPrintGridlines(false);
-            hoja.setDisplayGridlines(false);
-            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$B$1"));
-      
-
-            PrintSetup printSetup = hoja.getPrintSetup();
-            printSetup.setLandscape(true);
-            hoja.setFitToPage(true);
-            hoja.setHorizontallyCenter(true);
-      
-
-            Row filatitulo = hoja.createRow(0);//Creo la primer FILA
-            filatitulo.setHeightInPoints(35.0F);//Le doy un TAMAÑO
-            for (int i = 1; i <= 7; i++) {
-              filatitulo.createCell(i).setCellStyle((CellStyle)styles.get("title"));//Setea el ESTILO a las CELDAS  
-            }
-            Cell filaCell = filatitulo.getCell(2);//Obtiene una CELDA
-            filaCell.setCellValue("Cálculo retribuciones en especie: ");//Inserta el VALOR que queremos a la CELDA(ENCABEZADO)
-            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$H$1"));//Combina y centra el VALOR insertado en la CELDA
-            
-            Row row = hoja.createRow(0);//Fila
-            Cell cell = row.createCell(0);//Columna
-            cell.setCellValue("Distribuidora Don Pedro");//Sacado de la BASE de DATOS
-            cell.setCellStyle((CellStyle)styles.get("title"));
-            
-            row = hoja.createRow(1);
-            cell = row.createCell(0);
-            cell.setCellValue("CUIT N°");//Sacado de la BASE de DATOS
-            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$2:$H$3"));
-            cell.setCellStyle((CellStyle)styles.get("fondo"));
-            
+//    public void Excel(){
+//        Workbook libro = new HSSFWorkbook();//Creo el LIBRO donde guardare las HOJAS
+//            Map<String, CellStyle> styles = createStyles(libro);//Crea un ESTILO para la hoja
+//            Sheet hoja = libro.createSheet("Novedades");//Creo una HOJA
+//            hoja.setPrintGridlines(false);
+//            hoja.setDisplayGridlines(false);
+//            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$B$1"));
+//      
+//
+//            PrintSetup printSetup = hoja.getPrintSetup();
+//            printSetup.setLandscape(true);
+//            hoja.setFitToPage(true);
+//            hoja.setHorizontallyCenter(true);
+//      
+//
+//            Row filatitulo = hoja.createRow(0);//Creo la primer FILA
+//            filatitulo.setHeightInPoints(35.0F);//Le doy un TAMAÑO
+//            for (int i = 1; i <= 7; i++) {
+//              filatitulo.createCell(i).setCellStyle((CellStyle)styles.get("title"));//Setea el ESTILO a las CELDAS  
+//            }
+//            Cell filaCell = filatitulo.getCell(2);//Obtiene una CELDA
+//            filaCell.setCellValue("Cálculo retribuciones en especie: ");//Inserta el VALOR que queremos a la CELDA(ENCABEZADO)
+//            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$1:$H$1"));//Combina y centra el VALOR insertado en la CELDA
+//            
+//            Row row = hoja.createRow(0);//Fila
+//            Cell cell = row.createCell(0);//Columna
+//            cell.setCellValue("Distribuidora Don Pedro");//Sacado de la BASE de DATOS
+//            cell.setCellStyle((CellStyle)styles.get("title"));
+//            
 //            row = hoja.createRow(1);
-            cell = row.createCell(2);
-            cell.setCellValue("Junio 2013");//Sacado de la BASE de DATOS
-            cell.setCellStyle((CellStyle)styles.get("title"));
-            
-            row = hoja.createRow(3);
-            cell = row.createCell(2);
-            cell.setCellValue("Bruto nómina");
-            cell.setCellStyle((CellStyle)styles.get("item_left"));
-            cell = row.createCell(5);
-//            cell.setCellValue(this.NominajTextField.getText());
-            cell.setCellStyle((CellStyle)styles.get("data"));
-            cell.setAsActiveCell();
-            
-            row = hoja.createRow(4);
-            cell = row.createCell(2);
-            cell.setCellValue("Ingreso a cuenta");
-            cell.setCellStyle((CellStyle)styles.get("item_left"));
-            cell = row.createCell(5);
-//            cell.setCellValue(this.IngresoaCuentajTextField.getText());
-            cell.setCellStyle((CellStyle)styles.get("data"));
-            
-            row = hoja.createRow(5);
-            cell = row.createCell(2);
-            cell.setCellValue("Total retribucion en especie");
-            cell.setCellStyle((CellStyle)styles.get("item_left"));
-            cell = row.createCell(5);
-//            cell.setCellValue(this.TotaljTextField.getText());
-            cell.setCellStyle((CellStyle)styles.get("data"));
-            
-            row = hoja.createRow(6);
-            cell = row.createCell(2);
-            cell.setCellValue("IVA repercutido");
-            cell.setCellStyle((CellStyle)styles.get("item_left"));
-            cell = row.createCell(5);
-//            cell.setCellValue(this.IVAjTextField.getText());
-            cell.setCellStyle((CellStyle)styles.get("data"));
-            try {
-                CrearExcel(libro);
-            } catch (Exception ex) {
-                Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
-            }
-    }
-    public void CrearExcel(Workbook libro) throws Exception{
-        JFileChooser fc = null;
-        FileNameExtensionFilter filter = null;
-        if (fc == null){
-            fc = new JFileChooser();
-            fc.setDialogTitle("Guardar");
-      
-            fc.setFileSelectionMode(0);
-            filter = new FileNameExtensionFilter("Libro de Excel", new String[] { "xls" });
-            fc.addChoosableFileFilter(filter);
-            fc.setFileFilter(filter);
-        }
-        int returnVal = fc.showSaveDialog(this);
-        if (returnVal == 0){
-            File file = fc.getSelectedFile();
-            String ext = "";
-            if (fc.getFileFilter() == filter){
-                String extension = file.getAbsolutePath();
-                if (!extension.endsWith(".xls")){
-                    ext = ".xls";
-                }
-            }
-        try{
-            OutputStream output = new FileOutputStream(file + ext);
-            Throwable localThrowable2 = null;
-            try{
-                libro.write(output);
-                output.close();
-            }catch (Throwable localThrowable1){
-                localThrowable2 = localThrowable1;
-                throw localThrowable1;
-            }
-            finally{
-                if (output != null){
-                    if (localThrowable2 != null){
-                        try{
-                            output.close();
-                        }catch (Throwable x2){
-                            localThrowable2.addSuppressed(x2);
-                        }
-                    }else {
-                        output.close();
-                    }
-                }
-            }
-        }catch (FileNotFoundException e){
-            System.err.println(e.getMessage());
-        }catch (IOException e){
-            System.err.println(e.getMessage());
-        }
-     }
-     fc.setSelectedFile(null);
-  }
+//            cell = row.createCell(0);
+//            cell.setCellValue("CUIT N°");//Sacado de la BASE de DATOS
+//            hoja.addMergedRegion(CellRangeAddress.valueOf("$A$2:$H$3"));
+//            cell.setCellStyle((CellStyle)styles.get("fondo"));
+//            
+////            row = hoja.createRow(1);
+//            cell = row.createCell(2);
+//            cell.setCellValue("Junio 2013");//Sacado de la BASE de DATOS
+//            cell.setCellStyle((CellStyle)styles.get("title"));
+//            
+//            row = hoja.createRow(3);
+//            cell = row.createCell(2);
+//            cell.setCellValue("Bruto nómina");
+//            cell.setCellStyle((CellStyle)styles.get("item_left"));
+//            cell = row.createCell(5);
+////            cell.setCellValue(this.NominajTextField.getText());
+//            cell.setCellStyle((CellStyle)styles.get("data"));
+//            cell.setAsActiveCell();
+//            
+//            row = hoja.createRow(4);
+//            cell = row.createCell(2);
+//            cell.setCellValue("Ingreso a cuenta");
+//            cell.setCellStyle((CellStyle)styles.get("item_left"));
+//            cell = row.createCell(5);
+////            cell.setCellValue(this.IngresoaCuentajTextField.getText());
+//            cell.setCellStyle((CellStyle)styles.get("data"));
+//            
+//            row = hoja.createRow(5);
+//            cell = row.createCell(2);
+//            cell.setCellValue("Total retribucion en especie");
+//            cell.setCellStyle((CellStyle)styles.get("item_left"));
+//            cell = row.createCell(5);
+////            cell.setCellValue(this.TotaljTextField.getText());
+//            cell.setCellStyle((CellStyle)styles.get("data"));
+//            
+//            row = hoja.createRow(6);
+//            cell = row.createCell(2);
+//            cell.setCellValue("IVA repercutido");
+//            cell.setCellStyle((CellStyle)styles.get("item_left"));
+//            cell = row.createCell(5);
+////            cell.setCellValue(this.IVAjTextField.getText());
+//            cell.setCellStyle((CellStyle)styles.get("data"));
+//            try {
+//                CrearExcel(libro);
+//            } catch (Exception ex) {
+//                Logger.getLogger(TablaNovedades.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//    }
+//    public void CrearExcel(Workbook libro) throws Exception{
+//        JFileChooser fc = null;
+//        FileNameExtensionFilter filter = null;
+//        if (fc == null){
+//            fc = new JFileChooser();
+//            fc.setDialogTitle("Guardar");
+//      
+//            fc.setFileSelectionMode(0);
+//            filter = new FileNameExtensionFilter("Libro de Excel", new String[] { "xls" });
+//            fc.addChoosableFileFilter(filter);
+//            fc.setFileFilter(filter);
+//        }
+//        int returnVal = fc.showSaveDialog(this);
+//        if (returnVal == 0){
+//            File file = fc.getSelectedFile();
+//            String ext = "";
+//            if (fc.getFileFilter() == filter){
+//                String extension = file.getAbsolutePath();
+//                if (!extension.endsWith(".xls")){
+//                    ext = ".xls";
+//                }
+//            }
+//        try{
+//            OutputStream output = new FileOutputStream(file + ext);
+//            Throwable localThrowable2 = null;
+//            try{
+//                libro.write(output);
+//                output.close();
+//            }catch (Throwable localThrowable1){
+//                localThrowable2 = localThrowable1;
+//                throw localThrowable1;
+//            }
+//            finally{
+//                if (output != null){
+//                    if (localThrowable2 != null){
+//                        try{
+//                            output.close();
+//                        }catch (Throwable x2){
+//                            localThrowable2.addSuppressed(x2);
+//                        }
+//                    }else {
+//                        output.close();
+//                    }
+//                }
+//            }
+//        }catch (FileNotFoundException e){
+//            System.err.println(e.getMessage());
+//        }catch (IOException e){
+//            System.err.println(e.getMessage());
+//        }
+//     }
+//     fc.setSelectedFile(null);
+//  }
   
   private Map<String, CellStyle> createStyles(Workbook wb)
   {
@@ -1482,14 +1378,8 @@ private void deshabilitarFechas()
     
     Font titleFont = wb.createFont();
     titleFont.setFontHeightInPoints((short)24);
-//    titleFont.setFontName("Trebuchet MS");
     titleFont.setFontName("French Script MT");
     CellStyle style = wb.createCellStyle();
-    style.setBorderBottom((short)7);
-    style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-    style.setFont(titleFont);
-    style.setFillBackgroundColor(IndexedColors.INDIGO.getIndex());
-    styles.put("title", style);
     
     Font fuenteTitulo = wb.createFont();
     fuenteTitulo.setFontHeightInPoints((short)24);
@@ -1505,7 +1395,6 @@ private void deshabilitarFechas()
     itemFont.setFontHeightInPoints((short)10);
     itemFont.setFontName("Arial Black");
     style = wb.createCellStyle();
-//    style.setAlignment((short)1);
     style.setFont(itemFont);
     styles.put("item_left", style);
     
@@ -1517,15 +1406,6 @@ private void deshabilitarFechas()
     style.setFillPattern((short)1);
     style.setFont(itemFont);
     styles.put("conceptos", style);
-    
-    itemFont.setFontHeightInPoints((short)9);
-    itemFont.setFontName("Arial");
-    style = wb.createCellStyle();
-    style.setAlignment((short)2);
-    style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
-    style.setFillPattern((short)1);
-    style.setFont(itemFont);
-    styles.put("detalle", style);
     
     itemFont.setFontHeightInPoints((short)9);
     itemFont.setFontName("Arial");
@@ -1558,28 +1438,9 @@ private void deshabilitarFechas()
     
     style = wb.createCellStyle();
     style.setAlignment((short)2);
-//    style.setDataFormat((short)"dd-MMM");
     style.setFont(itemFont);
     styles.put("center", style);
     
-
-//    style = wb.createCellStyle();
-//    style.setAlignment((short)3);
-//    style.setFont(itemFont);
-//    style.setBorderRight((short)7);
-//    style.setRightBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
-//    style.setBorderBottom((short)7);
-//    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
-//    style.setBorderLeft((short)7);
-//    style.setLeftBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
-//    style.setBorderTop((short)7);
-//    style.setTopBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
-//    style.setDataFormat(wb.createDataFormat().getFormat("0"));
-//    style.setBorderBottom((short)7);
-//    style.setBottomBorderColor(IndexedColors.GREY_40_PERCENT.getIndex());
-//    style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-//    style.setFillPattern((short)1);
-//    styles.put("data", style);
     style = wb.createCellStyle();
     style.setAlignment((short)3);
     style.setFont(itemFont);
@@ -1608,28 +1469,24 @@ private void deshabilitarFechas()
   }
   
   private void colores(int i, HSSFWorkbook wb, HSSFCell celda){
-      System.out.println("Entro al switch");
       Map<String, CellStyle> styles = new HashMap();
       CellStyle style = wb.createCellStyle();
       switch (i) {
           case 0:
-            System.out.println("Entro "+i);
-            style.setAlignment((short)2);
-            style.setFillForegroundColor(IndexedColors.VIOLET.getIndex());
-            style.setFillPattern((short)1);
-            styles.put(String.valueOf(i), style);
-            celda.setCellStyle(style);
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.VIOLET.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
+              break;
           case 1:
-                System.out.println("Entro "+i);
-                style.setAlignment((short)2);
-                style.setFillForegroundColor(IndexedColors.CORAL.getIndex());
-                style.setFillPattern((short)1);
-                styles.put(String.valueOf(i), style);
-                celda.setCellStyle(style);
-
+              style.setAlignment((short)2);
+              style.setFillForegroundColor(IndexedColors.INDIGO.getIndex());
+              style.setFillPattern((short)1);
+              styles.put(String.valueOf(i), style);
+              celda.setCellStyle(style);
               break;
           case 2:
-              System.out.println("Entro "+i);
                 style.setAlignment((short)2);
                 style.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
                 style.setFillPattern((short)1);
@@ -1637,7 +1494,6 @@ private void deshabilitarFechas()
                 celda.setCellStyle(style);
               break;
           case 3:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.BLUE_GREY.getIndex());
               style.setFillPattern((short)1);
@@ -1645,7 +1501,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 4:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.TURQUOISE.getIndex());
               style.setFillPattern((short)1);
@@ -1653,7 +1508,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 5:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
               style.setFillPattern((short)1);
@@ -1661,7 +1515,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 6:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.getIndex());
               style.setFillPattern((short)1);
@@ -1669,7 +1522,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 7:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.GOLD.getIndex());
               style.setFillPattern((short)1);
@@ -1677,7 +1529,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 8:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
               style.setFillPattern((short)1);
@@ -1685,7 +1536,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;    
           case 9:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
               style.setFillPattern((short)1);
@@ -1693,7 +1543,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;    
           case 10:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
               style.setFillPattern((short)1);
@@ -1701,7 +1550,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 11:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
               style.setFillPattern((short)1);
@@ -1709,7 +1557,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 12:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.LIME.getIndex());
               style.setFillPattern((short)1);
@@ -1717,7 +1564,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;    
           case 13:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.MAROON.getIndex());
               style.setFillPattern((short)1);
@@ -1725,7 +1571,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;    
           case 14:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.ORCHID.getIndex());
               style.setFillPattern((short)1);
@@ -1733,7 +1578,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;    
           case 15:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.PLUM.getIndex());
               style.setFillPattern((short)1);
@@ -1741,7 +1585,6 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;
           case 16:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.TEAL.getIndex());
               style.setFillPattern((short)1);
@@ -1749,14 +1592,12 @@ private void deshabilitarFechas()
               celda.setCellStyle(style);
               break;    
           default:
-              System.out.println("Entro "+i);
               style.setAlignment((short)2);
               style.setFillForegroundColor(IndexedColors.RED.getIndex());
               style.setFillPattern((short)1);
               styles.put(String.valueOf(i), style);
               break;
       }
-      
       
   }
   

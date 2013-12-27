@@ -64,6 +64,8 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
         session.close();
         return a;     
     }
+    
+    @Override
     public Usuario getUsuarioAdministrador(String usuario,String clave){
         Usuario e = null;
         Session session = Conexion.getSession();

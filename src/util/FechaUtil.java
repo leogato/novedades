@@ -93,7 +93,6 @@ public class FechaUtil {
     public static int getDia (Date fecha){//********DEVUELVE EL DIA DEL MES SELECCIONADO
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTime(fecha);
-        
         return gc.get(Calendar.DAY_OF_MONTH);
     }
     public static String getDiaString (Date fecha){

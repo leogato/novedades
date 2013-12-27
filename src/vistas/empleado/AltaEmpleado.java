@@ -385,7 +385,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private void btneEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneEliminarActionPerformed
         //        limpiarVenanaEmpleado();
         //        setEnableVentanaInformacionEmpleado(true);
-        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtApellido.getText()+"2"+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
+        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtApellido.getText()+" "+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
             Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
             new EmpleadoDaoImp().deleteEmpleado(e);

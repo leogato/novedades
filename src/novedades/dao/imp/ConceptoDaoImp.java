@@ -28,25 +28,12 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
 
     @Override
     public List<Concepto> listarConcepto() {
-        Concepto con = null;
         Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "from Concepto";
         ArrayList<Concepto> concepto = (ArrayList<Concepto>)session.createQuery(sql).list();
         session.close();
         return concepto;
-    }
-    
-    @Override
-    public Concepto getConcepto(boolean carga){
-        Concepto con = null;
-        Session session = Conexion.getSession();
-        session.beginTransaction();
-        String sql = "from Concepto u\n"+"Where u.cargaUser = '"+carga+"'";
-        con = (Concepto)session.createQuery(sql).uniqueResult();
-        session.getTransaction().commit();
-        session.close();
-        return con;
     }
 
     @Override
@@ -82,54 +69,7 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
         session.getTransaction().commit();
         session.close();
         return a;      
-    }
-
-    public Concepto getCarga(boolean carga) {
-       Session session = Conexion.getSession();
-        session.beginTransaction();
-        Concepto a = (Concepto) session.get(Concepto.class,carga);
-        session.getTransaction().commit();
-        session.close();
-        return a;
-    }
-    
-    public List<Concepto> listarConcepto(Empleado e, Date fecIni){
-       Session session = Conexion.getSession();
-         Criteria criteria = session.createCriteria(Concepto.class);
-         criteria.addOrder(Order.asc("Legajo"));
-         criteria.add(Restrictions.eq("empleado", e));
-         criteria.add( Restrictions.ge("fecha", fecIni) );
-         List<Concepto> lista = criteria.list();
-         return lista;
-    }
-    
-    public List<Novedad> listarNovedad(Date fechaInicio, Date fechaFin) {
-       Session session = Conexion.getSession();
-       Criteria criteria = session.createCriteria(Novedad.class);
-       criteria.add( Restrictions.ge("fecha", fechaInicio) );
-       criteria.add( Restrictions.ge("fecha", fechaFin) );
-       List<Novedad> lista = criteria.list();
-       return lista;
-    }
-    
-//    public List<Novedad> listarNovedad(Date fechaInicio, Date fechaFin) {
-//       Session session = Conexion.getSession();
-//       List<Novedad> lista = .list();
-//       return lista;
-//    }
-    
-    public List<Novedad> listarNovedad(Empleado e,Date fechaInicio, Date fechaFin) {
-       Session session = Conexion.getSession();
-          Criteria criteria = session.createCriteria(Novedad.class);
-//          criteria.addOrder(Order.asc("fecha"));
-         criteria.addOrder(Order.asc("idAsistencia"));
-          criteria.add(Restrictions.eq("empleado", e));
-          criteria.add( Restrictions.ge("fecha", fechaInicio) );
-          criteria.add( Restrictions.ge("fecha", fechaFin) );
-          List<Novedad> lista = criteria.list();
-//         session.close();
-          return lista;
-    }
+    } 
 
     @Override
     public Concepto getConceptoHql(String descripcion) {
@@ -142,7 +82,5 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
         session.close();
         return con;
     }
-   
-  
 
 }

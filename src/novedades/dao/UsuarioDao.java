@@ -16,4 +16,5 @@ public interface UsuarioDao {
   public void deleteUsuario(Usuario a);
   public void upDateUsuario(Usuario a);
   public Usuario getUsuario(int legajo);
+  public Usuario getUsuarioAdministrador(String usuario,String clave);
 }

@@ -121,14 +121,14 @@ public class TablaUtil {
         System.out.println("Tipo: "+tipo);
         final String aux = tipo;
         System.out.println("aux: "+aux);
-        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
+        String[] titulos = {"ID","LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
         
         modelo = new DefaultTableModel(null, titulos){
             @Override
             public boolean isCellEditable(int row,int col){
                 boolean b = false;
                 System.out.println("col: "+col);
-                if(col == 3 || col == 4 || col == 5){
+                if(col == 4 || col == 5 || col == 6){
                     b = true;
                 }
                 return b;
@@ -138,7 +138,7 @@ public class TablaUtil {
     }
     
     public static void prepararTablaNovedades(DefaultTableModel modelo, JTable tablaNovedades){
-        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
+        String[] titulos = {"ID","LEGAJO","APELLIDO","NOMBRE","CONCEPTO","CANTIDAD","OBSERVACION"};
         
         modelo = new DefaultTableModel(null, titulos){
             @Override
@@ -148,7 +148,7 @@ public class TablaUtil {
                         b = true;
                     }else if (col == 5){
                         b= true;
-                    }else if(col == 3){
+                    }else if(col == 6){
                         b = true;
                     }
                 return b;
@@ -160,19 +160,29 @@ public class TablaUtil {
     
     public static void cargarModeloNovedades(DefaultTableModel modelo,List<Empleado> listaEmpleado,JTable tablaNovedades){
         modelo = (DefaultTableModel) tablaNovedades.getModel();
+        
         for (Empleado n : listaEmpleado){
-            Object[] filaAsistencia = {n.getLegajo(),n.getApellido(),n.getNombre(),"Sin Novedad"}; 
+            Object[] filaAsistencia = {"",n.getLegajo(),n.getApellido(),n.getNombre(),"Sin Novedad"}; 
             modelo.addRow(filaAsistencia);
         }
+        
+        tablaNovedades.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablaNovedades.getColumnModel().getColumn(0).setMinWidth(0);
+        tablaNovedades.getColumnModel().getColumn(0).setPreferredWidth(0);
 //        Conexion.getSessionFactory().close();
     }
+    
     public static void cargarNovedadesCompleta(DefaultTableModel modelo, List<Novedad> listaEmpleado, JTable tablaNovedades){
         modelo = (DefaultTableModel) tablaNovedades.getModel();
+        
         for (Novedad n : listaEmpleado){
-            Object[] filaAsistencia = {n.getEmpleado().getLegajo(),n.getEmpleado().getApellido(),n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()};//,n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()}; 
+            Object[] filaAsistencia = {n.getId(),n.getEmpleado().getLegajo(),n.getEmpleado().getApellido(),n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()};//,n.getEmpleado().getNombre(),n.getConcepto().getDescripcion(),n.getCantidad(),n.getObservacion()}; 
             modelo.addRow(filaAsistencia);
-            //Cargar todas las novedades con fecha de hoy
         }
+        
+        tablaNovedades.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablaNovedades.getColumnModel().getColumn(0).setMinWidth(0);
+        tablaNovedades.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
     
     public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
