@@ -6,8 +6,6 @@ package vistas.usuario;
 
 import vistas.empleado.*;
 import pojo.Empleado;
-import novedades.dao.imp.EmpleadoDaoImp;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;

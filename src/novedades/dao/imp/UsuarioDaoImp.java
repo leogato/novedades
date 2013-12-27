@@ -56,14 +56,29 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
         session.close();      }
 
     @Override
-    public Usuario getUsuario(int legajo) {
+    public List<Usuario> getEstado(boolean estado) {
        Session session = Conexion.getSession();
         session.beginTransaction();
-        Usuario a = (Usuario) session.get(Usuario.class,legajo);
+        String sql = "from Usuario as u where u.estado = '"+estado+"'";
+        List <Usuario> a = (List<Usuario>) session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();
         return a;     
     }
+    
+    @Override
+    public Usuario getUsuario(int legajo) {
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql = "from Usuario u \n"+
+                     "join fetch u.empleado as e \n"+
+                     "where e.legajo = '"+legajo+"'";
+        Usuario a = (Usuario) session.createQuery(sql).uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return a;     
+    }
+    
     
     @Override
     public Usuario getUsuarioAdministrador(String usuario,String clave){
@@ -79,21 +94,16 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
         return e;
     }
     
+    @Override
     public Usuario getUsuarioLogin(String usuario){
         Usuario e = null;
         Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "FROM Usuario u\n" +"join fetch u.empleado as e\n" +
-        "join fetch e.sucursal as suc\n"+
-        "join fetch suc.empresa as emp\n" +
-        "WHERE u.usuario = '"+usuario+"'";
+                     "join fetch e.sucursal as suc\n"+
+                     "join fetch suc.empresa as emp\n" +
+                     "WHERE u.usuario = '"+usuario+"'";
         e = (Usuario)session.createQuery(sql).uniqueResult();
-//        Criteria criteria = session.createCriteria(Usuario.class);
-//        criteria.add(Restrictions.eq("usuario", usuario));
-//        List<Usuario> lista = (List<Usuario>)criteria.list();
-//        if (lista.size()!=0) {
-//            e = lista.get(0);
-//        }         
         session.getTransaction().commit();
         session.close();
         return e;

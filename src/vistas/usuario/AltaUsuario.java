@@ -5,16 +5,10 @@
 package vistas.usuario;
 
 import vistas.empleado.*;
-import pojo.Concepto;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
-import hibernateUtil.Conexion;
-import java.util.List;
 import javax.swing.JOptionPane;
-import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
-import org.hibernate.annotations.Parent;
-import pojo.Novedad;
 import pojo.Usuario;
 
 /**
@@ -22,19 +16,10 @@ import pojo.Usuario;
  * @author Leo
  */
 public class AltaUsuario extends javax.swing.JDialog {
-//    public static final int MENU =1;
+
     public static final int GESTOR_EMPLEADO =1;
-    
-    
-    
-   
-//    byte[] imgByte;
-//    private String pathFoto;
-//    int resp;// respuesta  si agrego o no una foto el empleado,  
-//    private boolean seleccionofoto=false;
     private int legajo=0;
     private boolean BotonGuardarSelecciono=false;
-//    private String nombredelarchivo;
 
     public boolean isBotonGuardarSelecciono() {
         return BotonGuardarSelecciono;
@@ -62,22 +47,24 @@ public class AltaUsuario extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setTitle("EDITAR EMPLEADO");
-//        this.legajo = legajo;
+        this.legajo = legajo;
         btneEliminar.setVisible(true);
         btnBuscar.setVisible(false);
         Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
         Usuario u = new Usuario();
         u.setEmpleado(e);
-        txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
-        txtUsuario.setText(u.getUsuario());
-        txtDescripcion.setText(u.getDescripcion());
-        txtContrasenia.setText(u.getClave());
-        cmbTipo.setSelectedItem(u.getTipo());
-//        configurarParaEditar();
+//        System.out.println("legajo :"+legajo);
+//        u = new UsuarioDaoImp().getUsuario(legajo);
+//        System.out.println("usuario: "+u);
+//        txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
+//        txtUsuario.setText(u.getUsuario());
+//        txtDescripcion.setText(u.getDescripcion());
+//        txtContrasenia.setText(u.getClave());
+//        cmbTipo.setSelectedItem(u.getTipo());
+        configurarParaEditar();
         setLocationRelativeTo(this); 
         setVisible(true);
     }
-     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -348,6 +335,7 @@ public class AltaUsuario extends javax.swing.JDialog {
         int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Usuario: \n"+txtUsuario.getText()+" ?", "ELIMINAR USUARIO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
             Usuario u = new UsuarioDaoImp().getUsuario(legajo);
+//            u.setEstado(false);
             new UsuarioDaoImp().deleteUsuario(u);
             JOptionPane.showMessageDialog(rootPane, "La Eliminacion se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
@@ -362,10 +350,6 @@ public class AltaUsuario extends javax.swing.JDialog {
             Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
             u.setEmpleado(e);
             u = getDatosUsuario();
-//            u.setUsuario(txtUsuario.getText().trim());
-//            u.setClave(txtContrasenia.getText().trim());
-//            u.setDescripcion(txtDescripcion.getText().trim());
-//            u.setTipo(cmbTipo.getSelectedItem().toString());
             new UsuarioDaoImp().addUsuario(u);
             this.dispose();
         }else{
@@ -462,17 +446,7 @@ public class AltaUsuario extends javax.swing.JDialog {
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtUsuario;
     // End of variables declaration                   
 
-     private void limpiarVenanaEmpleado() {
-       txtUsuario.setText("");
-       txtLegajo.setText("");
-       txtDescripcion.setText("");
-       //BOTON
-      // btnGuardar.setEnabled(true);
-       btneEliminar.setEnabled(false);
-       // falta par aque  el cursor se situe en el campo legajo por defecyto
-       txtLegajo.requestFocus();
-    }
-    
+      
     /**
      * 
      * @return retornaun Objeto tipo Empleado a partir de los datos ingresados por el usuario
@@ -525,6 +499,7 @@ public class AltaUsuario extends javax.swing.JDialog {
          usuario.setDescripcion(txtDescripcion.getText());
          usuario.setClave(txtContrasenia.getText());
          usuario.setTipo(cmbTipo.getSelectedItem().toString());
+         usuario.setEstado(true);
          return usuario;
      }
       private void setEditableVentanaInformacionEmpleado(boolean logico) {
@@ -561,12 +536,25 @@ public class AltaUsuario extends javax.swing.JDialog {
 
     private void configurarParaEditar() {
 //        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
-        Usuario u = new UsuarioDaoImp().getUsuario(legajo);
-        txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
+//        Usuario u = new UsuarioDaoImp().getUsuario(e.getLegajo());
+//        if(u.getEstado()){
+//            txtLegajo.setText(String.valueOf(e.getLegajo()));
+//            txtUsuario.setText(u.getUsuario());
+//            txtDescripcion.setText(u.getDescripcion());
+//            txtContrasenia.setText(u.getClave());
+//            cmbTipo.setSelectedItem(u.getTipo());
+//        }else{
+//            JOptionPane.showMessageDialog(this, "EL USUARIO SE ENCUENTRA ANULADO");
+//        }
+        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+        Usuario u = new UsuarioDaoImp().getUsuario(e.getLegajo());
+        System.out.println("u: "+u);
+        System.out.println("e: "+e);
+        txtLegajo.setText(String.valueOf(e.getLegajo()));
         txtUsuario.setText(u.getUsuario());
-//        txtUsuario.setText(u.getEmpleado().getApellido()+" "+u.getEmpleado().getNombre());
         txtDescripcion.setText(u.getDescripcion());
         txtContrasenia.setText(u.getClave());
         cmbTipo.setSelectedItem(u.getTipo());
+        
     }
 }

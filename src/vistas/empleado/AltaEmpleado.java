@@ -352,24 +352,24 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
                 //validar el empleado
         
-                 try{
-                    Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
-                     if (e!=null) {
-                            JOptionPane.showMessageDialog(rootPane, "EL LEGAJO YA EXISTE, INTENTE NUEVAMENTE", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
-                            txtLegajo.setText("");
-                            txtLegajo.requestFocus();
-                        }else{
-                             // es uno legajo nuevo , por defecto la clave sera la misma que su legajo
-                             txtLegajo.setText(txtLegajo.getText());
-                             txtApellido.requestFocus();
-                         }
-                    }catch(Exception eee){
-                        if (!btnCancelar.isEnabled() ||txtLegajo.getText().trim().isEmpty() ) {
-                            JOptionPane.showMessageDialog(this, "NO PUEDE ESTAR VACIEO EL CAMPO LEGAJO");
-                            txtLegajo.setText("");
-                            txtLegajo.requestFocus();
-                        }
-                    }
+//                 try{
+//                    Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
+//                     if (e!=null) {
+//                            JOptionPane.showMessageDialog(rootPane, "EL LEGAJO YA EXISTE, INTENTE NUEVAMENTE", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+//                            txtLegajo.setText("");
+//                            txtLegajo.requestFocus();
+//                        }else{
+//                             // es uno legajo nuevo , por defecto la clave sera la misma que su legajo
+//                             txtLegajo.setText(txtLegajo.getText());
+//                             txtApellido.requestFocus();
+//                         }
+//                    }catch(Exception eee){
+//                        if (!btnCancelar.isEnabled() ||txtLegajo.getText().trim().isEmpty() ) {
+//                            JOptionPane.showMessageDialog(this, "NO PUEDE ESTAR VACIEO EL CAMPO LEGAJO");
+//                            txtLegajo.setText("");
+//                            txtLegajo.requestFocus();
+//                        }
+//                    }
     }//GEN-LAST:event_txtLegajoFocusLost
 
     private void txtLegajoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLegajoActionPerformed
