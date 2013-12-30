@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2013 12:56:08 by Hibernate Tools 3.2.1.GA
+// Generated 27/12/2013 10:31:44 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -20,8 +20,8 @@ public class Empleado  implements java.io.Serializable {
      private String convenio;
      private String tarea;
      private Boolean estado;
-     private Set usuarios = new HashSet(0);
-     private Set novedads = new HashSet(0);
+     private Set<Usuario> usuarios = new HashSet<Usuario>(0);
+     private Set<Novedad> novedads = new HashSet<Novedad>(0);
 
     public Empleado() {
     }
@@ -35,7 +35,7 @@ public class Empleado  implements java.io.Serializable {
         this.convenio = convenio;
         this.tarea = tarea;
     }
-    public Empleado(int legajo, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String convenio, String tarea, Boolean estado, Set usuarios, Set novedads) {
+    public Empleado(int legajo, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String convenio, String tarea, Boolean estado, Set<Usuario> usuarios, Set<Novedad> novedads) {
        this.legajo = legajo;
        this.sucursal = sucursal;
        this.apellido = apellido;
@@ -112,18 +112,18 @@ public class Empleado  implements java.io.Serializable {
     public void setEstado(Boolean estado) {
         this.estado = estado;
     }
-    public Set getUsuarios() {
+    public Set<Usuario> getUsuarios() {
         return this.usuarios;
     }
     
-    public void setUsuarios(Set usuarios) {
+    public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
-    public Set getNovedads() {
+    public Set<Novedad> getNovedads() {
         return this.novedads;
     }
     
-    public void setNovedads(Set novedads) {
+    public void setNovedads(Set<Novedad> novedads) {
         this.novedads = novedads;
     }
 

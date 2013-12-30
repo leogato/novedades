@@ -7,10 +7,13 @@ package vistas;
 import vistas.empleado.AltaEmpleado;
 import vistas.empleado.GestorEmpleado;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.List;
+import javax.swing.JDialog;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import pojo.Concepto;
 import pojo.Usuario;
 import vista.novedades.TablaNovedades;
@@ -31,6 +34,7 @@ public class principal extends javax.swing.JFrame {
     
     Usuario usuario= new Usuario();
     List<Concepto> con;
+    JDialog dialogo = null;
     /**
      * Creates new form principal
      */
@@ -146,6 +150,11 @@ public class principal extends javax.swing.JFrame {
 
         mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
         mnuItmAcerca.setText("Acerca");
+        mnuItmAcerca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmAcercaActionPerformed(evt);
+            }
+        });
         mnuArchivo.add(mnuItmAcerca);
 
         mnuSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -235,6 +244,7 @@ public class principal extends javax.swing.JFrame {
 
         mnuEmpresa.setText("Empresas");
 
+        mnuItemGestorEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/empresa.png"))); // NOI18N
         mnuItemGestorEmpresa.setText("Gestor de Empresas");
         mnuItemGestorEmpresa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,6 +253,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuEmpresa.add(mnuItemGestorEmpresa);
 
+        mnuItemEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/addEmpresa.png"))); // NOI18N
         mnuItemEmpresa.setText("Alta de Empresas");
         mnuItemEmpresa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -304,11 +315,12 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuNovedadesActionPerformed
 
     private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
+        visualizaDialogo(this, "MUCHAS GRACIAS POR UTILIZAR EL SISTEMA DE NOVEDADES, QUE TENGA BUEN DIA!", "Cerrando Sistema", 5000);
         System.exit(0);
     }//GEN-LAST:event_mnuSalirActionPerformed
 
     private void mnuItmCargaNovedadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCargaNovedadesActionPerformed
-        cargaNovedades cn = new cargaNovedades(this, true, usuario);
+        new cargaNovedades(this, true, usuario);
     }//GEN-LAST:event_mnuItmCargaNovedadesActionPerformed
 
     private void mnuItemEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemEmpresaActionPerformed
@@ -349,6 +361,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItmLoginActionPerformed
 
     private void mnuItmCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCloseActionPerformed
+        visualizaDialogo(this, "SU SALIDA HA SIDO EXITOSA, HASTA PRONTO","Logout",3000);
         setConfiguracionMenuAdministrador(false);
         mnuItmLogin.setEnabled(true);
         mnuSalir.setEnabled(true);
@@ -370,6 +383,10 @@ public class principal extends javax.swing.JFrame {
     private void mnuItemGestorEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemGestorEmpresaActionPerformed
         new GestorEmpresa(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuItemGestorEmpresaActionPerformed
+
+    private void mnuItmAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmAcercaActionPerformed
+        
+    }//GEN-LAST:event_mnuItmAcercaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -463,6 +480,37 @@ private void setConfiguracionMenuAdministrador(boolean b){
         mnuItmCargaNovedades.setEnabled(b);
         mnuItmClose.setEnabled(b);
     }
-
+    
+    public void visualizaDialogo( Component padre, String texto, String titulo, final long timeout){
+        
+        JOptionPane option = new JOptionPane("", JOptionPane.INFORMATION_MESSAGE);
+        
+        option.setMessage(texto);
+        
+        if ( null == dialogo ){
+            dialogo = option.createDialog(padre, titulo);
+        }else{
+            dialogo.setTitle(titulo);
+        }
+ 
+        Thread hilo = new Thread(){
+            public void run(){
+                try{
+                    Thread.sleep(timeout);
+                    if ( dialogo.isVisible() ){
+                        dialogo.setVisible(false);
+                    }
+                }
+                catch ( InterruptedException e ){
+                    e.printStackTrace();
+                }
+            }
+        };
+        hilo.start();
+ 
+        dialogo.setVisible(true);
+    }
 }
+
+
 

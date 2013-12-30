@@ -62,11 +62,21 @@ public class cargaRRHH extends javax.swing.JDialog {
       public cargaRRHH(java.awt.Frame parent, boolean modal, Sucursal sucursal, Date f, Empresa emp) {
         super(parent, modal);
         initComponents();
+        auxCant = sdf.format(f);
         this.sucursal = sucursal;
         System.out.println("Sucursal: "+sucursal);
         this.fecha = f;
         System.out.println("Fecha: "+f);
-        cargarTablaNovedadesRRHH();
+        
+        cargo();
+//        List<Novedad> nov = new NovedadDaoImp().listarNovedad(FechaUtil.getFechaString10DDMMAAAA(f), sucursal.getCodSuc());
+        
+//        if(nov.isEmpty()){
+//            cargarTablaNovedadesVacia(sucursal);
+//        }else{
+//            cargarTablaNovedadesRRHH();
+//        }
+//        
         btnCargar.setEnabled(true);
         llenaJComboBoxInvestigacioRRHH();
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(4);
@@ -221,18 +231,20 @@ public class cargaRRHH extends javax.swing.JDialog {
         if(tblNovedadesUsr.isEditing()){
                 tblNovedadesUsr.getCellEditor().stopCellEditing();
                 for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
-                    novedad = new NovedadDaoImp().getNovedad(id);
+//                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
+//                    novedad = new NovedadDaoImp().getNovedad(id);
                     getDatosTabla(i);
-                    new NovedadDaoImp().upDateNovedad(novedad);
+                    System.out.println("novedad: "+novedad);
+                    new NovedadDaoImp().addNovedad(novedad);
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
             }else{
                 for( int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
-                    novedad = new NovedadDaoImp().getNovedad(id);
+//                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
+//                    novedad = new NovedadDaoImp().getNovedad(id);
                     getDatosTabla(i);
-                    new NovedadDaoImp().upDateNovedad(novedad);
+                    System.out.println("novedad: "+novedad);
+                    new NovedadDaoImp().addNovedad(novedad);
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
             }
@@ -257,8 +269,8 @@ public class cargaRRHH extends javax.swing.JDialog {
     
      
     private void getDatosTabla(int i){
-        auxCant = tblNovedadesUsr.getValueAt(i, 4).toString();
-        auxObs = tblNovedadesUsr.getValueAt(i, 5).toString();
+        auxCant = (String)tblNovedadesUsr.getValueAt(i, 5);
+        auxObs = (String)tblNovedadesUsr.getValueAt(i, 6);
         e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 1).toString()));
         novedad.setEmpleado(e);
         c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 4).toString()));
@@ -277,15 +289,6 @@ public class cargaRRHH extends javax.swing.JDialog {
         System.out.println();
     }
     
-       private void getDatosTablaNull(int i){
-        e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString()));
-        novedad.setEmpleado(e);
-        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 3).toString()));
-        novedad.setConcepto(c);
-        System.out.println(lblFecha.getText());
-        System.out.println();
-    }
-       
    public void llenaJComboBoxInvestigacion() {
         Session session = null;
         int i = 0;
@@ -363,21 +366,30 @@ public class cargaRRHH extends javax.swing.JDialog {
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaNovSuc, tblNovedadesUsr);
     }
+      
+      private void cargarTablaNovedadesVacia(Sucursal suc){
+        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(suc.getEmpresa().getCodEmp(), suc.getCodSuc());
+        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
+        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
+      
+      }
     
-    private void cargo(){//RESTRINGE LA CARGA DE NOVEDADES SI ES QUE NO HAY NOVEDADES AUN
+    private void cargo(){//CARGA LA TABLA DE UNA U OTRA FORMA DEPENDIENDO SI HAY ALGUNA NOVEDAD CARGADA ESA FECHA PARA ESA SUCURSAL O NO
         List<Novedad> nov;
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where n.fecha = '"+hoy+"' and s.codSuc = '"+usuario.getEmpleado().getSucursal().getCodSuc()+"'";
+        hoy = FechaUtil.getFechaString11AAAAMMDD(fecha);
+        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where n.fecha = '"+hoy+"' and s.codSuc = '"+sucursal.getCodSuc()+"'";
         nov = (List<Novedad>)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();
-
-        if (nov.isEmpty()){
+        
+        if(nov.isEmpty()){
+            cargarTablaNovedadesVacia(sucursal);
             btnCargar.setEnabled(true);
         }else{
-            JOptionPane.showMessageDialog(rootPane, "LOS DATOS YA FUERON CARGADOS ANTERIORMENTE, INTENTE MAÑANA NUEVAMENTE");
-            cargarTablaNovedadesCompleta();
+            cargarTablaNovedadesRRHH();
+            btnCargar.setEnabled(false);
         }
     }
    

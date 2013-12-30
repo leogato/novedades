@@ -185,6 +185,9 @@ public class TablaUtil {
         tablaNovedades.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
     
+    
+    
+    
     public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
         String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
         modelo= new DefaultTableModel(null,titulos){

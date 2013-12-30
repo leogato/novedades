@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2013 12:56:08 by Hibernate Tools 3.2.1.GA
+// Generated 27/12/2013 10:31:44 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -16,12 +16,12 @@ public class Empresa  implements java.io.Serializable {
      private String gerente;
      private String mailGerente;
      private Boolean estado;
-     private Set sucursals = new HashSet(0);
+     private Set<Sucursal> sucursals = new HashSet<Sucursal>(0);
 
     public Empresa() {
     }
 
-    public Empresa(String nombre, String gerente, String mailGerente, Boolean estado, Set sucursals) {
+    public Empresa(String nombre, String gerente, String mailGerente, Boolean estado, Set<Sucursal> sucursals) {
        this.nombre = nombre;
        this.gerente = gerente;
        this.mailGerente = mailGerente;
@@ -64,11 +64,11 @@ public class Empresa  implements java.io.Serializable {
     public void setEstado(Boolean estado) {
         this.estado = estado;
     }
-    public Set getSucursals() {
+    public Set<Sucursal> getSucursals() {
         return this.sucursals;
     }
     
-    public void setSucursals(Set sucursals) {
+    public void setSucursals(Set<Sucursal> sucursals) {
         this.sucursals = sucursals;
     }
 

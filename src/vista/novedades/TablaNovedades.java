@@ -7,6 +7,7 @@ package vista.novedades;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import hibernateUtil.Conexion;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -74,21 +77,25 @@ public class TablaNovedades extends javax.swing.JDialog {
     JComboBox jcb = new JComboBox();
     java.awt.Frame parent;
     //Variables para crear el Excel//
-    int nxtRow, fila;
+    int nxtRow, fila, bandera = 0;
     Novedad novedad = new Novedad();
     Usuario usuario = new Usuario();
     Date date1;
     String auxFecIni, auxFecFin;
+    
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    JDialog dialogo = null;
     
     public TablaNovedades(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
         fechaInicio.setDate(FechaUtil.getFechaSinhora(new Date()));
         fechaFin.setDate(new Date());
         deshabilitarFechas();
         inactivarBusqueda();
         cmbConcepto.setEnabled(false);
+        btnNuevo.setEnabled(false);
         rdbHoy.requestFocus();
         rdbHoy.setSelected(true);
         llenaCmbConcepto();
@@ -619,13 +626,14 @@ public class TablaNovedades extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
                     }         
                 } catch (Exception e) {
-//                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
+                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
                 }
                 //***BUSQUEDA POR EMPRESA Y SUCURSAL***\\
             }
            
             if(cmbBusqueda.getSelectedIndex()== 2){
                 btnExcel.setEnabled(true);
+                btnNuevo.setEnabled(true);
                 inactivarBusqueda();
                 Empresa emp;
                 Sucursal suc;
@@ -682,7 +690,6 @@ public class TablaNovedades extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
-        
         int cel, o, dia,  valFecha = 0, nxtFila, dias, indice, inicio, fin, cantDiasMes, mes, anio, nxtMes;
         int mesIni, fecAnt = 0;
         String concepto;
@@ -690,8 +697,22 @@ public class TablaNovedades extends javax.swing.JDialog {
         String legajo, apellido, nombre, convenio, tarea;
         String fecha;
         Empresa emp = new EmpresaDaoImp().getEmpresa(Integer.parseInt(String.valueOf(tblNovedades.getValueAt(0, 7).toString().charAt(0))));
-        
         HSSFWorkbook libro;//crea el libro
+        
+        String ext = "";
+        File file = null;
+        JFileChooser fc = null;
+        FileNameExtensionFilter filter = null;
+        if (fc == null){
+            fc = new JFileChooser();
+            fc.setDialogTitle("Guardar");
+            fc.setFileSelectionMode(0);
+            filter = new FileNameExtensionFilter("Libro de Excel", new String[] { "xls" });
+            fc.addChoosableFileFilter(filter);
+            fc.setFileFilter(filter);
+        }
+        fc.setSelectedFile(null);
+        
         libro = new HSSFWorkbook();
         CellStyle style = libro.createCellStyle();
         Map<String, CellStyle> styles = createStyles(libro);
@@ -954,13 +975,55 @@ public class TablaNovedades extends javax.swing.JDialog {
         }//FIN DE MODULO PARA ESCRIBIR TODAS LAS SUCURSALES
             
         //***ESCRIBE EL LIBRO***\\
-        try {
-            FileOutputStream elFichero = new FileOutputStream("prueba.xls");
-            libro.write(elFichero);
-            elFichero.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        int returnVal = fc.showSaveDialog(this);
+        if (returnVal == 0){
+            file = fc.getSelectedFile();
+            
+            if (fc.getFileFilter() == filter){
+                String extension = file.getAbsolutePath();
+                if (!extension.endsWith(".xls")){
+                    ext = ".xls";
+                }
+            }
+            try{
+                OutputStream output = new FileOutputStream(file + ext);
+                Throwable localThrowable2 = null;
+                try{
+                    libro.write(output);
+                    output.close();
+//                    visualizaDialogo(this, "El libro ha sido generado correctamente", "GENERADO", 2000);
+                }catch (Throwable localThrowable1){
+                    localThrowable2 = localThrowable1;
+                    throw localThrowable1;
+                }
+                finally{
+                    if (output != null){
+                        if (localThrowable2 != null){
+                            try{
+                                output.close();
+                            }catch (Throwable x2){
+                                localThrowable2.addSuppressed(x2);
+                            }
+                        }else {
+                            output.close();
+                            
+                        }
+                    }
+                }
+            }catch (FileNotFoundException e){
+                System.err.println(e.getMessage());
+            }catch (IOException ex){
+                JOptionPane.showMessageDialog(this, "El libro CONSOLIDADO ya esta abierto, cierrelo y vuelva a intentar", "ERROR", 0);
+                this.dispose();
+                bandera = 1;
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (bandera == 0){
+                visualizaDialogo(this, "El libro ha sido generado correctamente", "GENERADO", 2000);
+//                dispose();
+            }
         }
+
         
     }//GEN-LAST:event_btnExcelActionPerformed
 
@@ -976,6 +1039,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                 inactivarEmpSuc();
                 cmbConcepto.setEnabled(false);
                 btnExcel.setEnabled(false);
+                btnNuevo.setEnabled(false);
                 
             }else if(cmbBusqueda.getSelectedIndex() == 1){
                 txtBusqueda.setEditable(true);
@@ -985,6 +1049,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                 cmbConcepto.setEnabled(false);
                 cmbConcepto.setEditable(false);
                 btnExcel.setEnabled(false);
+                btnNuevo.setEnabled(false);
                 inactivarEmpSuc();
                 
             }else if(cmbBusqueda.getSelectedIndex() == 2){
@@ -996,6 +1061,7 @@ public class TablaNovedades extends javax.swing.JDialog {
             }else if (cmbBusqueda.getSelectedIndex() == 3){
                 cmbConcepto.setEnabled(true);
                 btnExcel.setEnabled(false);
+                btnNuevo.setEnabled(false);
                 inactivarBusqueda();
                 inactivarEmpSuc();
             }
@@ -1030,8 +1096,13 @@ public class TablaNovedades extends javax.swing.JDialog {
             suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
         }
         auxFecIni = FechaUtil.getFechaString10DDMMAAAA(fechaInicio.getDate());
-        new cargaRRHH(parent, rootPaneCheckingEnabled, suc, fechaInicio.getDate(), emp);
-        btnBuscarActionPerformed(evt);
+        if(suc.getNombre().equalsIgnoreCase("TODAS")){
+            JOptionPane.showMessageDialog(parent, "DEBE SELECCIONAR UNICAMENTE UNA SUCURSAL PARA CARGAR DATOS","ADVERTENCIA",1);
+        }else{
+            new cargaRRHH(parent, rootPaneCheckingEnabled, suc, fechaInicio.getDate(), emp);
+            //        btnBuscarActionPerformed(evt);
+        }
+
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -1600,6 +1671,37 @@ public class TablaNovedades extends javax.swing.JDialog {
       }
       
   }
+  
+  public void visualizaDialogo( Component padre, String texto, String titulo, final long timeout){
+        
+        
+        JOptionPane option = new JOptionPane("", JOptionPane.INFORMATION_MESSAGE);
+        
+        option.setMessage(texto);
+        
+        if ( null == dialogo ){
+            dialogo = option.createDialog(padre, titulo);
+        }else{
+            dialogo.setTitle(titulo);
+        }
+ 
+        Thread hilo = new Thread(){
+            public void run(){
+                try{
+                    Thread.sleep(timeout);
+                    if ( dialogo.isVisible() ){
+                        dialogo.setVisible(false);
+                    }
+                }
+                catch ( InterruptedException e ){
+                    e.printStackTrace();
+                }
+            }
+        };
+        hilo.start();
+ 
+        dialogo.setVisible(true);
+    }
   
 }
   

@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2013 12:56:08 by Hibernate Tools 3.2.1.GA
+// Generated 27/12/2013 10:31:44 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -16,7 +16,7 @@ public class Concepto  implements java.io.Serializable {
      private String tipo;
      private Boolean estado;
      private Boolean cargaUser;
-     private Set novedads = new HashSet(0);
+     private Set<Novedad> novedads = new HashSet<Novedad>(0);
 
     public Concepto() {
     }
@@ -26,7 +26,7 @@ public class Concepto  implements java.io.Serializable {
         this.codCon = codCon;
         this.descripcion = descripcion;
     }
-    public Concepto(int codCon, String descripcion, String tipo, Boolean estado, Boolean cargaUser, Set novedads) {
+    public Concepto(int codCon, String descripcion, String tipo, Boolean estado, Boolean cargaUser, Set<Novedad> novedads) {
        this.codCon = codCon;
        this.descripcion = descripcion;
        this.tipo = tipo;
@@ -70,11 +70,11 @@ public class Concepto  implements java.io.Serializable {
     public void setCargaUser(Boolean cargaUser) {
         this.cargaUser = cargaUser;
     }
-    public Set getNovedads() {
+    public Set<Novedad> getNovedads() {
         return this.novedads;
     }
     
-    public void setNovedads(Set novedads) {
+    public void setNovedads(Set<Novedad> novedads) {
         this.novedads = novedads;
     }
 

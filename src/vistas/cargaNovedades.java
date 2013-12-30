@@ -259,38 +259,22 @@ public class cargaNovedades extends javax.swing.JDialog {
         nov = (ArrayList)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();
-            System.out.println("Fecha: "+lblFecha.getText());
-            System.out.println("legajo de empleado: "+tblNovedadesUsr.getValueAt(0, 1));
-        System.out.println("nov: "+nov);
-        
         if (nov.isEmpty()){
             if(tblNovedadesUsr.isEditing()){
                 tblNovedadesUsr.getCellEditor().stopCellEditing();
-                System.out.println("Entro");
-                
+
                 for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-                    System.out.println(i);
-                    System.out.println("Estoy en el FOR 1");
-                    System.out.println("cantidad de dato: "+tblNovedadesUsr.getRowCount());
-                    System.out.println("Entro a getDatosTabla");
                     getDatosTabla(i);
-                    System.out.println("Salgo de getDatosTabla");
 //                    novedad.setFecha(lblFecha.getText().toString);
                     novedad.setFecha(FechaUtil.getFechaSinhora(date));
-                    System.out.println("Seteo la fecha de la novedad");
                     usuario.setCargo(true);
-                    System.out.println("Seteo si cargo o no");
                     new NovedadDaoImp().addNovedad(novedad);
-                    System.out.println("Cargo la novedad");
                     new UsuarioDaoImp().upDateUsuario(usuario);
-                    System.out.println("Cargo el usuario de la sucursal");
                 }
                 
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
             }else{
                 for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-                    System.out.println(i);
-                    System.out.println("Estoy en el FOR 2");
                     getDatosTabla(i);
                     novedad.setFecha(date);
                     usuario.setCargo(true);
