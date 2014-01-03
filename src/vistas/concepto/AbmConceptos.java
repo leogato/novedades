@@ -8,7 +8,10 @@ import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.ConceptoDaoImp;
+import org.hibernate.Session;
 import pojo.Concepto;
+import pojo.Novedad;
+import util.FechaUtil;
 
 /**
  *
@@ -30,8 +33,8 @@ public class AbmConceptos extends javax.swing.JDialog {
     public AbmConceptos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        btnEliminar.setVisible(false);
-        btnEliminar.setEnabled(false);
+        btnAnular.setVisible(false);
+        btnAnular.setEnabled(false);
         this.setTitle("NUEVO CONCEPTO");
         setLocationRelativeTo(this);
         setVisible(true);
@@ -41,7 +44,7 @@ public class AbmConceptos extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.cod_con = cod_con;
-        btnEliminar.setVisible(true);
+        btnAnular.setVisible(true);
         txtId.setEditable(false);
         this.setTitle("EDITAR CONCEPTO");
         configurarParaEditar();
@@ -70,8 +73,8 @@ public class AbmConceptos extends javax.swing.JDialog {
         panelShadow1 = new org.edisoncor.gui.panel.PanelShadow();
         panelTranslucidoComplete1 = new org.edisoncor.gui.panel.PanelTranslucidoComplete();
         btnAtras = new org.edisoncor.gui.button.ButtonIpod();
-        btnCancelar = new org.edisoncor.gui.button.ButtonIpod();
-        btnEliminar = new org.edisoncor.gui.button.ButtonIpod();
+        btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
+        btnAnular = new org.edisoncor.gui.button.ButtonIpod();
         labelMetric1 = new org.edisoncor.gui.label.LabelMetric();
         labelMetric2 = new org.edisoncor.gui.label.LabelMetric();
         labelMetric3 = new org.edisoncor.gui.label.LabelMetric();
@@ -121,19 +124,19 @@ public class AbmConceptos extends javax.swing.JDialog {
             }
         });
 
-        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
-        btnCancelar.setText("Guardar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GUARDAR.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
-        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+        btnAnular.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
+        btnAnular.setText("Anular");
+        btnAnular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
+                btnAnularActionPerformed(evt);
             }
         });
 
@@ -145,9 +148,9 @@ public class AbmConceptos extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAnular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(71, 71, 71)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelTranslucidoComplete1Layout.setVerticalGroup(
@@ -156,8 +159,8 @@ public class AbmConceptos extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(panelTranslucidoComplete1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAnular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -263,19 +266,15 @@ public class AbmConceptos extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (cod_con==0) {
                 System.out.println("entro en nuevo");
-                // nuevo empleado
+                // nuevo Concepto
                 if(validarConceptoNuevo()){
                     System.out.println(validarConceptoNuevo());
                     Concepto e = getDatosConcepto();
-                    // agrego los datos que faltan
-                    //                       e.setAdministrador(false);
-                    //                       e.setClave("");
-                    //                       e.setFechaIngreso(null);
+                    e.setEstado(true);
                     new ConceptoDaoImp().addConcepto(e);
-                    //                       mensajero.mensajeInformacionAltaOK(this);
                     this.dispose();
                 }
             } else {
@@ -288,8 +287,8 @@ public class AbmConceptos extends javax.swing.JDialog {
                         Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
                         List<Concepto> lista =new ConceptoDaoImp().listarConcepto();
                         new ConceptoDaoImp().addConcepto(e);
-                        // aqui va borrar el empleado o   porque se modiico la clave primario
 
+                        // aqui va borrar el empleado o   porque se modiico la clave primario
                         new ConceptoDaoImp().deleteConcepto(c);
                         Concepto conUp = new ConceptoDaoImp().getConcepto(e.getCodCon());
 
@@ -297,29 +296,37 @@ public class AbmConceptos extends javax.swing.JDialog {
                         new ConceptoDaoImp().upDateConcepto(e);
 
                     }
-                    // agregar todas la asistencia
-
-//                    Conexion.getSessionFactory().close();
                     this.dispose();
                 }
 
             }
 
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
         permitirSoloNumero(evt);
     }//GEN-LAST:event_txtIdKeyTyped
 
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Concepto: \n"+txtId.getText()+" "+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
-        if (resp==JOptionPane.OK_OPTION) {
-             Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
-            new ConceptoDaoImp().deleteConcepto(c);
-            JOptionPane.showMessageDialog(rootPane, "La Eliminacion se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+    private void btnAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnularActionPerformed
+//        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Concepto: \n"+txtId.getText()+" "+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
+//        if (resp==JOptionPane.OK_OPTION) {
+//             Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
+//            new ConceptoDaoImp().deleteConcepto(c);
+//            JOptionPane.showMessageDialog(rootPane, "La Eliminacion se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+//            this.dispose();
+//        }
+         int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro que desea ANULAR el Concepto: \n"+txtId.getText()+"-"+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
+         if (resp==JOptionPane.OK_OPTION) {
+            Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
+            System.out.println("estado: "+c.getEstado());
+            System.out.println("concepto: "+c.getDescripcion());
+            c.setEstado(false);
+            System.out.println("estado: "+c.getEstado());
+            new ConceptoDaoImp().upDateConcepto(c);
+            JOptionPane.showMessageDialog(rootPane, "La ANULACION se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         }
-    }//GEN-LAST:event_btnEliminarActionPerformed
+    }//GEN-LAST:event_btnAnularActionPerformed
 
     /**
      * @param args the command line arguments
@@ -363,9 +370,9 @@ public class AbmConceptos extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.edisoncor.gui.button.ButtonIpod btnAnular;
     private org.edisoncor.gui.button.ButtonIpod btnAtras;
-    private org.edisoncor.gui.button.ButtonIpod btnCancelar;
-    private org.edisoncor.gui.button.ButtonIpod btnEliminar;
+    private org.edisoncor.gui.button.ButtonIpod btnGuardar;
     private javax.swing.JCheckBox chkCarga;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbTipo;
     private org.edisoncor.gui.label.LabelMetric labelMetric1;
@@ -441,5 +448,7 @@ public class AbmConceptos extends javax.swing.JDialog {
         con.setCargaUser(chkCarga.isSelected());
         return con;
      }
+    
+    
 }
 

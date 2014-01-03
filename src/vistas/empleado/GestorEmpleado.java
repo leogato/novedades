@@ -4,17 +4,12 @@
  */
 package vistas.empleado;
 
-import hibernateUtil.Conexion;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import pojo.Concepto;
 
 /**
  *
@@ -31,7 +26,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
     private int legajo;
     int quienloyamo;
     java.awt.Frame parent;// indica quien es el padre. me sirve para pasar el icono de la aplcacion
-  //  EmpleadoDao empleados ;
    
     public GestorEmpleado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

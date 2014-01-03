@@ -53,14 +53,6 @@ public class AltaUsuario extends javax.swing.JDialog {
         Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
         Usuario u = new Usuario();
         u.setEmpleado(e);
-//        System.out.println("legajo :"+legajo);
-//        u = new UsuarioDaoImp().getUsuario(legajo);
-//        System.out.println("usuario: "+u);
-//        txtLegajo.setText(String.valueOf(u.getEmpleado().getLegajo()));
-//        txtUsuario.setText(u.getUsuario());
-//        txtDescripcion.setText(u.getDescripcion());
-//        txtContrasenia.setText(u.getClave());
-//        cmbTipo.setSelectedItem(u.getTipo());
         configurarParaEditar();
         setLocationRelativeTo(this); 
         setVisible(true);

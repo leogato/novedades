@@ -65,14 +65,16 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
     
     @Override
     public List<Novedad> listarNovedad(Date fechaIni, Date fechaFin) {
+        java.sql.Date parseIni, parseFin;
         Session session = Conexion.getSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Novedad.class);
-        criteria.add( Restrictions.ge("fecha", fechaIni) );
-        criteria.add( Restrictions.le("fecha", fechaFin) ); 
-        List<Novedad> novedad = (List<Novedad>)criteria.list();
-        session.getTransaction().commit();
-        return novedad;
+        parseIni = new java.sql.Date(fechaIni.getTime());
+        parseFin = new java.sql.Date (fechaFin.getTime());
+        String sql = "from Novedad as n \n" +
+                "join fetch n.empleado as e \n" +
+                "where n.fecha >= '"+parseIni+"' and n.fecha <= '"+parseFin+"'";
+        List<Novedad> lista = session.createQuery(sql).list();
+        return lista;
     }
     
     @Override

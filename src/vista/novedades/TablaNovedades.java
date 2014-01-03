@@ -47,12 +47,8 @@ import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.PrintSetup;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.hibernate.Criteria;
@@ -617,17 +613,20 @@ public class TablaNovedades extends javax.swing.JDialog {
             
             if (cmbBusqueda.getSelectedIndex()== 1) {
            //********BUSQUEDA POR LEGAJO********\\
-                try {        
+//                try {        
                     Empleado emp = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtBusqueda.getText().toString()));
+                    System.out.println("emp: "+emp.getApellido());
 //                    String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+emp.getLegajo()+"'";
                     if (emp!=null) {
                         listaNov = new NovedadDaoImp().listarNovedad(emp,FechaUtil.getFechaSinhora(fechaInicio.getDate()), fechaFin.getDate());
                     }else{
                         JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
                     }         
-                } catch (Exception e) {
-                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
-                }
+//                } catch (Exception e) {
+//                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
+//                   txtBusqueda.requestFocus();
+//                   txtBusqueda.setAlignmentX(RIGHT_ALIGNMENT);
+//                }
                 //***BUSQUEDA POR EMPRESA Y SUCURSAL***\\
             }
            
@@ -1054,6 +1053,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                 
             }else if(cmbBusqueda.getSelectedIndex() == 2){
                 cmbEmpresa.requestFocus();
+                btnBuscar.setEnabled(true);
                 activarEmpSuc();
                 inactivarBusqueda();
                 cmbConcepto.setEnabled(false);
@@ -1100,7 +1100,6 @@ public class TablaNovedades extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(parent, "DEBE SELECCIONAR UNICAMENTE UNA SUCURSAL PARA CARGAR DATOS","ADVERTENCIA",1);
         }else{
             new cargaRRHH(parent, rootPaneCheckingEnabled, suc, fechaInicio.getDate(), emp);
-            //        btnBuscarActionPerformed(evt);
         }
 
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -1221,16 +1220,19 @@ public class TablaNovedades extends javax.swing.JDialog {
     }
     
     public void llenaCmbConcepto() {
-        Session sesion;
+        Session session;
         try {
-            sesion = Conexion.getSession();
-            Criteria crit = sesion.createCriteria(Concepto.class);
-            List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+            session = Conexion.getSession();
+            session.beginTransaction();
+            String sql = "from Concepto as c\n" +
+                         "where c.estado = true";
+            List<Concepto> lisCon = session.createQuery(sql).list();
+            session.getTransaction().commit();
             cmbConcepto.removeAllItems();
-            for (Concepto con : rsConcepto) {
+            for (Concepto con : lisCon) {
                 cmbConcepto.addItem(con.getDescripcion());
             }
-            sesion.close();
+            session.close();
         }catch (Exception e) {}
     }
     
@@ -1239,7 +1241,7 @@ public class TablaNovedades extends javax.swing.JDialog {
         try{
             sesion = Conexion.getSession();
             sesion.beginTransaction();
-            String sql = "from Empresa";
+            String sql = "from Empresa as e where e.estado = true";
             List<Empresa> rsEmpresa = (List<Empresa>)sesion.createQuery(sql).list();
             cmbEmpresa.removeAllItems();
             for(Empresa emp : rsEmpresa){
@@ -1257,9 +1259,11 @@ public class TablaNovedades extends javax.swing.JDialog {
             String sql = "from Sucursal as s join fetch s.empresa as e where e.codEmp = '"+codEmp+"'";
             List<Sucursal> rsSucursal = (List<Sucursal>)sesion.createQuery(sql).list();
             cmbSucursal.removeAllItems();
+            
             for(Sucursal suc : rsSucursal){
                 cmbSucursal.addItem(suc.getCodSuc()+"-"+suc.getNombre());
             }
+            
             sesion.close();
         }catch(Exception e){
             System.out.println(e);

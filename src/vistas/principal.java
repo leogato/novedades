@@ -20,9 +20,9 @@ import vista.novedades.TablaNovedades;
 import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
 import vistas.empresa.AltaEmpresa;
-import vistas.empresa.AltaEmpresa2;
 import vistas.empresa.GestorEmpresa;
 import vistas.usuario.AltaUsuario;
+import vistas.usuario.CambiarClave;
 import vistas.usuario.GestorUsuario;
 import vistas.usuario.Login;
 
@@ -81,6 +81,7 @@ public class principal extends javax.swing.JFrame {
         mnuArchivo = new javax.swing.JMenu();
         mnuItmLogin = new javax.swing.JMenuItem();
         mnuItmClose = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         mnuItmAcerca = new javax.swing.JMenuItem();
         mnuSalir = new javax.swing.JMenuItem();
         mnuNovedades = new javax.swing.JMenu();
@@ -147,6 +148,16 @@ public class principal extends javax.swing.JFrame {
             }
         });
         mnuArchivo.add(mnuItmClose);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/chgPass.png"))); // NOI18N
+        jMenuItem1.setText("Cambiar Clave");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnuArchivo.add(jMenuItem1);
 
         mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
         mnuItmAcerca.setText("Acerca");
@@ -388,43 +399,14 @@ public class principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_mnuItmAcercaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new CambiarClave(this, rootPaneCheckingEnabled, usuario);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new principal().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.varios.ClockDigital clkHora;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPopupMenu jPopupMenu1;

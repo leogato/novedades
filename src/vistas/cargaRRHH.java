@@ -289,47 +289,22 @@ public class cargaRRHH extends javax.swing.JDialog {
         System.out.println();
     }
     
-   public void llenaJComboBoxInvestigacion() {
-        Session session = null;
-        int i = 0;
-        try {
-            if (usuario.getTipo().equals("COMUN")){
-                session = Conexion.getSession();
-                boolean cargar = true;
-                Criteria crit = session.createCriteria(Concepto.class);
-                crit.add(Restrictions.eq("cargaUser", cargar));
-                List<Concepto> liscon = crit.list();
-                for (Concepto inv : liscon){
-                    jcb.addItem(inv.getDescripcion());
-//                    i++;
-                }
-                session.close();
-            }else{
-                session = Conexion.getSession();
-                Criteria crit = session.createCriteria(Concepto.class);
-                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
-                jcb.removeAllItems();
-                for (Concepto inv : rsConcepto) {
-                    jcb.addItem(inv.getDescripcion());
-                }
-                session.close();
-            }
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-   }
-   
    public void llenaJComboBoxInvestigacioRRHH() {
         Session session = null;
         int i = 0;
         try {
                 session = Conexion.getSession();
-                Criteria crit = session.createCriteria(Concepto.class);
-                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+                session.beginTransaction();
+                String sql = "from Concepto as c\n" +
+                             "where c.estado = true";
+                List<Concepto> lisCon = session.createQuery(sql).list();
+                session.getTransaction().commit();
                 jcb.removeAllItems();
-                for (Concepto inv : rsConcepto) {
+                
+                for (Concepto inv : lisCon) {
                     jcb.addItem(inv.getDescripcion());
                 }
+                
                 session.close();
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -379,7 +354,7 @@ public class cargaRRHH extends javax.swing.JDialog {
         Session session = Conexion.getSession();
         session.beginTransaction();
         hoy = FechaUtil.getFechaString11AAAAMMDD(fecha);
-        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where n.fecha = '"+hoy+"' and s.codSuc = '"+sucursal.getCodSuc()+"'";
+        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where e.estado = true and n.fecha = '"+hoy+"' and s.codSuc = '"+sucursal.getCodSuc()+"'";
         nov = (List<Novedad>)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();

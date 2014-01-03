@@ -4,6 +4,7 @@
  */
 package vistas.concepto;
 
+import hibernateUtil.Conexion;
 import vistas.usuario.*;
 import vistas.empleado.*;
 import pojo.Empleado;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
+import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Usuario;
 
@@ -492,7 +494,18 @@ private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
           btnModificar.setEnabled(false);
            btnNuevo.setEnabled(false);
      }
-    
+
+     private void cargo(){//CARGA LA TABLA DE UNA U OTRA FORMA DEPENDIENDO SI HAY ALGUNA NOVEDAD CARGADA ESA FECHA PARA ESA SUCURSAL O NO
+        List<Concepto> con;
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql = "from Concepto as c\n" +
+                     "where c.estado = true";
+        con = (List<Concepto>)session.createQuery(sql).list();
+        session.getTransaction().commit();
+        session.close();
+        
+    }
 
      
 }

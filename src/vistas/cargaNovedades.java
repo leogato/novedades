@@ -21,12 +21,9 @@ import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
-import pojo.Empresa;
 import pojo.Novedad;
 import pojo.Sucursal;
 import pojo.Usuario;
@@ -265,7 +262,6 @@ public class cargaNovedades extends javax.swing.JDialog {
 
                 for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
                     getDatosTabla(i);
-//                    novedad.setFecha(lblFecha.getText().toString);
                     novedad.setFecha(FechaUtil.getFechaSinhora(date));
                     usuario.setCargo(true);
                     new NovedadDaoImp().addNovedad(novedad);
@@ -339,36 +335,33 @@ public class cargaNovedades extends javax.swing.JDialog {
         
     }
     
-       private void getDatosTablaNull(int i){
-        e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString()));
-        novedad.setEmpleado(e);
-        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 3).toString()));
-        novedad.setConcepto(c);
-        System.out.println(lblFecha.getText());
-        System.out.println();
-    }
-       
    public void llenaJComboBoxInvestigacion() {
         Session session = null;
-        int i = 0;
         try {
             if (usuario.getTipo().equals("COMUN")){
                 session = Conexion.getSession();
-                boolean cargar = true;
-                Criteria crit = session.createCriteria(Concepto.class);
-                crit.add(Restrictions.eq("cargaUser", cargar));
-                List<Concepto> liscon = crit.list();
-                for (Concepto inv : liscon){
+                session.beginTransaction();
+                String sql = "from Concepto as c\n" +
+                             "where c.estado = true and c.cargaUser = true";
+                List<Concepto> lisCon = session.createQuery(sql).list();
+                session.getTransaction().commit();
+                session.close();
+                
+                for (Concepto inv : lisCon){
                     jcb.addItem(inv.getDescripcion());
-//                    i++;
                 }
+                
                 session.close();
             }else{
                 session = Conexion.getSession();
-                Criteria crit = session.createCriteria(Concepto.class);
-                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
+                session.beginTransaction();
+                String sql = "from Concepto as c\n" +
+                             "where c.estado = true";
+                List<Concepto> lisCon = session.createQuery(sql).list();
+                session.getTransaction().commit();
                 jcb.removeAllItems();
-                for (Concepto inv : rsConcepto) {
+               
+                for (Concepto inv : lisCon) {
                     jcb.addItem(inv.getDescripcion());
                 }
                 session.close();
@@ -376,31 +369,6 @@ public class cargaNovedades extends javax.swing.JDialog {
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-   }
-   
-   public void llenaJComboBoxInvestigacioRRHH() {
-        Session session = null;
-        int i = 0;
-        try {
-                session = Conexion.getSession();
-                Criteria crit = session.createCriteria(Concepto.class);
-                List<Concepto> rsConcepto = crit.list();// SELECT * FROM TABLA
-                jcb.removeAllItems();
-                for (Concepto inv : rsConcepto) {
-                    jcb.addItem(inv.getDescripcion());
-                }
-                session.close();
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-   }
-   
-   public void cargaCantidad(){
-//       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
-       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(String.valueOf(tblNovedadesUsr.getValueAt(0, 4).toString().charAt(0))));
-       if(con.getCargaUser()){
-//           tblNovedadesUsr.set;
-       }
    }
    
    private void cargarTablaNovedades(){
@@ -418,22 +386,11 @@ public class cargaNovedades extends javax.swing.JDialog {
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
     }
     
-      private void cargarTablaNovedadesRRHH() {
-//        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-          System.out.println("Fecha y codigo: "+fecha+" "+sucursal.getCodSuc());
-          String aux = FechaUtil.getFechaString11AAAAMMDD(fecha);
-        List<Novedad> listaNovSuc = new NovedadDaoImp().listarNovedad(aux, sucursal.getCodSuc());
-          System.out.println("Codigo de suc: "+sucursal.getCodSuc());
-        System.out.println("listaNovSuc: "+listaNovSuc);
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
-        util.TablaUtil.cargarNovedadesCompleta(modelo, listaNovSuc, tblNovedadesUsr);
-    }
-    
     private void cargo(){//RESTRINGE LA CARGA DE NOVEDADES SI ES QUE NO HAY NOVEDADES AUN
         List<Novedad> nov;
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where n.fecha = '"+hoy+"' and s.codSuc = '"+usuario.getEmpleado().getSucursal().getCodSuc()+"'";
+        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where e.estado= true n.fecha = '"+hoy+"' and s.codSuc = '"+usuario.getEmpleado().getSucursal().getCodSuc()+"'";
         nov = (List<Novedad>)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();

@@ -7,18 +7,12 @@ package novedades.dao.imp;
 
 import hibernateUtil.Conexion;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import novedades.dao.ConceptoDao;
 
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
-import pojo.Empleado;
-import pojo.Novedad;
 
 /**
  *
@@ -30,7 +24,7 @@ public class ConceptoDaoImp extends Conexion implements ConceptoDao{
     public List<Concepto> listarConcepto() {
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "from Concepto";
+        String sql = "from Concepto as c where c.estado = true";
         ArrayList<Concepto> concepto = (ArrayList<Concepto>)session.createQuery(sql).list();
         session.close();
         return concepto;

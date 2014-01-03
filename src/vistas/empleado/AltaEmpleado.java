@@ -42,8 +42,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
         initComponents();
         llenaCmbEmpresa();
 //        llenaCmbSucursal();
-        btneEliminar.setVisible(false);
-        btneEliminar.setEnabled(false);
+        btnAnular.setVisible(false);
+        btnAnular.setEnabled(false);
         this.setTitle("NUEVO EMPLEADO");
         setLocationRelativeTo(this);
         setVisible(true);
@@ -59,7 +59,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         llenaCmbEmpresa();
 //        llenaCmbSucursal();
         this.legajo = legajo;
-        btneEliminar.setVisible(true);
+        btnAnular.setVisible(true);
         this.setTitle("EDITAR EMPLEADO");
         configurarParaEditar();
         setLocationRelativeTo(this); 
@@ -82,7 +82,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         elegirFichero = new javax.swing.JFileChooser();
         pnlPrincipal = new org.edisoncor.gui.panel.Panel();
         btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
-        btneEliminar = new org.edisoncor.gui.button.ButtonIpod();
+        btnAnular = new org.edisoncor.gui.button.ButtonIpod();
         btnCancelar = new org.edisoncor.gui.button.ButtonIpod();
         txtTarea = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric15 = new org.edisoncor.gui.label.LabelMetric();
@@ -116,12 +116,12 @@ public class AltaEmpleado extends javax.swing.JDialog {
             }
         });
 
-        btneEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
-        btneEliminar.setText("ELIMINAR");
-        btneEliminar.setAnimacion(false);
-        btneEliminar.addActionListener(new java.awt.event.ActionListener() {
+        btnAnular.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
+        btnAnular.setText("Anular");
+        btnAnular.setAnimacion(false);
+        btnAnular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btneEliminarActionPerformed(evt);
+                btnAnularActionPerformed(evt);
             }
         });
 
@@ -248,7 +248,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                         .addGap(27, 27, 27)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
-                        .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAnular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(85, 85, 85)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
@@ -319,7 +319,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btneEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAnular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -382,17 +382,18 @@ public class AltaEmpleado extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void btneEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneEliminarActionPerformed
+    private void btnAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnularActionPerformed
         //        limpiarVenanaEmpleado();
         //        setEnableVentanaInformacionEmpleado(true);
-        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Empleado: \n"+txtApellido.getText()+" "+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
+        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de ANULAR el Empleado: \n"+txtApellido.getText()+"-"+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
             Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
-            new EmpleadoDaoImp().deleteEmpleado(e);
-            JOptionPane.showMessageDialog(rootPane, "La Eliminacion se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
+            e.setEstado(false);
+            new EmpleadoDaoImp().upDateEmpleado(e);
+            JOptionPane.showMessageDialog(rootPane, "La ANULACION se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         }
-    }//GEN-LAST:event_btneEliminarActionPerformed
+    }//GEN-LAST:event_btnAnularActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
@@ -405,6 +406,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 if(validarEmpleadoNuevo()){
                     System.out.println(validarEmpleadoNuevo());
                     Empleado e = getDatosEmpleado();
+                    e.setEstado(true);
                     new EmpleadoDaoImp().addEmpleado(e);
                     this.dispose();
                 }
@@ -496,9 +498,9 @@ public class AltaEmpleado extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.edisoncor.gui.button.ButtonIpod btnAnular;
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
     private org.edisoncor.gui.button.ButtonIpod btnGuardar;
-    private org.edisoncor.gui.button.ButtonIpod btneEliminar;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbEmpresa;
     private org.edisoncor.gui.comboBox.ComboBoxRound cmbSucursal;
     private javax.swing.JFileChooser elegirFichero;
@@ -528,7 +530,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
        txtTarea.setText("");
        //BOTON
       // btnGuardar.setEnabled(true);
-       btneEliminar.setEnabled(false);
+       btnAnular.setEnabled(false);
        // falta par aque  el cursor se situe en el campo legajo por defecyto
        txtLegajo.requestFocus();
     }
@@ -612,7 +614,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtConvenio.setEditable(logico);
         txtTarea.setEditable(logico);
         btnGuardar.setEnabled(logico);
-        btneEliminar.setEnabled(logico);
+        btnAnular.setEnabled(logico);
         //foco
         txtLegajo.requestFocus();
        
@@ -630,7 +632,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtTarea.setEnabled(logico);
         btnCancelar.setEnabled(logico);
         btnGuardar.setEnabled(logico);
-        btneEliminar.setEnabled(logico);
+        btnAnular.setEnabled(logico);
         //foco
         txtLegajo.requestFocus();
        

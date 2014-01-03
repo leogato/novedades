@@ -51,6 +51,15 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
     }
 
     @Override
+//    public Empleado getEmpleado(int legajo) {
+//        Session session = Conexion.getSession();
+//        session.beginTransaction();
+//        String sql = "from Empleado as c where c.estado = true";
+//        Empleado a = (Empleado)session.createQuery(sql).uniqueResult();
+//        session.getTransaction().commit();
+//        session.close();
+//        return a;
+//    }
     public Empleado getEmpleado(int legajo) {
        Session session = Conexion.getSession();
         session.beginTransaction();
@@ -83,9 +92,8 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
     public List<Empleado> listarEmpleado() {
        Session session = Conexion.getSession();
         session.beginTransaction();
-        Criteria criteria = session.createCriteria(Empleado.class);
-//        criteria.addOrder(Order.asc("legajo"));
-        List<Empleado> lista = (List<Empleado>)criteria.list();
+        String sql = "from Empleado as c where c.estado = true";
+        List<Empleado> lista = (List<Empleado>)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();
         return lista;

@@ -27,40 +27,17 @@ import vistas.cargaNovedades;
 public class TablaUtil {
     static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     static String fecha;
-    /**
-     * Crea la estructura de la tabla Asamblea , indica que columnas contendra
-     * @param modelo  modelo de la tabla asamblea 
-     * @param tablaAsamblea  tabla donde contendra informacion de todas las asableas
-     */
-    public static void prepararTablaAsistencia(DefaultTableModel modelo, JTable tablaAsistencia){
-        
-        String[] titulos = {"ID","LEGAJO","EMPLEADO","ENTRADA/SALIDA","FECHA","HORA"};
-       modelo= new DefaultTableModel(null,titulos){
-                	@Override// impleamento este metodo para que la tabla sea no editable
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-       };
-       
-       tablaAsistencia.setModel(modelo);
-    }
     
-    
-    /**
-     * Carga todos registros en la tabla Asamblea 
-     * @param modelo  modelos de la tabla asamblea
-     * @param listaAsamblea  
-     * @param tablaAsamblea tabla donde contiene toda la informacion de las asambleas
-     */
     
     public static void cargarModeloConcepto(DefaultTableModel modelo,List<Concepto> listaConcepto,JTable tablaOrdendelDia){
          modelo =(DefaultTableModel) tablaOrdendelDia.getModel();
+         
          for (Concepto a : listaConcepto) {
-        Object[] filaNovedad = {a.getCodCon(),a.getDescripcion(),a.getTipo(),a.getCargaUser()}; 
-        modelo.addRow(filaNovedad);
+            Object[] filaNovedad = {a.getCodCon(),a.getDescripcion(),a.getTipo(),a.getCargaUser()}; 
+            modelo.addRow(filaNovedad);
+        }
+         
     }
-//        Conexion.getSessionFactory().close();
-}
     
     public static void prepararTablaConcepto(DefaultTableModel modelo, JTable tablaConcepto){
         String[] titulos = {"CODIGO","DESCRIPCION","TIPO","CARGA USUARIO"};

@@ -26,7 +26,7 @@ public class Login extends javax.swing.JDialog {
      Date fecha = new Date();
      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
      String adm = "ADMINISTRADOR";
-     Usuario e;
+     Usuario usuario;
      Concepto con;
      
     public boolean isBotonAceptar() {
@@ -177,37 +177,34 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     String fecha_login="";
          try{
                 // obtengo el usuario que se logueo
-             e = new UsuarioDaoImp().getUsuarioAdministrador(txtUsuario.getText(), txtClave.getText());
+             usuario = new UsuarioDaoImp().getUsuarioAdministrador(txtUsuario.getText(), txtClave.getText());
                 // actualizo la ultima fecha de  ingreso del usuario
-             e.setUltimoIngreso(new Date());
-             new UsuarioDaoImp().upDateUsuario(e);
+             usuario.setUltimoIngreso(new Date());
+             new UsuarioDaoImp().upDateUsuario(usuario);
                 //.........
              
-             String tipo = e.getTipo();
-             if (e!=null) {// si existe el  usuario y es administrador
+             String tipo = usuario.getTipo();
+             if (usuario!=null) {// si existe el  usuario y es administrador
                  if(tipo.equals(adm)){
                     System.out.println("Es administrador");
                     BotonAceptar=true;
                     comun = false;
                     this.dispose();
-                    JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ e.getUsuario());
+                    JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ usuario.getUsuario());
                  }else if(tipo.equals("COMUN")){
                      if(!fecha_login.equals(sdf.format(fecha))){
                         BotonAceptar = true;
                         comun = true;
 //                        con = new ConceptoDaoImp().getConcepto(comun);
                         fecha_login = sdf.format(fecha);//capturo la fecha actual en una cadena
-                        System.out.println("Fecha actual "+fecha_login);
                         this.dispose();
                         setearDatos();
-                        JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ e.getUsuario());
+                        JOptionPane.showMessageDialog(rootPane, "Bienvenido "+ usuario.getUsuario());
                      }else{
-                         System.out.println("Entro!");
                          BotonAceptar = false;
                          JOptionPane.showMessageDialog(rootPane, "No puede cargar novedades dos veces en el mismo dia, intentalo mañana");
                          this.dispose();
                      }
-                   
                      
                   }else {
                     JOptionPane.showMessageDialog(this, "Su Identificacion es Incorrecta, por favor Ingrese de nuevo", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -231,49 +228,7 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 }//GEN-LAST:event_btnAtrasActionPerformed
   
     
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Login dialog = new Login(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt
-                        .event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.label.LabelMetric Usuario;
     private org.edisoncor.gui.button.ButtonIpod btnAtras;
@@ -312,11 +267,11 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
 
     public Usuario getUsuario() {
-        return e;
+        return usuario;
     }
 
     public void setUsuario(Usuario usuario) {
-        this.e = usuario;
+        this.usuario = usuario;
     }
 
     public Concepto getCon() {
