@@ -1,5 +1,5 @@
 package pojo;
-// Generated 27/12/2013 10:31:44 by Hibernate Tools 3.2.1.GA
+// Generated 06/01/2014 21:48:57 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -17,6 +17,8 @@ public class Empleado  implements java.io.Serializable {
      private String nombre;
      private String cuit;
      private Integer codEmp;
+     private String nomEmp;
+     private String nomSuc;
      private String convenio;
      private String tarea;
      private Boolean estado;
@@ -35,13 +37,15 @@ public class Empleado  implements java.io.Serializable {
         this.convenio = convenio;
         this.tarea = tarea;
     }
-    public Empleado(int legajo, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String convenio, String tarea, Boolean estado, Set<Usuario> usuarios, Set<Novedad> novedads) {
+    public Empleado(int legajo, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String nomEmp, String nomSuc, String convenio, String tarea, Boolean estado, Set<Usuario> usuarios, Set<Novedad> novedads) {
        this.legajo = legajo;
        this.sucursal = sucursal;
        this.apellido = apellido;
        this.nombre = nombre;
        this.cuit = cuit;
        this.codEmp = codEmp;
+       this.nomEmp = nomEmp;
+       this.nomSuc = nomSuc;
        this.convenio = convenio;
        this.tarea = tarea;
        this.estado = estado;
@@ -90,6 +94,20 @@ public class Empleado  implements java.io.Serializable {
     
     public void setCodEmp(Integer codEmp) {
         this.codEmp = codEmp;
+    }
+    public String getNomEmp() {
+        return this.nomEmp;
+    }
+    
+    public void setNomEmp(String nomEmp) {
+        this.nomEmp = nomEmp;
+    }
+    public String getNomSuc() {
+        return this.nomSuc;
+    }
+    
+    public void setNomSuc(String nomSuc) {
+        this.nomSuc = nomSuc;
     }
     public String getConvenio() {
         return this.convenio;

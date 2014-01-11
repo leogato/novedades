@@ -4,12 +4,16 @@
  */
 package vistas.usuario;
 
+import hibernateUtil.Conexion;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
+import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Novedad;
 import pojo.Usuario;
@@ -281,5 +285,6 @@ private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     public void setCon(Concepto con) {
         this.con = con;
     }
+    
     
 }

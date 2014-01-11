@@ -7,13 +7,19 @@ package vistas.empleado;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
 import hibernateUtil.Conexion;
+import java.awt.Color;
+import java.sql.Connection;
 import java.util.List;
 import javax.swing.JOptionPane;
+import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpresaDaoImp;
+import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import pojo.Concepto;
 import pojo.Empresa;
+import pojo.Novedad;
 import pojo.Sucursal;
 
 /**
@@ -56,12 +62,13 @@ public class AltaEmpleado extends javax.swing.JDialog {
     public AltaEmpleado(java.awt.Frame parent, boolean modal,int legajo) {
         super(parent, modal);
         initComponents();
-        llenaCmbEmpresa();
+        
 //        llenaCmbSucursal();
         this.legajo = legajo;
         btnAnular.setVisible(true);
         this.setTitle("EDITAR EMPLEADO");
         configurarParaEditar();
+//        llenaCmbEmpresa();
         setLocationRelativeTo(this); 
         setVisible(true);
         // no se realizara la carga de foto
@@ -139,8 +146,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtTarea.setBorder(null);
         txtTarea.setForeground(new java.awt.Color(255, 255, 255));
         txtTarea.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTarea.setCaretColor(new java.awt.Color(255, 255, 255));
         txtTarea.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtTarea.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         labelMetric15.setText("TAREA");
 
@@ -150,15 +157,15 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtConvenio.setBorder(null);
         txtConvenio.setForeground(new java.awt.Color(255, 255, 255));
         txtConvenio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtConvenio.setCaretColor(new java.awt.Color(255, 255, 255));
         txtConvenio.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtConvenio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         txtCuit.setBackground(new java.awt.Color(102, 102, 102));
         txtCuit.setBorder(null);
         txtCuit.setForeground(new java.awt.Color(255, 255, 255));
         txtCuit.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCuit.setCaretColor(new java.awt.Color(255, 255, 255));
         txtCuit.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtCuit.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         labelMetric12.setText("CUIT");
 
@@ -168,16 +175,24 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtNombre.setBorder(null);
         txtNombre.setForeground(new java.awt.Color(255, 255, 255));
         txtNombre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtNombre.setCaretColor(new java.awt.Color(255, 255, 255));
         txtNombre.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtNombre.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
 
         txtApellido.setBackground(new java.awt.Color(102, 102, 102));
         txtApellido.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtApellido.setForeground(new java.awt.Color(255, 255, 255));
         txtApellido.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtApellido.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtApellido.setToolTipText("");
+        txtApellido.setCaretColor(new java.awt.Color(255, 255, 255));
         txtApellido.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtApellido.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        txtApellido.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtApellidoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtApellidoFocusLost(evt);
+            }
+        });
 
         labelMetric10.setText("APELLIDO");
 
@@ -212,6 +227,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
         cmbEmpresa.setBackground(new java.awt.Color(102, 102, 102));
         cmbEmpresa.setForeground(new java.awt.Color(255, 255, 255));
+        cmbEmpresa.setAnchoDeBorde(2.0F);
         cmbEmpresa.setColorDeBorde(new java.awt.Color(255, 102, 0));
         cmbEmpresa.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -221,6 +237,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
 
         cmbSucursal.setBackground(new java.awt.Color(102, 102, 102));
         cmbSucursal.setForeground(new java.awt.Color(255, 255, 255));
+        cmbSucursal.setAnchoDeBorde(2.0F);
         cmbSucursal.setColorDeBorde(new java.awt.Color(255, 102, 0));
         cmbSucursal.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -406,8 +423,9 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 if(validarEmpleadoNuevo()){
                     System.out.println(validarEmpleadoNuevo());
                     Empleado e = getDatosEmpleado();
-                    e.setEstado(true);
+                    
                     new EmpleadoDaoImp().addEmpleado(e);
+                    JOptionPane.showMessageDialog(rootPane, "SE HA CREADO UN NUEVO EMPLEADO EXITOSAMENTE","AVISO",1);
                     this.dispose();
                 }
             } else {
@@ -418,15 +436,17 @@ public class AltaEmpleado extends javax.swing.JDialog {
                     Empleado e = getDatosEmpleado();
                     if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
                         Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
-                        List<Empleado> lista =new EmpleadoDaoImp().listarEmpleado();
+//                        List<Empleado> lista =new EmpleadoDaoImp().listarEmpleado();
+                        
                         new EmpleadoDaoImp().upDateEmpleado(e);
                         // aqui va borrar el empleado o   porque se modiico la clave primario
                         new EmpleadoDaoImp().deleteEmpleado(o);
-                        Empleado emplUp = new EmpleadoDaoImp().getEmpleado(e.getLegajo());
+                        JOptionPane.showMessageDialog(rootPane, "SE HA MODIFICADO EL EMPLEADO EXITOSAMENTE","AVISO",1);
+//                        Empleado emplUp = new EmpleadoDaoImp().getEmpleado(e.getLegajo());
 
                     }else{
                         new EmpleadoDaoImp().upDateEmpleado(e);
-
+                        JOptionPane.showMessageDialog(rootPane, "SE HA MODIFICADO EL EMPLEADO EXITOSAMENTE","AVISO",1);
                     }
                     this.dispose();
                 }
@@ -435,12 +455,18 @@ public class AltaEmpleado extends javax.swing.JDialog {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void cmbSucursalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSucursalItemStateChanged
-        
+
     }//GEN-LAST:event_cmbSucursalItemStateChanged
 
     private void cmbEmpresaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEmpresaItemStateChanged
         llenaCmbSucursal(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
     }//GEN-LAST:event_cmbEmpresaItemStateChanged
+
+    private void txtApellidoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtApellidoFocusGained
+    }//GEN-LAST:event_txtApellidoFocusGained
+
+    private void txtApellidoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtApellidoFocusLost
+    }//GEN-LAST:event_txtApellidoFocusLost
      
     private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
           // permitir solo el ingreso de numero
@@ -521,7 +547,8 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtTarea;
     // End of variables declaration//GEN-END:variables
 
-     private void limpiarVenanaEmpleado() {
+      
+    private void limpiarVenanaEmpleado() {
        txtApellido.setText("");
        txtCuit.setText("");
        txtLegajo.setText("");
@@ -583,23 +610,22 @@ public class AltaEmpleado extends javax.swing.JDialog {
         Empleado empleado = new Empleado();
         Sucursal sucursal = null;
         String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
-                System.out.println("Cod: "+cod);
-                if (cod.charAt(1) == '-'){
-                    sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
-                }else{
-                    sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
-                }
+        if (cod.charAt(1) == '-'){
+            sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+        }else{
+            sucursal = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
+        }
         empleado.setSucursal(sucursal);
-        System.out.println("Legajo "+Integer.parseInt(txtLegajo.getText()));
         empleado.setLegajo(Integer.parseInt(txtLegajo.getText()));
         empleado.setApellido(txtApellido.getText());
         empleado.setNombre(txtNombre.getText());
+        empleado.setNomSuc(cmbSucursal.getSelectedItem().toString());
         empleado.setCodEmp(Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0))));
-        int v = Integer.parseInt(String.valueOf(cmbEmpresa.getSelectedItem().toString().charAt(0)));
-        System.out.println("Cod Emp "+v);
+        empleado.setNomEmp(cmbEmpresa.getSelectedItem().toString());
         empleado.setCuit(txtCuit.getText());
         empleado.setConvenio(txtConvenio.getText());
         empleado.setTarea(txtTarea.getText());
+        empleado.setEstado(true);
         
         return empleado;
      }
@@ -640,18 +666,28 @@ public class AltaEmpleado extends javax.swing.JDialog {
     }
 
     private void configurarParaEditar() {
+        System.out.println("legajo: "+legajo);
         Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+        Sucursal s = new SucursalDaoImp().getSucursal(e.getSucursal().getCodSuc());
+        Empresa em = new EmpresaDaoImp().getEmpresa(s.getEmpresa().getCodEmp());
+        List<Sucursal> lista = new SucursalDaoImp().listarSucursal();
+        llenaCmbEmpresa();
         txtLegajo.setText(String.valueOf(e.getLegajo()));
+        txtLegajo.setEditable(false);
         txtApellido.setText(e.getApellido());
         txtNombre.setText(e.getNombre());
         txtCuit.setText(String.valueOf(e.getCuit()));
         txtConvenio.setText(e.getConvenio());
         txtTarea.setText(e.getTarea());
+        cmbEmpresa.setSelectedItem(em.getCodEmp().toString()+"-"+em.getNombre().toString());
+        cmbSucursal.setSelectedItem(s.getCodSuc()+"-"+s.getNombre().toString());
+        
     }
     
     public void llenaCmbEmpresa() {
         Session sesion = null;
         try {
+            
             sesion = Conexion.getSession();
             Criteria crit = sesion.createCriteria(Empresa.class);
             List<Empresa> rsConcepto = crit.list();// SELECT * FROM TABLA
@@ -661,31 +697,45 @@ public class AltaEmpleado extends javax.swing.JDialog {
                 cmbEmpresa.addItem(emp.getCodEmp()+"-"+ emp.getNombre());
                 System.out.println(emp.getCodEmp()+"-"+emp.getNombre());
             }
-//            sesion.close();
-            //JOptionPane.showMessageDialog(this, "Factor creado Satisfactoriamente", "Felicitaciones", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void llenaCmbEmpresaEdit(int codEmp) {
+        Session sesion = null;
+        try {
+            sesion = Conexion.getSession();
+            sesion.beginTransaction();
+            String sql = "from Empresa where codEmp = '"+codEmp+"'";
+            List<Empresa> rsConcepto = (List<Empresa>) sesion.createQuery(sql).list();// SELECT * FROM TABLA
+            cmbEmpresa.removeAllItems();
+            
+            for (Empresa emp : rsConcepto) {
+                cmbEmpresa.addItem(emp.getCodEmp()+"-"+ emp.getNombre());
+                System.out.println(emp.getCodEmp()+"-"+emp.getNombre());
+            }
+            
+        } catch (Exception e) {
         }
     }
 
     private void llenaCmbSucursal(int codEmp) {
-//        Empresa emp = new EmpresaDaoImp().getEmpresa(cmbEmpresa.getSelectedItem().toString().charAt(0));
         Session sesion;
-        System.out.println("codEmp: "+codEmp);
         try{
             sesion = Conexion.getSession();
-            String sql = "from Sucursal as s join fetch s.empresa as e where e.codEmp = '"+codEmp+"'";
-//            Criteria crit = sesion.createCriteria(Sucursal.class);
-//            List<Sucursal> rsSucursal = crit.list();
+            String sql = "from Sucursal as s join fetch s.empresa as e where e.codEmp = '"+codEmp+"' and s.nombre != 'TODAS'";
             List<Sucursal> rsSucursal = (List<Sucursal>)sesion.createQuery(sql).list();
-            System.out.println("rsSucursal: "+rsSucursal);
             cmbSucursal.removeAllItems();
+            
             for(Sucursal suc : rsSucursal){
                 cmbSucursal.addItem(suc.getCodSuc()+"-"+suc.getNombre());
             }
+            
             sesion.close();
         }catch(Exception e){
             System.out.println(e);
         }
     }
+    
+    
 }

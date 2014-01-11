@@ -4,7 +4,7 @@
  */
 package novedades;
 import vistas.principal;
- import vistas.principal.*;
+import vistas.principal.*;
 /**
  *
  * @author usuario

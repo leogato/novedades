@@ -277,7 +277,7 @@ public class AbmConceptos extends javax.swing.JDialog {
                     new ConceptoDaoImp().addConcepto(e);
                     this.dispose();
                 }
-            } else {
+            }else {
                 System.out.println("entro a modificar");
                 //actualizar empleado
                 if (validarConceptoActulizado()) {

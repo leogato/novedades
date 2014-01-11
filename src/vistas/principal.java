@@ -6,13 +6,9 @@ package vistas;
 
 import vistas.empleado.AltaEmpleado;
 import vistas.empleado.GestorEmpleado;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.List;
 import javax.swing.JDialog;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import pojo.Concepto;
 import pojo.Usuario;
@@ -21,7 +17,8 @@ import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
 import vistas.empresa.AltaEmpresa;
 import vistas.empresa.GestorEmpresa;
-import vistas.usuario.AltaUsuario;
+import vistas.sucursal.AltaUsuario;
+import vistas.usuario.AltaUsuario2;
 import vistas.usuario.CambiarClave;
 import vistas.usuario.GestorUsuario;
 import vistas.usuario.Login;
@@ -35,6 +32,8 @@ public class principal extends javax.swing.JFrame {
     Usuario usuario= new Usuario();
     List<Concepto> con;
     JDialog dialogo = null;
+    String mensaje;
+    
     /**
      * Creates new form principal
      */
@@ -43,27 +42,8 @@ public class principal extends javax.swing.JFrame {
         setConfiguracionMenuAdministrador(false);
         setLocationRelativeTo(this);
         setVisible(true);
-        
+        mnuItemChgPass.setEnabled(false);
     }
-    public class BackgroundMenuBar extends JMenuBar
-{
-    Color bgColor=Color.BLACK;
-
-    public void setColor(Color color)
-    {
-        bgColor=color;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g)
-    {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.RED);
-        g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
-
-    }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,14 +54,12 @@ public class principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
         panel1 = new org.edisoncor.gui.panel.Panel();
-        clkHora = new org.edisoncor.gui.varios.ClockDigital();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuArchivo = new javax.swing.JMenu();
         mnuItmLogin = new javax.swing.JMenuItem();
         mnuItmClose = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mnuItemChgPass = new javax.swing.JMenuItem();
         mnuItmAcerca = new javax.swing.JMenuItem();
         mnuSalir = new javax.swing.JMenuItem();
         mnuNovedades = new javax.swing.JMenu();
@@ -106,25 +84,18 @@ public class principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.jpg"))); // NOI18N
+        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/perseids_tudorica.gif"))); // NOI18N
         panel1.setOpaque(false);
-
-        clkHora.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap(70, Short.MAX_VALUE)
-                .addComponent(clkHora, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 454, Short.MAX_VALUE)
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(clkHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(218, Short.MAX_VALUE))
+            .addGap(0, 278, Short.MAX_VALUE)
         );
 
         mnuArchivo.setText("Archivo");
@@ -149,15 +120,15 @@ public class principal extends javax.swing.JFrame {
         });
         mnuArchivo.add(mnuItmClose);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/chgPass.png"))); // NOI18N
-        jMenuItem1.setText("Cambiar Clave");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mnuItemChgPass.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItemChgPass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/chgPass.png"))); // NOI18N
+        mnuItemChgPass.setText("Cambiar Clave");
+        mnuItemChgPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mnuItemChgPassActionPerformed(evt);
             }
         });
-        mnuArchivo.add(jMenuItem1);
+        mnuArchivo.add(mnuItemChgPass);
 
         mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
         mnuItmAcerca.setText("Acerca");
@@ -326,7 +297,8 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuNovedadesActionPerformed
 
     private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
-        visualizaDialogo(this, "MUCHAS GRACIAS POR UTILIZAR EL SISTEMA DE NOVEDADES, QUE TENGA BUEN DIA!", "Cerrando Sistema", 5000);
+        mensaje = "MUCHAS GRACIAS POR UTILIZAR EL SISTEMA DE NOVEDADES, QUE TENGA BUEN DIA!";
+        JOptionPane.showMessageDialog(this, mensaje, "Cerrar Sistema", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0);
     }//GEN-LAST:event_mnuSalirActionPerformed
 
@@ -339,7 +311,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItemEmpresaActionPerformed
 
     private void mnuABMUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuABMUsuarioActionPerformed
-        new AltaUsuario(this, true);
+        new AltaUsuario2(this, true);
     }//GEN-LAST:event_mnuABMUsuarioActionPerformed
 
     private void mnuAltaEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAltaEmpleadosActionPerformed
@@ -359,12 +331,14 @@ public class principal extends javax.swing.JFrame {
         if (login.isBotonAceptar() && login.isComun() == false) {
             usuario = login.getUsuario();
             setConfiguracionMenuAdministrador(true);
+            mnuItemChgPass.setEnabled(true);
             mnuItmLogin.setEnabled(false);
             mnuSalir.setEnabled(false);
             
         } else if(login.isBotonAceptar() && login.isComun()){
             usuario = login.getUsuario();
             setConfiguracionComun(true);
+            mnuItemChgPass.setEnabled(true);
             mnuItmLogin.setEnabled(false);
             mnuSalir.setEnabled(false);
         }
@@ -372,11 +346,14 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItmLoginActionPerformed
 
     private void mnuItmCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmCloseActionPerformed
-        visualizaDialogo(this, "SU SALIDA HA SIDO EXITOSA, HASTA PRONTO","Logout",3000);
+        mensaje = "SU SALIDA HA SIDO EXITOSA, HASTA PRONTO "+usuario.getEmpleado().getNombre();
         setConfiguracionMenuAdministrador(false);
+        mnuItemChgPass.setEnabled(false);
         mnuItmLogin.setEnabled(true);
         mnuSalir.setEnabled(true);
         usuario = null;
+        JOptionPane.showMessageDialog(this, mensaje, "Cerrar Sesion", JOptionPane.INFORMATION_MESSAGE);
+        
     }//GEN-LAST:event_mnuItmCloseActionPerformed
 
     private void mnuItmGestorConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmGestorConceptoActionPerformed
@@ -399,17 +376,14 @@ public class principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_mnuItmAcercaActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mnuItemChgPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemChgPassActionPerformed
         new CambiarClave(this, rootPaneCheckingEnabled, usuario);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mnuItemChgPassActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.varios.ClockDigital clkHora;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JMenuItem mnuABMUsuario;
     private javax.swing.JMenuItem mnuAltaEmpleados;
     private javax.swing.JMenu mnuArchivo;
@@ -417,6 +391,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenu mnuEmpleados;
     private javax.swing.JMenu mnuEmpresa;
     private javax.swing.JMenuItem mnuGestorEmpleados;
+    private javax.swing.JMenuItem mnuItemChgPass;
     private javax.swing.JMenuItem mnuItemEmpresa;
     private javax.swing.JMenuItem mnuItemGestorEmpresa;
     private javax.swing.JMenuItem mnuItmAcerca;
@@ -433,7 +408,8 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenu mnuUsuario;
     private org.edisoncor.gui.panel.Panel panel1;
     // End of variables declaration//GEN-END:variables
-private void setConfiguracionMenuAdministrador(boolean b){
+
+    private void setConfiguracionMenuAdministrador(boolean b){
         
         mnuSalir.setVisible(true);
         mnuItmAcerca.setVisible(true);
@@ -446,10 +422,10 @@ private void setConfiguracionMenuAdministrador(boolean b){
         mnuEmpleados.setVisible(b);
         mnuUsuario.setEnabled(b);
         mnuUsuario.setVisible(b);
-        mnuEmpresa.setEnabled(b);
-        mnuEmpresa.setVisible(b);
-        mnuSucursal.setEnabled(b);
-        mnuSucursal.setVisible(b);
+        mnuEmpresa.setEnabled(false);
+        mnuEmpresa.setVisible(false);
+        mnuSucursal.setEnabled(false);
+        mnuSucursal.setVisible(false);
         mnuConcepto.setEnabled(b);
         mnuConcepto.setVisible(b);
         mnuItmClose.setEnabled(b);
@@ -464,17 +440,15 @@ private void setConfiguracionMenuAdministrador(boolean b){
     }
     
     public void visualizaDialogo( Component padre, String texto, String titulo, final long timeout){
-        
-        JOptionPane option = new JOptionPane("", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane option = new JOptionPane(texto, JOptionPane.INFORMATION_MESSAGE);
         
         option.setMessage(texto);
-        
         if ( null == dialogo ){
             dialogo = option.createDialog(padre, titulo);
         }else{
             dialogo.setTitle(titulo);
         }
- 
+        
         Thread hilo = new Thread(){
             public void run(){
                 try{
@@ -489,7 +463,7 @@ private void setConfiguracionMenuAdministrador(boolean b){
             }
         };
         hilo.start();
- 
+        
         dialogo.setVisible(true);
     }
 }

@@ -25,7 +25,7 @@ public class Conexion {
     public String db = "novedades";
     public String url = "jdbc:mysql://192.168.0.100/novedades";
     public String user = "root";
-    public String pass = "";
+    public String pass = "leovilis";
     
     public Conexion(){
         

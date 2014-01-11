@@ -6,19 +6,16 @@ package util;
 
 
 
-import hibernateUtil.Conexion;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import novedades.dao.imp.EmpleadoDaoImp;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Empresa;
 import pojo.Novedad;
 import pojo.Usuario;
-import vistas.cargaNovedades;
 
 /**
  *
@@ -67,7 +64,7 @@ public class TablaUtil {
         modelo = new DefaultTableModel(null, titulos){
             @Override
             public boolean isCellEditable(int row, int col){
-                if(col == 9){    
+                if(col == 9 || col == 10 || col == 11){    
                     return true;
                 }else{
                     return false;
@@ -166,7 +163,7 @@ public class TablaUtil {
     
     
     public static void prepararTablaEmpleado(DefaultTableModel modelo, JTable tablaEmpleado){
-        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","EMPRESA","SUCURSAL","CUIT","CONVENIO","TAREA"};
+        String[] titulos = {"LEGAJO","APELLIDO","NOMBRE","SUCURSAL","EMPRESA","CUIT","CONVENIO","TAREA"};
         modelo= new DefaultTableModel(null,titulos){
             @Override// impleamento este metodo para que la tabla sea no editable
             public boolean isCellEditable(int row, int column) {
@@ -176,14 +173,13 @@ public class TablaUtil {
         tablaEmpleado.setModel(modelo);
     }  
   
-    
   
   public static void cargarModeloEmpleado(DefaultTableModel modelo,List<Empleado>listaEmpleado,JTable tablaEmpleado){
     modelo =(DefaultTableModel) tablaEmpleado.getModel();
     if (listaEmpleado == null)
         JOptionPane.showMessageDialog(tablaEmpleado, "Lista de usuario esta vacia, cargue un nuevo Empleado");
         for ( Empleado a : listaEmpleado) {
-            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getCodEmp(),a.getSucursal().getCodSuc(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
+            Object[] filaEmpleado = {a.getLegajo(),a.getApellido(),a.getNombre(),a.getNomSuc(),a.getNomEmp(),a.getCuit(),a.getConvenio(),a.getTarea()}; 
             modelo.addRow(filaEmpleado);
         }
     }

@@ -5,10 +5,8 @@
 package vistas;
 
 import hibernateUtil.Conexion;
-import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
@@ -20,10 +18,7 @@ import javax.swing.table.TableColumn;
 import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpleadoDaoImp;
 import novedades.dao.imp.NovedadDaoImp;
-import novedades.dao.imp.UsuarioDaoImp;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Empresa;
@@ -31,7 +26,6 @@ import pojo.Novedad;
 import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
-//import vista.novedades.prueba;
 
 
 
@@ -64,19 +58,10 @@ public class cargaRRHH extends javax.swing.JDialog {
         initComponents();
         auxCant = sdf.format(f);
         this.sucursal = sucursal;
-        System.out.println("Sucursal: "+sucursal);
         this.fecha = f;
-        System.out.println("Fecha: "+f);
         
         cargo();
-//        List<Novedad> nov = new NovedadDaoImp().listarNovedad(FechaUtil.getFechaString10DDMMAAAA(f), sucursal.getCodSuc());
-        
-//        if(nov.isEmpty()){
-//            cargarTablaNovedadesVacia(sucursal);
-//        }else{
-//            cargarTablaNovedadesRRHH();
-//        }
-//        
+
         btnCargar.setEnabled(true);
         llenaJComboBoxInvestigacioRRHH();
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(4);
@@ -116,7 +101,7 @@ public class cargaRRHH extends javax.swing.JDialog {
         setResizable(false);
 
         panel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Floorboard & Wall - Green by ABH 1680x1050.jpg"))); // NOI18N
+        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/perseids_tudorica.gif"))); // NOI18N
 
         btnCargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cargar.png"))); // NOI18N
         btnCargar.setText("Cargar");
@@ -144,7 +129,7 @@ public class cargaRRHH extends javax.swing.JDialog {
 
         tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, "0 - Sin Novedad", "0", "-"}
+
             },
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
@@ -176,14 +161,14 @@ public class cargaRRHH extends javax.swing.JDialog {
                         .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(59, 59, 59))
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(183, 183, 183)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(216, 216, 216))
-                    .addGroup(panel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(46, Short.MAX_VALUE))))
+            .addGroup(panel1Layout.createSequentialGroup()
+                .addGap(213, 213, 213)
+                .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(183, 183, 183)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,12 +180,12 @@ public class cargaRRHH extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(lblSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         lblEmpresa.getAccessibleContext().setAccessibleName("3 - FERNANDO MANZUR SUCURSAL");
@@ -215,7 +200,9 @@ public class cargaRRHH extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();

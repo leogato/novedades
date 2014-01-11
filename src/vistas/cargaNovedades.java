@@ -85,7 +85,6 @@ public class cargaNovedades extends javax.swing.JDialog {
                 boolean b = false;
                 Concepto c = new ConceptoDaoImp().getConceptoHql(descrip);
                 tipo = c.getTipo();
-                System.out.println("Descripcion "+tipo);
                 if ("CUALITATIVA".equalsIgnoreCase(c.getTipo())) {
                    b = true;  
                 } 
@@ -104,7 +103,6 @@ public class cargaNovedades extends javax.swing.JDialog {
         lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
         lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
         Date fecha = util.FechaUtil.getFechaSinhora(date);
-        System.out.println("ultimo: "+fecha);
         setLocationRelativeTo(this);
         setVisible(true);
         usuario.setUltimoIngreso(new Date());
@@ -137,7 +135,7 @@ public class cargaNovedades extends javax.swing.JDialog {
         setResizable(false);
 
         panel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Floorboard & Wall - Green by ABH 1680x1050.jpg"))); // NOI18N
+        panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/perseids_tudorica.gif"))); // NOI18N
 
         btnCargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cargar.png"))); // NOI18N
         btnCargar.setText("Cargar");
@@ -165,7 +163,7 @@ public class cargaNovedades extends javax.swing.JDialog {
 
         tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, "0 - Sin Novedad", "0", "-"}
+
             },
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
@@ -216,12 +214,12 @@ public class cargaNovedades extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(lblSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         lblEmpresa.getAccessibleContext().setAccessibleName("3 - FERNANDO MANZUR SUCURSAL");
@@ -330,8 +328,6 @@ public class cargaNovedades extends javax.swing.JDialog {
         }else{
             novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 6).toString());
         }
-        System.out.println(lblFecha.getText());
-        System.out.println();
         
     }
     
@@ -378,10 +374,9 @@ public class cargaNovedades extends javax.swing.JDialog {
     }
 
     private void cargarTablaNovedadesCompleta() {
-        System.out.println("CodSuc: "+usuario.getEmpleado().getSucursal().getCodSuc());
-        String fecha = FechaUtil.getFechaString11AAAAMMDD(date);
+        String fech = FechaUtil.getFechaString11AAAAMMDD(date);
 //        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fecha, usuario.getEmpleado().getSucursal().getCodSuc());
+        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fech, usuario.getEmpleado().getSucursal().getCodSuc());
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
     }
@@ -390,7 +385,10 @@ public class cargaNovedades extends javax.swing.JDialog {
         List<Novedad> nov;
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "from Novedad as n join fetch n.empleado as e join fetch e.sucursal as s where e.estado= true n.fecha = '"+hoy+"' and s.codSuc = '"+usuario.getEmpleado().getSucursal().getCodSuc()+"'";
+        String sql = "from Novedad as n "
+                     + "join fetch n.empleado as e "
+                     + "join fetch e.sucursal as s "
+                     + "where e.estado = true and n.fecha = '"+hoy+"' and s.codSuc = '"+usuario.getEmpleado().getSucursal().getCodSuc()+"'";
         nov = (List<Novedad>)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();
