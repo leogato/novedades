@@ -106,18 +106,20 @@ public class Login extends javax.swing.JDialog {
         txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtUsuario.setForeground(new java.awt.Color(255, 255, 255));
         txtUsuario.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtUsuario.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtUsuario.setAnchoDeBorde(1.0F);
+        txtUsuario.setCaretColor(new java.awt.Color(255, 255, 255));
         txtUsuario.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtUsuario.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        txtUsuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         lblFecha.setText("30/10/2013");
 
         txtClave.setBackground(new java.awt.Color(102, 102, 102));
         txtClave.setForeground(new java.awt.Color(255, 255, 255));
         txtClave.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtClave.setCaretColor(new java.awt.Color(255, 102, 0));
+        txtClave.setAnchoDeBorde(1.0F);
+        txtClave.setCaretColor(new java.awt.Color(255, 255, 255));
         txtClave.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtClave.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        txtClave.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtClave.setMinimumSize(new java.awt.Dimension(2, 19));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);

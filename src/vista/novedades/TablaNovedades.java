@@ -622,11 +622,7 @@ public class TablaNovedades extends javax.swing.JDialog {
                     }else{
                         JOptionPane.showMessageDialog(this, "NO EXISTE EL EMPLEADO","ERROR",JOptionPane.ERROR_MESSAGE);
                     }         
-//                } catch (Exception e) {
-//                   JOptionPane.showMessageDialog(this, "DEBES INGRESAR UN LEGAJO","ERROR",JOptionPane.ERROR_MESSAGE);
-//                   txtBusqueda.requestFocus();
-//                   txtBusqueda.setAlignmentX(RIGHT_ALIGNMENT);
-//                }
+//                
                 //***BUSQUEDA POR EMPRESA Y SUCURSAL***\\
             }
            
@@ -680,7 +676,8 @@ public class TablaNovedades extends javax.swing.JDialog {
             TablaUtil.prepararTablaRRHH(modelo, tblNovedades); 
             TablaUtil.cargarModeloRRHH(modelo, listaNov, tblNovedades);
             tblNovedades.setAutoCreateRowSorter(true);
-            
+            tblNovedades.getRowSorter().toggleSortOrder(1);//******ORDENA POR FECHA
+           
             //******LLENA UN COMBOBOX Y LO INSERTA EN LA JTABLE EN LA COLUMNA  8 (CONCEPTOS)
             llenaJComboBoxInvestigacion();
             TableColumn tc = tblNovedades.getColumnModel().getColumn(9);
@@ -891,6 +888,8 @@ public class TablaNovedades extends javax.swing.JDialog {
                         celda.setCellValue(convenio);
                         celda = f.createCell(3);
                         celda.setCellValue(tarea);
+                        hoja.autoSizeColumn(0);
+                        hoja.autoSizeColumn(1);
                         hoja.autoSizeColumn(2);
                         hoja.autoSizeColumn(3);
                         hoja.autoSizeColumn(4);
@@ -913,7 +912,6 @@ public class TablaNovedades extends javax.swing.JDialog {
                         }//TERMINA EL MODULO PARA SUMAR LAS CUANTITATIVAS
                         
                         int cel2 = cel+o;
-                        System.out.println("cel2 "+cel2);
                         nxtFila = fila;
                         
                         //***MODULO PARA INSERTAR LAS NOVEDADES CUALITATIVAS SEGUN LOS DIAS BUSCADOS***\\
@@ -939,11 +937,6 @@ public class TablaNovedades extends javax.swing.JDialog {
                                         
                                         f = hoja.getRow(13);
                                         celda = f.getCell(cel2);
-                                        System.out.println("celda: "+celda.toString());
-                                        System.out.println("valFecha "+valFecha);
-                                        System.out.println("dia: "+dia);
-                                        System.out.println("mesIni: "+mesIni);
-                                        System.out.println("mes2: "+mes2);
                                         valFecha = (int) celda.getNumericCellValue();
                                         
                                         if(valFecha < fecAnt){

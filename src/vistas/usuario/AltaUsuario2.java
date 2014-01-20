@@ -289,10 +289,10 @@ public class AltaUsuario2 extends javax.swing.JDialog {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        GestorEmpleado ventanaPersonal = new GestorEmpleado(null, true, GestorEmpleado.VENTANA_GESTOR_ASISTENCIA);
-        if (ventanaPersonal.isBotonSeleccionado()) {
+        GestorEmpleado gestor = new GestorEmpleado(null, true, GestorEmpleado.VENTANA_GESTOR_ASISTENCIA);
+        if (gestor.isBotonSeleccionado()) {
             // si el usuario selecciono un empleado
-            Empleado e = new EmpleadoDaoImp().getEmpleado(ventanaPersonal.getLegajo());
+            Empleado e = new EmpleadoDaoImp().getEmpleado(gestor.getLegajo());
             txtLegajo.setText(String.valueOf(e.getLegajo()));
             txtUsuario.setText(e.getNombre().charAt(0)+e.getApellido());
             txtDescripcion.requestFocus();

@@ -91,11 +91,11 @@ public class principal extends javax.swing.JFrame {
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
+            .addGap(0, 423, Short.MAX_VALUE)
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 278, Short.MAX_VALUE)
+            .addGap(0, 240, Short.MAX_VALUE)
         );
 
         mnuArchivo.setText("Archivo");
@@ -130,6 +130,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuArchivo.add(mnuItemChgPass);
 
+        mnuItmAcerca.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
         mnuItmAcerca.setText("Acerca");
         mnuItmAcerca.addActionListener(new java.awt.event.ActionListener() {
@@ -258,6 +259,7 @@ public class principal extends javax.swing.JFrame {
 
         mnuConcepto.setText("Conceptos");
 
+        mnuItmGestorConcepto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GesCon.png"))); // NOI18N
         mnuItmGestorConcepto.setText("Gestor de Conceptos");
         mnuItmGestorConcepto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,6 +268,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuConcepto.add(mnuItmGestorConcepto);
 
+        mnuItmAltaConceptos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/concepto.png"))); // NOI18N
         mnuItmAltaConceptos.setText("Alta de Conceptos");
         mnuItmAltaConceptos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -286,7 +289,7 @@ public class principal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -373,7 +376,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItemGestorEmpresaActionPerformed
 
     private void mnuItmAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmAcercaActionPerformed
-        
+        new acerca(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuItmAcercaActionPerformed
 
     private void mnuItemChgPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemChgPassActionPerformed

@@ -146,6 +146,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtTarea.setBorder(null);
         txtTarea.setForeground(new java.awt.Color(255, 255, 255));
         txtTarea.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTarea.setAnchoDeBorde(1.0F);
         txtTarea.setCaretColor(new java.awt.Color(255, 255, 255));
         txtTarea.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
@@ -157,6 +158,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtConvenio.setBorder(null);
         txtConvenio.setForeground(new java.awt.Color(255, 255, 255));
         txtConvenio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtConvenio.setAnchoDeBorde(1.0F);
         txtConvenio.setCaretColor(new java.awt.Color(255, 255, 255));
         txtConvenio.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
@@ -164,6 +166,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtCuit.setBorder(null);
         txtCuit.setForeground(new java.awt.Color(255, 255, 255));
         txtCuit.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCuit.setAnchoDeBorde(1.0F);
         txtCuit.setCaretColor(new java.awt.Color(255, 255, 255));
         txtCuit.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
@@ -175,6 +178,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtNombre.setBorder(null);
         txtNombre.setForeground(new java.awt.Color(255, 255, 255));
         txtNombre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtNombre.setAnchoDeBorde(1.0F);
         txtNombre.setCaretColor(new java.awt.Color(255, 255, 255));
         txtNombre.setColorDeBorde(new java.awt.Color(255, 102, 0));
 
@@ -183,8 +187,10 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtApellido.setForeground(new java.awt.Color(255, 255, 255));
         txtApellido.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtApellido.setToolTipText("");
+        txtApellido.setAnchoDeBorde(1.0F);
         txtApellido.setCaretColor(new java.awt.Color(255, 255, 255));
         txtApellido.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtApellido.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtApellido.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtApellidoFocusGained(evt);
@@ -201,7 +207,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         txtLegajo.setBackground(new java.awt.Color(255, 255, 0));
         txtLegajo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtLegajo.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        txtLegajo.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        txtLegajo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtLegajo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtLegajoActionPerformed(evt);

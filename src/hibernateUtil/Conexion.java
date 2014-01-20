@@ -7,6 +7,7 @@ package hibernateUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -26,9 +27,22 @@ public class Conexion {
     public String url = "jdbc:mysql://192.168.0.100/novedades";
     public String user = "root";
     public String pass = "leovilis";
+    public boolean entro=false;
+    public Statement st=null;
+    public Connection con=null;
+    
     
     public Conexion(){
-        
+        try
+        {
+            String driver1 = "com.mysql.jdbc.Driver";
+            Class.forName( driver1 );
+            con = DriverManager.getConnection(url,user,pass);
+            st= con.createStatement();           
+        }catch(Exception x21)
+        {
+            System.out.println(x21);
+        }
     }
 
 //    private static final SessionFactory sessionFactory;
@@ -115,4 +129,6 @@ private static final SessionFactory sessionFactory;
         return sessionFactory.openSession();
     }
 
+    
+    
 }

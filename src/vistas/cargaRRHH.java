@@ -221,19 +221,21 @@ public class cargaRRHH extends javax.swing.JDialog {
 //                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
 //                    novedad = new NovedadDaoImp().getNovedad(id);
                     getDatosTabla(i);
-                    System.out.println("novedad: "+novedad);
+                    System.out.println("novedad: "+novedad.getConcepto());
                     new NovedadDaoImp().addNovedad(novedad);
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
+                this.dispose();
             }else{
                 for( int i = 0;i < tblNovedadesUsr.getRowCount();i++){
 //                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
 //                    novedad = new NovedadDaoImp().getNovedad(id);
                     getDatosTabla(i);
-                    System.out.println("novedad: "+novedad);
+                    System.out.println("novedad: "+novedad.getConcepto());
                     new NovedadDaoImp().addNovedad(novedad);
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
+                this.dispose();
             }
     }//GEN-LAST:event_btnCargarActionPerformed
 
@@ -272,6 +274,7 @@ public class cargaRRHH extends javax.swing.JDialog {
         }else{
             novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 6).toString());
         }
+        novedad.setFecha(fecha);
         System.out.println(lblFecha.getText());
         System.out.println();
     }
@@ -306,20 +309,20 @@ public class cargaRRHH extends javax.swing.JDialog {
        }
    }
    
-   private void cargarTablaNovedades(){
-        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
-        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
-    }
-
-    private void cargarTablaNovedadesCompleta() {
-        System.out.println("CodSuc: "+usuario.getEmpleado().getSucursal().getCodSuc());
-        String fecha = FechaUtil.getFechaString11AAAAMMDD(date);
+//   private void cargarTablaNovedades(){
 //        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fecha, usuario.getEmpleado().getSucursal().getCodSuc());
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
-        util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
-    }
+//        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
+//        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
+//    }
+//
+//    private void cargarTablaNovedadesCompleta() {
+//        System.out.println("CodSuc: "+usuario.getEmpleado().getSucursal().getCodSuc());
+//        String fecha = FechaUtil.getFechaString11AAAAMMDD(date);
+////        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
+//        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fecha, usuario.getEmpleado().getSucursal().getCodSuc());
+//        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
+//        util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
+//    }
     
       private void cargarTablaNovedadesRRHH() {
 //        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());

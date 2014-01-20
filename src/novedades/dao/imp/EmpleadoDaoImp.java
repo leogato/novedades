@@ -13,6 +13,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
+import pojo.Empresa;
 
 /**
  *
@@ -51,15 +52,6 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
     }
 
     @Override
-//    public Empleado getEmpleado(int legajo) {
-//        Session session = Conexion.getSession();
-//        session.beginTransaction();
-//        String sql = "from Empleado as c where c.estado = true";
-//        Empleado a = (Empleado)session.createQuery(sql).uniqueResult();
-//        session.getTransaction().commit();
-//        session.close();
-//        return a;
-//    }
     public Empleado getEmpleado(int legajo) {
        Session session = Conexion.getSession();
         session.beginTransaction();
@@ -83,10 +75,6 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-//    @Override
-//    public Empleado getEmpleadoAdministrador(int legajo, boolean adm, String contrasenias) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
 
     @Override
     public List<Empleado> listarEmpleado() {
@@ -98,7 +86,28 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         session.close();
         return lista;
     }
+    public List<Empleado> listarEmpleado(int codSuc){
+        Session sesion = Conexion.getSession();
+        sesion.beginTransaction();
+        String sql = "from Empleado as e\n" +
+                     "join fetch e.sucursal as s\n" +
+                     "where s.codSuc = '"+codSuc+"'";
+        List<Empleado> lista = (List<Empleado>) sesion.createQuery(sql).list();
+        sesion.getTransaction().commit();
+        sesion.close();
+        return lista;
+    }
     
+    public List<Empleado> listarEmpleado(Empresa e){
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql = "from Empleado as e\n" +
+                "join fetch e.sucursal as suc\n" +
+                "join fetch suc.empresa as emp\n" +
+                "where emp.codEmp = '"+e.getCodEmp()+"'";
+        List<Empleado> lista = (List<Empleado>)session.createQuery(sql).list();
+        return lista;
+    }
     @Override
         public List<Empleado> listarEmpleado(int codEmp, int codSuc){
             Session session = Conexion.getSession();

@@ -28,6 +28,7 @@ import pojo.Novedad;
 import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
+import util.HoraServer;
 //import vista.novedades.prueba;
 
 
@@ -96,9 +97,10 @@ public class cargaNovedades extends javax.swing.JDialog {
         TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(4);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
-        
+        HoraServer hs = new HoraServer();
         tblNovedadesUsr.setAutoCreateRowSorter(true);
-        lblFecha.setText(sdf.format(date));
+//        lblFecha.setText(sdf.format(date));
+        lblFecha.setText(hs.getFecha());
         ultimaCarga = new Date(sdf.format(date));
         lblEmpresa.setText(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp()+"-"+usuario.getEmpleado().getSucursal().getEmpresa().getNombre());
         lblSucursal.setText(usuario.getEmpleado().getSucursal().getCodSuc()+"-"+usuario.getEmpleado().getSucursal().getNombre());
