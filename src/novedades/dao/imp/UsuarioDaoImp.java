@@ -72,7 +72,7 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
         session.beginTransaction();
         String sql = "from Usuario u \n"+
                      "join fetch u.empleado as e \n"+
-                     "where e.legajo = '"+legajo+"'";
+                     "where e.id = '"+legajo+"'";
         Usuario a = (Usuario) session.createQuery(sql).uniqueResult();
         session.getTransaction().commit();
         session.close();
@@ -97,6 +97,8 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
     @Override
     public Usuario getUsuarioLogin(String usuario){
         Usuario e = null;
+    
+        
         Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "FROM Usuario u\n" +"join fetch u.empleado as e\n" +
@@ -106,6 +108,8 @@ public class UsuarioDaoImp extends Conexion implements UsuarioDao{
         e = (Usuario)session.createQuery(sql).uniqueResult();
         session.getTransaction().commit();
         session.close();
+        
+        
         return e;
     }    
 }

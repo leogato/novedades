@@ -7,19 +7,13 @@ package vistas.empleado;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
 import hibernateUtil.Conexion;
-import java.awt.Color;
-import java.sql.Connection;
 import java.util.List;
 import javax.swing.JOptionPane;
-import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.EmpresaDaoImp;
-import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import pojo.Concepto;
 import pojo.Empresa;
-import pojo.Novedad;
 import pojo.Sucursal;
 
 /**
@@ -29,7 +23,8 @@ import pojo.Sucursal;
 public class AltaEmpleado extends javax.swing.JDialog {
 
     public static final int GESTOR_EMPLEADO =1;
-    private int legajo=0;
+//    private int legajo = 0;
+    private int idEmp = 0;
     private boolean BotonGuardarSelecciono=false;
     private String nombredelarchivo;
 
@@ -59,12 +54,14 @@ public class AltaEmpleado extends javax.swing.JDialog {
         
     }
     
-    public AltaEmpleado(java.awt.Frame parent, boolean modal,int legajo) {
+    public AltaEmpleado(java.awt.Frame parent, boolean modal,int idEMp) {
         super(parent, modal);
         initComponents();
         
 //        llenaCmbSucursal();
-        this.legajo = legajo;
+//        this.legajo = legajo;
+        
+        this.idEmp = idEMp;
         btnAnular.setVisible(true);
         this.setTitle("EDITAR EMPLEADO");
         configurarParaEditar();
@@ -410,7 +407,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
         //        setEnableVentanaInformacionEmpleado(true);
         int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de ANULAR el Empleado: \n"+txtApellido.getText()+"-"+txtNombre.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
-            Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+            Empleado e = new EmpleadoDaoImp().getEmpleado(idEmp);
             e.setEstado(false);
             new EmpleadoDaoImp().upDateEmpleado(e);
             JOptionPane.showMessageDialog(rootPane, "La ANULACION se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
@@ -421,34 +418,27 @@ public class AltaEmpleado extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
         //               try{
-            //obtengos los datos ingresados
+            //obtengo los datos ingresados
 
-            if (legajo==0) {
-                System.out.println("entro en nuevo");
+            if (idEmp==0) {
                 // nuevo empleado
                 if(validarEmpleadoNuevo()){
-                    System.out.println(validarEmpleadoNuevo());
                     Empleado e = getDatosEmpleado();
-                    
                     new EmpleadoDaoImp().addEmpleado(e);
                     JOptionPane.showMessageDialog(rootPane, "SE HA CREADO UN NUEVO EMPLEADO EXITOSAMENTE","AVISO",1);
                     this.dispose();
                 }
             } else {
-                System.out.println("entro a modificar");
                 //actualizar empleado
                 if (validarEmpleadoActulizado()) {
                     //obtengos los datos y creo el empelado
                     Empleado e = getDatosEmpleado();
-                    if (legajo != Integer.parseInt(txtLegajo.getText().trim())) {
-                        Empleado o = new EmpleadoDaoImp().getEmpleado(legajo);
-//                        List<Empleado> lista =new EmpleadoDaoImp().listarEmpleado();
-                        
+                    if (idEmp != Integer.parseInt(txtLegajo.getText().trim())) {
+                        Empleado o = new EmpleadoDaoImp().getEmpleado(idEmp);
                         new EmpleadoDaoImp().upDateEmpleado(e);
                         // aqui va borrar el empleado o   porque se modiico la clave primario
                         new EmpleadoDaoImp().deleteEmpleado(o);
                         JOptionPane.showMessageDialog(rootPane, "SE HA MODIFICADO EL EMPLEADO EXITOSAMENTE","AVISO",1);
-//                        Empleado emplUp = new EmpleadoDaoImp().getEmpleado(e.getLegajo());
 
                     }else{
                         new EmpleadoDaoImp().upDateEmpleado(e);
@@ -482,53 +472,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
       }
        
      }    
-    /**
- * 
- * @param label  label donde estara visualizada la imagen
- * @param img   imagen que se quiere viusalizar en el label
- */
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AltaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AltaEmpleado dialog = new AltaEmpleado(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnAnular;
     private org.edisoncor.gui.button.ButtonIpod btnCancelar;
@@ -577,8 +521,7 @@ public class AltaEmpleado extends javax.swing.JDialog {
        
      public boolean validarEmpleadoActulizado(){
         boolean todoOk = true;
-        Empleado empOriginal = new EmpleadoDaoImp().getEmpleado(legajo); 
-        System.out.println("empleado original "+empOriginal.getLegajo());
+        Empleado empOriginal = new EmpleadoDaoImp().getEmpleado(idEmp); 
         if (empOriginal.getLegajo() !=Integer.parseInt(txtLegajo.getText().trim())) {
              // el empleado modifico el legajo
             Empleado empLeg = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText().trim()));  
@@ -594,7 +537,6 @@ public class AltaEmpleado extends javax.swing.JDialog {
          boolean todoOk=false;
          try{
          Empleado empLeg = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText().trim()));
-         System.out.println("Variable empLeg: "+empLeg);
              //actualizar
              
              if (empLeg ==null){
@@ -672,8 +614,9 @@ public class AltaEmpleado extends javax.swing.JDialog {
     }
 
     private void configurarParaEditar() {
-        System.out.println("legajo: "+legajo);
-        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+        System.out.println("legajo: "+idEmp);
+        
+        Empleado e = new EmpleadoDaoImp().getEmpleado(idEmp);
         Sucursal s = new SucursalDaoImp().getSucursal(e.getSucursal().getCodSuc());
         Empresa em = new EmpresaDaoImp().getEmpresa(s.getEmpresa().getCodEmp());
         List<Sucursal> lista = new SucursalDaoImp().listarSucursal();

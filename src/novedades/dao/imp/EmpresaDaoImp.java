@@ -68,6 +68,7 @@ public class EmpresaDaoImp extends Conexion implements EmpresaDao {
         return a;
     }
     
+    @Override
     public Empresa getEmpresaLogin(int cod_emp) {
         Empresa e = null;
        Session session = Conexion.getSession();

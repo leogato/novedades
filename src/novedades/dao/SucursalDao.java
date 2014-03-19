@@ -17,5 +17,5 @@ public interface SucursalDao{
   public void deleteSucursal(Sucursal a);
   public void upDateSucursal(Sucursal a);
   public Sucursal getSucursal(int idSuc);
-    
+  public Sucursal getSucursalLogin(int idSuc);  
 }

@@ -4,6 +4,10 @@
  */
 package vistas;
 
+import java.awt.Color;
+import java.awt.Desktop;
+import java.net.URI;
+
 /**
  *
  * @author Leo
@@ -16,8 +20,10 @@ public class acerca extends javax.swing.JDialog {
     public acerca(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        lblManual.setText("<html><a href='http://www.google.com/'>MANUAL DE AYUDA</a><target=blank></html>");
         setLocationRelativeTo(this);
         setVisible(true);
+        this.setBackground(Color.darkGray);
     }
 
     /**
@@ -36,6 +42,7 @@ public class acerca extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        lblManual = new org.jdesktop.swingx.JXHyperlink();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -73,9 +80,21 @@ public class acerca extends javax.swing.JDialog {
 
         jLabel1.setText("Enero de 2014");
 
-        jLabel2.setText("Version 1.2");
+        jLabel2.setText("Version 2.0");
 
         jLabel3.setText("Jujuy - Argentina");
+
+        lblManual.setText("MANUAL DE AYUDA");
+        lblManual.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblManualMouseClicked(evt);
+            }
+        });
+        lblManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lblManualActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,6 +105,7 @@ public class acerca extends javax.swing.JDialog {
                 .addComponent(panelTranslucidoComplete22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblManual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelMetric1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -109,11 +129,30 @@ public class acerca extends javax.swing.JDialog {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 10, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(lblManual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void lblManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblManualActionPerformed
+        //www.google.com.ar
+    }//GEN-LAST:event_lblManualActionPerformed
+
+    private void lblManualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblManualMouseClicked
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                    desktop.browse(new URI("http://www.google.com.ar"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_lblManualMouseClicked
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -123,6 +162,7 @@ public class acerca extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private org.edisoncor.gui.label.LabelMetric labelMetric1;
+    private org.jdesktop.swingx.JXHyperlink lblManual;
     private org.edisoncor.gui.panel.PanelTranslucidoComplete2 panelTranslucidoComplete22;
     // End of variables declaration//GEN-END:variables
 }

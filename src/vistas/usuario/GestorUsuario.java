@@ -4,7 +4,6 @@
  */
 package vistas.usuario;
 
-import vistas.empleado.*;
 import pojo.Empleado;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class GestorUsuario extends javax.swing.JDialog {
     private List<Usuario> listaUsuario;
     private List<Empleado> listaEmpleado;
     private boolean seleccionado;
+    private int idEmp;
     private int legajo;
     private Usuario usuario;
     int quienloyamo;
@@ -77,7 +77,8 @@ public class GestorUsuario extends javax.swing.JDialog {
     public void initComponentesVentana(){
         //empleados = new EmpleadoDaoImp();
         cargarTablaConUsuario();
-                
+        tblUsuario.setAutoCreateRowSorter(true);
+        tblUsuario.getRowSorter().toggleSortOrder(0);                
         btnModificar.setEnabled(false);
        
     }
@@ -121,8 +122,9 @@ public class GestorUsuario extends javax.swing.JDialog {
             }
         });
 
-        tblUsuario.setBackground(new java.awt.Color(204, 204, 204));
+        tblUsuario.setBackground(new java.awt.Color(0, 0, 0));
         tblUsuario.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        tblUsuario.setForeground(new java.awt.Color(255, 255, 255));
         tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -199,10 +201,13 @@ public class GestorUsuario extends javax.swing.JDialog {
         return seleccionado;
     }
 
-    public int getLegajo() {
-        return legajo;
+//    public int getLegajo() {
+//        return legajo;
+//    }
+    
+    public int getIdEmp(){
+        return idEmp;
     }
-
     
     
       
@@ -226,7 +231,6 @@ public class GestorUsuario extends javax.swing.JDialog {
            int fila = tblUsuario.getSelectedRow();
         if (fila!= -1) {
             btnModificar.setEnabled(true);  
-            System.out.println("selecciono con el mouse");
         }
     }//GEN-LAST:event_tblUsuarioMouseClicked
 
@@ -253,14 +257,11 @@ public class GestorUsuario extends javax.swing.JDialog {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         
-//        isModificar= true;
         int fila = tblUsuario.getSelectedRow();
-        System.out.println("Fila seleccionada "+tblUsuario.getSelectedRow());
         if (fila!= -1) {
-            legajo = (Integer) tblUsuario.getModel().getValueAt(tblUsuario.getSelectedRow(), 0);
-            System.out.println("Legajo "+legajo);
+            idEmp = (Integer) tblUsuario.getValueAt(tblUsuario.getSelectedRow(), 0);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
-            AltaUsuario2 ventanaEditUsuario = new AltaUsuario2(parent, true, legajo);
+            AltaUsuario2 ventanaEditUsuario = new AltaUsuario2(parent, true, idEmp);
             cargarTablaConUsuario();    
         }else{
             JOptionPane.showMessageDialog(null, "Debes seleccionar un Usuario de la Tabla");
@@ -270,10 +271,7 @@ public class GestorUsuario extends javax.swing.JDialog {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
         AltaUsuario2 ventanaNuevoUsuario = new AltaUsuario2(parent, true);
-//        if (ventanaNuevoEmpleado.isBotonGuardarSelecciono()) {
             cargarTablaConUsuario();
-//            ventanaNuevoEmpleado.dispose();
-//            
 //        }
         
          
@@ -290,47 +288,7 @@ public class GestorUsuario extends javax.swing.JDialog {
        
      }    
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                GestorEmpleado dialog = new GestorEmpleado(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnCancelarOperacion;
     private org.edisoncor.gui.button.ButtonIpod btnModificar;
@@ -344,8 +302,8 @@ public class GestorUsuario extends javax.swing.JDialog {
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
     private void cargarTablaConUsuario() {
-//       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
-       listaUsuario = new UsuarioDaoImp().listarUsuario();
+
+        listaUsuario = new UsuarioDaoImp().listarUsuario();
        util.TablaUtil.prepararTablaUsuario(modelo, tblUsuario);
        util.TablaUtil.cargarModeloUsuario(modelo, listaUsuario, tblUsuario);
     }

@@ -46,7 +46,9 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
     public Novedad getNovedad(int id){
        Session session = Conexion.getSession();
         session.beginTransaction();
-        Novedad nov = (Novedad) session.get(Novedad.class,id);
+        String sql = "from Novedad as n where n.id = '"+id+"'";
+//        Novedad nov = (Novedad) session.get(Novedad.class,id);
+        Novedad nov = (Novedad)session.createQuery(sql).uniqueResult();
         session.getTransaction().commit();
         session.close();
         return nov; 
@@ -102,6 +104,29 @@ public class NovedadDaoImp extends Conexion implements NovedadDao {
          criteria.add( Restrictions.le("fecha", fechaFin) ); 
          List<Novedad> lista = criteria.list();
         return lista;
+    }
+//    public List<Novedad> listarNovedadEmp(List<Empleado> e, Date fechaInicio, Date fechaFin) {
+//        Session session = Conexion.getSession();
+//        session.beginTransaction();
+//         Criteria criteria = session.createCriteria(Novedad.class);
+//         criteria.add(Restrictions.eq("empleado", e));
+//         criteria.add( Restrictions.ge("fecha", fechaInicio) );
+//         criteria.add( Restrictions.le("fecha", fechaFin) ); 
+//         List<Novedad> lista = criteria.list();
+//        return lista;
+//    }
+    
+    public List<Novedad> listarNovedadEmp(int legajo, Date fechaInicio, Date fechaFin) {
+        java.sql.Date parseIni, parseFin;
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        parseIni = new java.sql.Date(fechaInicio.getTime());
+        parseFin = new java.sql.Date (fechaFin.getTime());
+        String sql = "from Novedad as n\n" +
+                     "join fetch n.empleado as e\n" +
+                     "where e.legajo = '"+legajo+"'  and n.fecha >= '"+parseIni+"' and n.fecha <= '"+parseFin+"'";
+        List<Novedad> lista = session.createQuery(sql).list();
+        return lista; 
     }
     
     @Override

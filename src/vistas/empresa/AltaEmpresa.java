@@ -4,18 +4,10 @@
  */
 package vistas.empresa;
 
-import vistas.empleado.*;
-import pojo.Empleado;
-import novedades.dao.imp.EmpleadoDaoImp;
-import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.EmpresaDaoImp;
-import novedades.dao.imp.SucursalDaoImp;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import pojo.Empresa;
-import pojo.Sucursal;
 
 /**
  *
@@ -45,18 +37,14 @@ public class AltaEmpresa extends javax.swing.JDialog {
     }
     
     public AltaEmpresa(java.awt.Frame parent, boolean modal,int codigo) {
+
         super(parent, modal);
         initComponents();
         this.codigo = codigo;
         btneEliminar.setVisible(true);
         this.setTitle("EDITAR EMPRESA");
-//        configurarParaEditar();
         setLocationRelativeTo(this); 
         setVisible(true);
-        // no se realizara la carga de foto
-       
-        
-        
     }
      
     /**
@@ -196,11 +184,10 @@ public class AltaEmpresa extends javax.swing.JDialog {
                                 .addComponent(txtDenominacion, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
                                     .addComponent(labelMetric11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(146, 146, 146)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtGerente, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createSequentialGroup()
+                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
                                     .addComponent(labelMetric14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtMail, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))))
@@ -296,7 +283,8 @@ public class AltaEmpresa extends javax.swing.JDialog {
         int resp =JOptionPane.showConfirmDialog(rootPane,"ESTA SEGURO QUE DESEA ELIMINAR LA EMPRESA: \n"+txtCodigo.getText()+"-"+txtDenominacion.getText()+" ?", "ELIMINAR EMPLEADO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
             Empresa emp = new EmpresaDaoImp().getEmpresa(codigo);
-            new EmpresaDaoImp().deleteEmpresa(emp);
+//            new EmpresaDaoImp().deleteEmpresa(emp);
+            emp.setEstado(false);
             JOptionPane.showMessageDialog(rootPane, "LA ELIMINACION SE REALIZO CORRECTAMENTE ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         }

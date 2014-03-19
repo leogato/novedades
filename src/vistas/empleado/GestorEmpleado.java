@@ -7,18 +7,13 @@ package vistas.empleado;
 import hibernateUtil.Conexion;
 import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import novedades.dao.imp.EmpresaDaoImp;
-import novedades.dao.imp.NovedadDaoImp;
 import novedades.dao.imp.SucursalDaoImp;
 import org.hibernate.Session;
 import pojo.Empresa;
 import pojo.Sucursal;
-import util.FechaUtil;
-import util.TablaUtil;
 
 /**
  *
@@ -33,7 +28,8 @@ public class GestorEmpleado extends javax.swing.JDialog {
     private List<Empleado> listaEmpleado;
     private boolean seleccionado;
     private int legajo;
-    
+    private int idEmp;
+    private int fila;
     int quienloyamo;
     java.awt.Frame parent;// indica quien es el padre. me sirve para pasar el icono de la aplcacion
    
@@ -44,7 +40,9 @@ public class GestorEmpleado extends javax.swing.JDialog {
         initComponentesVentana();    
         this.setTitle("MODIFICACION DE EMPLEADO");
         llenaCmbEmpresa();
+        
         btnBuscar.setVisible(false);
+        btnBuscar.setEnabled(false);
         setLocationRelativeTo(this);
         setVisible(true);
         
@@ -57,7 +55,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
         initComponents();
         this.setTitle("ALTA DE EMPLEADO");
         llenaCmbEmpresa();
-        if (MENU== quienloyamo) {
+        if (MENU == quienloyamo) {
             //boton seleccionar no debe aparecer
         }else{
            // buscador de empleado
@@ -66,8 +64,12 @@ public class GestorEmpleado extends javax.swing.JDialog {
             btnModificar.setVisible(false);
             btnCancelarOperacion.setVisible(false);
             btnBuscar.setVisible(true);
+            btnBuscar.setEnabled(true);
+
+            
         }
-        initComponentesVentana();  
+        
+//        initComponentesVentana();  
         setLocationRelativeTo(this);
         setVisible(true);
     }
@@ -104,12 +106,13 @@ public class GestorEmpleado extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE EMPLEADOS", 2, 2, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)), "GESTOR DE EMPLEADOS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Calibri", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
         panel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tblEmpleado.setBackground(new java.awt.Color(204, 204, 204));
+        tblEmpleado.setBackground(new java.awt.Color(0, 0, 0));
         tblEmpleado.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        tblEmpleado.setForeground(new java.awt.Color(255, 255, 255));
         tblEmpleado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -118,9 +121,16 @@ public class GestorEmpleado extends javax.swing.JDialog {
                 "LEGAJO", "APELLIDO", "NOMBRE", "EMPRESA", "SUCURSAL", "CUIT", "CONVENIO", "TAREA"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -144,12 +154,10 @@ public class GestorEmpleado extends javax.swing.JDialog {
         tblEmpleado.getColumnModel().getColumn(2).setResizable(false);
         tblEmpleado.getColumnModel().getColumn(2).setPreferredWidth(120);
 
-        panel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 186, 1081, 170));
+        panel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 156, 1081, 200));
 
         panelShadow1.setDistance(20);
         panelShadow1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        panelTranslucidoComplete21.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/adduser.png"))); // NOI18N
         btnNuevo.setText("NUEVO");
@@ -159,7 +167,6 @@ public class GestorEmpleado extends javax.swing.JDialog {
                 btnNuevoActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete21.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 10, -1, -1));
 
         btnCancelarOperacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/atras.png"))); // NOI18N
         btnCancelarOperacion.setText("ATRAS");
@@ -169,17 +176,15 @@ public class GestorEmpleado extends javax.swing.JDialog {
                 btnCancelarOperacionActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete21.add(btnCancelarOperacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 13, 81, -1));
 
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Editar.png"))); // NOI18N
-        btnModificar.setText("MODIFIC");
+        btnModificar.setText("EDITAR");
         btnModificar.setAnimacion(false);
         btnModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnModificarActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete21.add(btnModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, -1, -1));
 
         btnBuscar.setBackground(new java.awt.Color(51, 51, 51));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/OK.png"))); // NOI18N
@@ -191,7 +196,33 @@ public class GestorEmpleado extends javax.swing.JDialog {
                 btnBuscarActionPerformed(evt);
             }
         });
-        panelTranslucidoComplete21.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, 67, 67));
+
+        javax.swing.GroupLayout panelTranslucidoComplete21Layout = new javax.swing.GroupLayout(panelTranslucidoComplete21);
+        panelTranslucidoComplete21.setLayout(panelTranslucidoComplete21Layout);
+        panelTranslucidoComplete21Layout.setHorizontalGroup(
+            panelTranslucidoComplete21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTranslucidoComplete21Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(btnCancelarOperacion, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(408, 408, 408)
+                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(318, 318, 318)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        panelTranslucidoComplete21Layout.setVerticalGroup(
+            panelTranslucidoComplete21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTranslucidoComplete21Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(panelTranslucidoComplete21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCancelarOperacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelTranslucidoComplete21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11))
+        );
 
         panelShadow1.add(panelTranslucidoComplete21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 11, 1070, 100));
 
@@ -199,7 +230,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
 
         panelShadow2.setDistance(20);
 
-        panelTranslucidoComplete22.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 220, 220)), "FILTRO", 2, 0, null, java.awt.Color.white));
+        panelTranslucidoComplete22.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 220, 220)), "FILTRO", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.white));
 
         labelMetric1.setText("Empresa");
 
@@ -283,9 +314,7 @@ public class GestorEmpleado extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -297,6 +326,13 @@ public class GestorEmpleado extends javax.swing.JDialog {
 
     public int getLegajo() {
         return legajo;
+    }
+    
+    public int getIdEmp(){
+        return idEmp;
+    }
+    public int getFila(){
+        return fila;
     }
       
     private void buttonIpod1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonIpod1ActionPerformed
@@ -314,9 +350,8 @@ public class GestorEmpleado extends javax.swing.JDialog {
     private void tblEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmpleadoMouseClicked
            int fila = tblEmpleado.getSelectedRow();
         if (fila!= -1) {
-            btnBuscar.setVisible(false);
+//            btnBuscar.setVisible(true);
             btnModificar.setEnabled(true);  
-            System.out.println("selecciono con el mouse");
         }
     }//GEN-LAST:event_tblEmpleadoMouseClicked
 
@@ -344,9 +379,11 @@ public class GestorEmpleado extends javax.swing.JDialog {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         int fila = tblEmpleado.getSelectedRow();
         if (fila!= -1) {
-            legajo = (Integer) tblEmpleado.getModel().getValueAt(tblEmpleado.getSelectedRow(), 0);
+            idEmp = ((Integer) tblEmpleado.getValueAt(tblEmpleado.getSelectedRow(), 0));
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
-            AltaEmpleado ventanaEditEmpleado = new AltaEmpleado(parent, true, legajo);
+            AltaEmpleado ventanaEditEmpleado = new AltaEmpleado(parent, true, idEmp);
+            cargarTablaConEmpleado();
+            
         }else{
             JOptionPane.showMessageDialog(null, "Debes seleccionar un Empleado de la Tabla");
         }
@@ -369,25 +406,26 @@ public class GestorEmpleado extends javax.swing.JDialog {
                     suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
                 }
         if(suc.getNombre().equals("TODAS")){
-            System.out.println("cod emp :"+suc.getEmpresa().getCodEmp()+" cod Suc: "+suc.getCodSuc());
             listaEmpleado =new EmpleadoDaoImp().listarEmpleado(suc.getEmpresa());
         }else{
-            System.out.println("cod Suc: "+suc.getCodSuc());
             listaEmpleado =new EmpleadoDaoImp().listarEmpleado(suc.getCodSuc());
         }
         util.TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
         util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
+        tblEmpleado.setAutoCreateRowSorter(true);
+        tblEmpleado.getRowSorter().toggleSortOrder(1);
     }//GEN-LAST:event_btnFiltroActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         int fila = tblEmpleado.getSelectedRow();
-        if (fila== -1) {
+        if (fila == -1) {
             // no se selecciono ninguna fila de la lista
-            JOptionPane.showMessageDialog(null, "debes seleccionar un Empleado ", "Informacion",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "NO SELECCIONO NINGUN EMPLEADO, ELIJA UNO DE LA LISTA ", "INFORMACION",JOptionPane.INFORMATION_MESSAGE);
         } else {
             seleccionado = true;
             modelo = (DefaultTableModel)tblEmpleado.getModel();
-            legajo = Integer.parseInt(modelo.getValueAt(fila, 0).toString());
+//            idEmp = (int) modelo.getValueAt(fila, 0);
+            idEmp = (int) tblEmpleado.getValueAt(fila, 0);
             this.dispose();
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
@@ -426,19 +464,19 @@ public class GestorEmpleado extends javax.swing.JDialog {
     /**
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
-//    private void cargarTablaConEmpleado() {
-//        Sucursal suc;
-//        String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
-//        if (cod.charAt(1) == '-'){
-//                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
-//                }else{
-//                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
-//                }
-//        
-//        listaEmpleado =new EmpleadoDaoImp().listarEmpleado(suc.getCodSuc());
-//        util.TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
-//        util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
-//    }
+    private void cargarTablaConEmpleado() {
+        Sucursal suc;
+        String cod = String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1));
+        if (cod.charAt(1) == '-'){
+                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))));
+                }else{
+                    suc = new SucursalDaoImp().getSucursal(Integer.parseInt(String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(0))+String.valueOf(cmbSucursal.getSelectedItem().toString().charAt(1))));
+                }
+        
+        listaEmpleado =new EmpleadoDaoImp().listarEmpleado(suc.getCodSuc());
+        util.TablaUtil.prepararTablaEmpleado(modelo, tblEmpleado);
+        util.TablaUtil.cargarModeloEmpleado(modelo, listaEmpleado, tblEmpleado);
+    }
 
     
     

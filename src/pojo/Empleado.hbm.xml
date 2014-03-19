@@ -1,16 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 06/01/2014 21:48:58 by Hibernate Tools 3.2.1.GA -->
+<!-- Generated 18/02/2014 21:09:58 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="pojo.Empleado" table="empleado" catalog="novedades">
-        <id name="legajo" type="int">
-            <column name="LEGAJO" />
-            <generator class="assigned" />
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
         </id>
         <many-to-one name="sucursal" class="pojo.Sucursal" fetch="select">
             <column name="COD_SUC" />
         </many-to-one>
+        <property name="legajo" type="int">
+            <column name="LEGAJO" not-null="true" />
+        </property>
         <property name="apellido" type="string">
             <column name="APELLIDO" length="30" not-null="true" />
         </property>
@@ -30,7 +33,7 @@
             <column name="nom_suc" length="35" />
         </property>
         <property name="convenio" type="string">
-            <column name="convenio" length="30" not-null="true" />
+            <column name="convenio" length="40" />
         </property>
         <property name="tarea" type="string">
             <column name="tarea" length="30" not-null="true" />
@@ -38,17 +41,17 @@
         <property name="estado" type="java.lang.Boolean">
             <column name="estado" />
         </property>
-        <set name="usuarios" inverse="true">
-            <key>
-                <column name="LEGAJO" />
-            </key>
-            <one-to-many class="pojo.Usuario" />
-        </set>
         <set name="novedads" inverse="true">
             <key>
-                <column name="legajo" not-null="true" />
+                <column name="idEmp" not-null="true" />
             </key>
             <one-to-many class="pojo.Novedad" />
+        </set>
+        <set name="usuarios" inverse="true">
+            <key>
+                <column name="idEmp" not-null="true" unique="true" />
+            </key>
+            <one-to-many class="pojo.Usuario" />
         </set>
     </class>
 </hibernate-mapping>

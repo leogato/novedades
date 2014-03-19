@@ -16,4 +16,5 @@ public interface EmpresaDao {
   public void deleteEmpresa(Empresa a);
   public void upDateEmpresa(Empresa a);
   public Empresa getEmpresa(int cod_emp);
+  public Empresa getEmpresaLogin(int cod_emp);
 }

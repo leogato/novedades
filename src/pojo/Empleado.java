@@ -1,5 +1,5 @@
 package pojo;
-// Generated 06/01/2014 21:48:57 by Hibernate Tools 3.2.1.GA
+// Generated 18/02/2014 21:09:57 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.HashSet;
@@ -11,8 +11,9 @@ import java.util.Set;
 public class Empleado  implements java.io.Serializable {
 
 
-     private int legajo;
+     private Integer id;
      private Sucursal sucursal;
+     private int legajo;
      private String apellido;
      private String nombre;
      private String cuit;
@@ -22,24 +23,23 @@ public class Empleado  implements java.io.Serializable {
      private String convenio;
      private String tarea;
      private Boolean estado;
-     private Set<Usuario> usuarios = new HashSet<Usuario>(0);
      private Set<Novedad> novedads = new HashSet<Novedad>(0);
+     private Set<Usuario> usuarios = new HashSet<Usuario>(0);
 
     public Empleado() {
     }
 
 	
-    public Empleado(int legajo, String apellido, String nombre, String cuit, String convenio, String tarea) {
+    public Empleado(int legajo, String apellido, String nombre, String cuit, String tarea) {
         this.legajo = legajo;
         this.apellido = apellido;
         this.nombre = nombre;
         this.cuit = cuit;
-        this.convenio = convenio;
         this.tarea = tarea;
     }
-    public Empleado(int legajo, Sucursal sucursal, String apellido, String nombre, String cuit, Integer codEmp, String nomEmp, String nomSuc, String convenio, String tarea, Boolean estado, Set<Usuario> usuarios, Set<Novedad> novedads) {
-       this.legajo = legajo;
+    public Empleado(Sucursal sucursal, int legajo, String apellido, String nombre, String cuit, Integer codEmp, String nomEmp, String nomSuc, String convenio, String tarea, Boolean estado, Set<Novedad> novedads, Set<Usuario> usuarios) {
        this.sucursal = sucursal;
+       this.legajo = legajo;
        this.apellido = apellido;
        this.nombre = nombre;
        this.cuit = cuit;
@@ -49,16 +49,16 @@ public class Empleado  implements java.io.Serializable {
        this.convenio = convenio;
        this.tarea = tarea;
        this.estado = estado;
-       this.usuarios = usuarios;
        this.novedads = novedads;
+       this.usuarios = usuarios;
     }
    
-    public int getLegajo() {
-        return this.legajo;
+    public Integer getId() {
+        return this.id;
     }
     
-    public void setLegajo(int legajo) {
-        this.legajo = legajo;
+    public void setId(Integer id) {
+        this.id = id;
     }
     public Sucursal getSucursal() {
         return this.sucursal;
@@ -66,6 +66,13 @@ public class Empleado  implements java.io.Serializable {
     
     public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
+    }
+    public int getLegajo() {
+        return this.legajo;
+    }
+    
+    public void setLegajo(int legajo) {
+        this.legajo = legajo;
     }
     public String getApellido() {
         return this.apellido;
@@ -130,19 +137,19 @@ public class Empleado  implements java.io.Serializable {
     public void setEstado(Boolean estado) {
         this.estado = estado;
     }
-    public Set<Usuario> getUsuarios() {
-        return this.usuarios;
-    }
-    
-    public void setUsuarios(Set<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
     public Set<Novedad> getNovedads() {
         return this.novedads;
     }
     
     public void setNovedads(Set<Novedad> novedads) {
         this.novedads = novedads;
+    }
+    public Set<Usuario> getUsuarios() {
+        return this.usuarios;
+    }
+    
+    public void setUsuarios(Set<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
 

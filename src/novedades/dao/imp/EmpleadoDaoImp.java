@@ -51,16 +51,26 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         session.close();
     }
 
+    public List<Empleado> getEmpleados(int legajo){
+        Session session = Conexion.getSession();
+        session.beginTransaction();
+        String sql  = "from Empleado as e where e.legajo = '"+legajo+"'";
+        List<Empleado> lista = (List<Empleado>)session.createQuery(sql).list();
+        session.getTransaction().commit();
+        session.close();
+        return lista;
+    }
+    
     @Override
     public Empleado getEmpleado(int legajo) {
-       Session session = Conexion.getSession();
+        Session session = Conexion.getSession();
         session.beginTransaction();
         Empleado a = (Empleado) session.get(Empleado.class, legajo);
         session.getTransaction().commit();
         session.close();
         return a;
     }
-    
+    @Override
     public Empleado getEmpleado(String nombre){
        Session session = Conexion.getSession();
         session.beginTransaction();
@@ -70,11 +80,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         return a;
     }
 
-    @Override
-    public Set<Concepto> getConcepto(int idConcepto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
 
     @Override
     public List<Empleado> listarEmpleado() {
@@ -86,18 +92,21 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         session.close();
         return lista;
     }
+    
+    @Override
     public List<Empleado> listarEmpleado(int codSuc){
         Session sesion = Conexion.getSession();
         sesion.beginTransaction();
         String sql = "from Empleado as e\n" +
                      "join fetch e.sucursal as s\n" +
-                     "where s.codSuc = '"+codSuc+"'";
+                     "where e.estado = true and s.codSuc = '"+codSuc+"'";
         List<Empleado> lista = (List<Empleado>) sesion.createQuery(sql).list();
         sesion.getTransaction().commit();
         sesion.close();
         return lista;
     }
     
+    @Override
     public List<Empleado> listarEmpleado(Empresa e){
         Session session = Conexion.getSession();
         session.beginTransaction();
@@ -108,6 +117,7 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
         List<Empleado> lista = (List<Empleado>)session.createQuery(sql).list();
         return lista;
     }
+    
     @Override
         public List<Empleado> listarEmpleado(int codEmp, int codSuc){
             Session session = Conexion.getSession();
@@ -118,13 +128,13 @@ public class EmpleadoDaoImp extends Conexion implements EmpleadoDao{
                     "where emp.codEmp = '"+codEmp+"' and suc.codSuc = '"+codSuc+"'";
             List<Empleado> lista = (List<Empleado>)session.createQuery(sql).list();
             return lista;
-    }
+        }
     
+    @Override
     public List<Empleado> listarEmpleado(int leg, String ape, String nom) {
         Session session = Conexion.getSession();
         session.beginTransaction();
         Criteria criteria = session.createCriteria(Empleado.class);
-//        criteria.addOrder(Order.asc("legajo"));
         List<Empleado> lista = (List<Empleado>)criteria.list();
         session.getTransaction().commit();
         session.close();

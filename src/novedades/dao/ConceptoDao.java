@@ -6,7 +6,6 @@ package novedades.dao;
 
 import java.util.List;
 import pojo.Concepto;
-import pojo.Empleado;
 
 
 /**

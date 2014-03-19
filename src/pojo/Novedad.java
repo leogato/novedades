@@ -1,5 +1,5 @@
 package pojo;
-// Generated 06/01/2014 21:48:57 by Hibernate Tools 3.2.1.GA
+// Generated 18/02/2014 21:09:57 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.Date;
@@ -13,26 +13,34 @@ public class Novedad  implements java.io.Serializable {
      private Integer id;
      private Empleado empleado;
      private Concepto concepto;
+     private int legajo;
      private Integer cantidad;
      private String observacion;
      private Date fecha;
      private Boolean estado;
+     private String modificador;
+     private String quien;
 
     public Novedad() {
     }
 
 	
-    public Novedad(Empleado empleado, Concepto concepto) {
+    public Novedad(Empleado empleado, Concepto concepto, int legajo, String quien) {
         this.empleado = empleado;
         this.concepto = concepto;
+        this.legajo = legajo;
+        this.quien = quien;
     }
-    public Novedad(Empleado empleado, Concepto concepto, Integer cantidad, String observacion, Date fecha, Boolean estado) {
+    public Novedad(Empleado empleado, Concepto concepto, int legajo, Integer cantidad, String observacion, Date fecha, Boolean estado, String modificador, String quien) {
        this.empleado = empleado;
        this.concepto = concepto;
+       this.legajo = legajo;
        this.cantidad = cantidad;
        this.observacion = observacion;
        this.fecha = fecha;
        this.estado = estado;
+       this.modificador = modificador;
+       this.quien = quien;
     }
    
     public Integer getId() {
@@ -55,6 +63,13 @@ public class Novedad  implements java.io.Serializable {
     
     public void setConcepto(Concepto concepto) {
         this.concepto = concepto;
+    }
+    public int getLegajo() {
+        return this.legajo;
+    }
+    
+    public void setLegajo(int legajo) {
+        this.legajo = legajo;
     }
     public Integer getCantidad() {
         return this.cantidad;
@@ -83,6 +98,20 @@ public class Novedad  implements java.io.Serializable {
     
     public void setEstado(Boolean estado) {
         this.estado = estado;
+    }
+    public String getModificador() {
+        return this.modificador;
+    }
+    
+    public void setModificador(String modificador) {
+        this.modificador = modificador;
+    }
+    public String getQuien() {
+        return this.quien;
+    }
+    
+    public void setQuien(String quien) {
+        this.quien = quien;
     }
 
 

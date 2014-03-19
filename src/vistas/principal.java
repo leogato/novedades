@@ -15,9 +15,9 @@ import pojo.Usuario;
 import vista.novedades.TablaNovedades;
 import vistas.concepto.AbmConceptos;
 import vistas.concepto.GestorConcepto;
+import vistas.empleado.importarEmpleado;
 import vistas.empresa.AltaEmpresa;
 import vistas.empresa.GestorEmpresa;
-import vistas.sucursal.AltaUsuario;
 import vistas.usuario.AltaUsuario2;
 import vistas.usuario.CambiarClave;
 import vistas.usuario.GestorUsuario;
@@ -60,7 +60,6 @@ public class principal extends javax.swing.JFrame {
         mnuItmLogin = new javax.swing.JMenuItem();
         mnuItmClose = new javax.swing.JMenuItem();
         mnuItemChgPass = new javax.swing.JMenuItem();
-        mnuItmAcerca = new javax.swing.JMenuItem();
         mnuSalir = new javax.swing.JMenuItem();
         mnuNovedades = new javax.swing.JMenu();
         mnuItmCargaNovedades = new javax.swing.JMenuItem();
@@ -68,6 +67,7 @@ public class principal extends javax.swing.JFrame {
         mnuEmpleados = new javax.swing.JMenu();
         mnuGestorEmpleados = new javax.swing.JMenuItem();
         mnuAltaEmpleados = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         mnuUsuario = new javax.swing.JMenu();
         mnuItmGestorUsuario = new javax.swing.JMenuItem();
         mnuABMUsuario = new javax.swing.JMenuItem();
@@ -80,9 +80,11 @@ public class principal extends javax.swing.JFrame {
         mnuConcepto = new javax.swing.JMenu();
         mnuItmGestorConcepto = new javax.swing.JMenuItem();
         mnuItmAltaConceptos = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        mnuItmAcerca = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
+        setTitle("REGISTRO DE NOVEDADES DIARIAS");
 
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/perseids_tudorica.gif"))); // NOI18N
         panel1.setOpaque(false);
@@ -91,7 +93,7 @@ public class principal extends javax.swing.JFrame {
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 423, Short.MAX_VALUE)
+            .addGap(0, 497, Short.MAX_VALUE)
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,16 +131,6 @@ public class principal extends javax.swing.JFrame {
             }
         });
         mnuArchivo.add(mnuItemChgPass);
-
-        mnuItmAcerca.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
-        mnuItmAcerca.setText("Acerca");
-        mnuItmAcerca.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItmAcercaActionPerformed(evt);
-            }
-        });
-        mnuArchivo.add(mnuItmAcerca);
 
         mnuSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         mnuSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Exit.png"))); // NOI18N
@@ -183,6 +175,7 @@ public class principal extends javax.swing.JFrame {
 
         mnuEmpleados.setText("Empleados");
 
+        mnuGestorEmpleados.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         mnuGestorEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/User_Group_Icon_32.png"))); // NOI18N
         mnuGestorEmpleados.setText("Gestor de Empleados");
         mnuGestorEmpleados.addActionListener(new java.awt.event.ActionListener() {
@@ -192,6 +185,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuEmpleados.add(mnuGestorEmpleados);
 
+        mnuAltaEmpleados.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mnuAltaEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Profile.png"))); // NOI18N
         mnuAltaEmpleados.setText("Alta de Empleados");
         mnuAltaEmpleados.addActionListener(new java.awt.event.ActionListener() {
@@ -201,10 +195,21 @@ public class principal extends javax.swing.JFrame {
         });
         mnuEmpleados.add(mnuAltaEmpleados);
 
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excelImport.png"))); // NOI18N
+        jMenuItem1.setText("Importar Empleados");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnuEmpleados.add(jMenuItem1);
+
         jMenuBar1.add(mnuEmpleados);
 
         mnuUsuario.setText("Usuarios");
 
+        mnuItmGestorUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
         mnuItmGestorUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/users.png"))); // NOI18N
         mnuItmGestorUsuario.setText("Gestor de Usuarios");
         mnuItmGestorUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -214,6 +219,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuUsuario.add(mnuItmGestorUsuario);
 
+        mnuABMUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mnuABMUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/user.png"))); // NOI18N
         mnuABMUsuario.setText("Alta de Usuarios");
         mnuABMUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -259,6 +265,7 @@ public class principal extends javax.swing.JFrame {
 
         mnuConcepto.setText("Conceptos");
 
+        mnuItmGestorConcepto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         mnuItmGestorConcepto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/GesCon.png"))); // NOI18N
         mnuItmGestorConcepto.setText("Gestor de Conceptos");
         mnuItmGestorConcepto.addActionListener(new java.awt.event.ActionListener() {
@@ -268,6 +275,7 @@ public class principal extends javax.swing.JFrame {
         });
         mnuConcepto.add(mnuItmGestorConcepto);
 
+        mnuItmAltaConceptos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mnuItmAltaConceptos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/concepto.png"))); // NOI18N
         mnuItmAltaConceptos.setText("Alta de Conceptos");
         mnuItmAltaConceptos.addActionListener(new java.awt.event.ActionListener() {
@@ -278,6 +286,20 @@ public class principal extends javax.swing.JFrame {
         mnuConcepto.add(mnuItmAltaConceptos);
 
         jMenuBar1.add(mnuConcepto);
+
+        jMenu1.setText("Ayuda");
+
+        mnuItmAcerca.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        mnuItmAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Info.png"))); // NOI18N
+        mnuItmAcerca.setText("Acerca");
+        mnuItmAcerca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmAcercaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnuItmAcerca);
+
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -368,7 +390,7 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItmAltaConceptosActionPerformed
 
     private void mnuItmNovedadesRRHHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmNovedadesRRHHActionPerformed
-        new TablaNovedades(this, rootPaneCheckingEnabled);
+        new TablaNovedades(this, rootPaneCheckingEnabled, usuario);
     }//GEN-LAST:event_mnuItmNovedadesRRHHActionPerformed
 
     private void mnuItemGestorEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemGestorEmpresaActionPerformed
@@ -383,8 +405,14 @@ public class principal extends javax.swing.JFrame {
         new CambiarClave(this, rootPaneCheckingEnabled, usuario);
     }//GEN-LAST:event_mnuItemChgPassActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new importarEmpleado(this, rootPaneCheckingEnabled);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem mnuABMUsuario;

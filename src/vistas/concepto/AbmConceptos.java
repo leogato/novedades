@@ -4,14 +4,10 @@
  */
 package vistas.concepto;
 
-import hibernateUtil.Conexion;
 import java.util.List;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.ConceptoDaoImp;
-import org.hibernate.Session;
 import pojo.Concepto;
-import pojo.Novedad;
-import util.FechaUtil;
 
 /**
  *
@@ -84,12 +80,13 @@ public class AbmConceptos extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "ALTA, BAJA Y MODIFICACION DE CONCEPTOS", 2, 0, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true), "ALTA DE CONCEPTOS", 2, 0, new java.awt.Font("Calibri", 1, 24), java.awt.Color.white)); // NOI18N
         panel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/textura-metallica-2.jpg"))); // NOI18N
 
         txtId.setBackground(new java.awt.Color(102, 102, 102));
         txtId.setForeground(new java.awt.Color(255, 255, 255));
         txtId.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtId.setAnchoDeBorde(1.0F);
         txtId.setCaretColor(new java.awt.Color(102, 102, 102));
         txtId.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtId.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
@@ -106,6 +103,7 @@ public class AbmConceptos extends javax.swing.JDialog {
 
         txtDescripcion.setBackground(new java.awt.Color(102, 102, 102));
         txtDescripcion.setForeground(new java.awt.Color(255, 255, 255));
+        txtDescripcion.setAnchoDeBorde(1.0F);
         txtDescripcion.setCaretColor(new java.awt.Color(102, 102, 102));
         txtDescripcion.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtDescripcion.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
@@ -194,7 +192,6 @@ public class AbmConceptos extends javax.swing.JDialog {
         cmbTipo.setBackground(new java.awt.Color(102, 102, 102));
         cmbTipo.setForeground(new java.awt.Color(255, 255, 255));
         cmbTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CUALITATIVA", "CUANTITATIVA" }));
-        cmbTipo.setAnchoDeBorde(2.0F);
         cmbTipo.setColorDeBorde(new java.awt.Color(255, 102, 0));
         cmbTipo.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
 
@@ -268,33 +265,25 @@ public class AbmConceptos extends javax.swing.JDialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (cod_con==0) {
-                System.out.println("entro en nuevo");
                 // nuevo Concepto
                 if(validarConceptoNuevo()){
                     System.out.println(validarConceptoNuevo());
                     Concepto e = getDatosConcepto();
-                    e.setEstado(true);
                     new ConceptoDaoImp().addConcepto(e);
                     this.dispose();
                 }
             }else {
-                System.out.println("entro a modificar");
-                //actualizar empleado
+                //actualizar Concepto
                 if (validarConceptoActulizado()) {
-                    //obtengos los datos y creo el empelado
+                    //obtengos los datos y creo el Concepto
                     Concepto e = getDatosConcepto();
                     if (cod_con != Integer.parseInt(txtId.getText().trim())) {
                         Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
-                        List<Concepto> lista =new ConceptoDaoImp().listarConcepto();
                         new ConceptoDaoImp().addConcepto(e);
-
-                        // aqui va borrar el empleado o   porque se modiico la clave primario
+                        // aqui va borrar el Concepto o porque se modifico la clave primario
                         new ConceptoDaoImp().deleteConcepto(c);
-                        Concepto conUp = new ConceptoDaoImp().getConcepto(e.getCodCon());
-
                     }else{
                         new ConceptoDaoImp().upDateConcepto(e);
-
                     }
                     this.dispose();
                 }
@@ -308,67 +297,18 @@ public class AbmConceptos extends javax.swing.JDialog {
     }//GEN-LAST:event_txtIdKeyTyped
 
     private void btnAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnularActionPerformed
-//        int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Concepto: \n"+txtId.getText()+" "+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
-//        if (resp==JOptionPane.OK_OPTION) {
-//             Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
-//            new ConceptoDaoImp().deleteConcepto(c);
-//            JOptionPane.showMessageDialog(rootPane, "La Eliminacion se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
-//            this.dispose();
-//        }
+
          int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro que desea ANULAR el Concepto: \n"+txtId.getText()+"-"+txtDescripcion.getText()+" ?", "ELIMINAR CONCEPTO",JOptionPane.OK_CANCEL_OPTION);
          if (resp==JOptionPane.OK_OPTION) {
             Concepto c = new ConceptoDaoImp().getConcepto(cod_con);
-            System.out.println("estado: "+c.getEstado());
-            System.out.println("concepto: "+c.getDescripcion());
             c.setEstado(false);
-            System.out.println("estado: "+c.getEstado());
             new ConceptoDaoImp().upDateConcepto(c);
             JOptionPane.showMessageDialog(rootPane, "La ANULACION se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         }
     }//GEN-LAST:event_btnAnularActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AbmConceptos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AbmConceptos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AbmConceptos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AbmConceptos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AbmConceptos dialog = new AbmConceptos(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnAnular;
     private org.edisoncor.gui.button.ButtonIpod btnAtras;
@@ -406,7 +346,6 @@ public class AbmConceptos extends javax.swing.JDialog {
          boolean todoOk=false;
          try{
          Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(txtId.getText().trim()));
-         System.out.println("Variable empLeg: "+con);
              //actualizar
              
              if (con ==null){
@@ -426,7 +365,6 @@ public class AbmConceptos extends javax.swing.JDialog {
     public boolean validarConceptoActulizado(){
         boolean todoOk=true;
         Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(txtId.getText().trim()));
-        System.out.println("empleado original "+con.getCodCon()+"-"+con.getDescripcion());
         
         if (con.getCodCon()!=Integer.parseInt(txtId.getText().trim())) {
              // el empleado modifico el legajo
@@ -441,11 +379,11 @@ public class AbmConceptos extends javax.swing.JDialog {
     
     public Concepto getDatosConcepto(){
         Concepto con = new Concepto();
-        System.out.println("ID "+Integer.parseInt(txtId.getText()));
         con.setCodCon(Integer.parseInt(txtId.getText()));
         con.setDescripcion(txtDescripcion.getText());
         con.setTipo(cmbTipo.getSelectedItem().toString());
         con.setCargaUser(chkCarga.isSelected());
+        con.setEstado(true);
         return con;
      }
     

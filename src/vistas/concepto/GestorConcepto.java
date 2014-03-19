@@ -5,24 +5,19 @@
 package vistas.concepto;
 
 import hibernateUtil.Conexion;
-import vistas.usuario.*;
 import vistas.empleado.*;
-import pojo.Empleado;
-import novedades.dao.imp.EmpleadoDaoImp;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import novedades.dao.imp.ConceptoDaoImp;
-import novedades.dao.imp.UsuarioDaoImp;
 import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Usuario;
 
 /**
  *
- * @author Joel
+ * @author LEO
  */
 public class GestorConcepto extends javax.swing.JDialog {
     public static final int VENTANA_GESTOR_ASISTENCIA=1;
@@ -116,8 +111,9 @@ public class GestorConcepto extends javax.swing.JDialog {
             }
         });
 
-        tblConcepto.setBackground(new java.awt.Color(204, 204, 204));
+        tblConcepto.setBackground(new java.awt.Color(0, 0, 0));
         tblConcepto.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        tblConcepto.setForeground(new java.awt.Color(255, 255, 255));
         tblConcepto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -203,8 +199,6 @@ public class GestorConcepto extends javax.swing.JDialog {
     
       
     private void buttonIpod1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonIpod1ActionPerformed
-//       limpiarVenanaEmpleado();
-//       setEditableVentanaInformacionEmpleado(true);
     }//GEN-LAST:event_buttonIpod1ActionPerformed
 
     private void buttonIpod2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonIpod2ActionPerformed
@@ -212,17 +206,13 @@ public class GestorConcepto extends javax.swing.JDialog {
     }//GEN-LAST:event_buttonIpod2ActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
-       // cancela la operacion actual
-
         this.dispose();
-        
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblConceptoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblConceptoMouseClicked
            int fila = tblConcepto.getSelectedRow();
         if (fila!= -1) {
             btnModificar.setEnabled(true);  
-            System.out.println("selecciono con el mouse");
         }
     }//GEN-LAST:event_tblConceptoMouseClicked
 
@@ -249,12 +239,9 @@ public class GestorConcepto extends javax.swing.JDialog {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         
-//        isModificar= true;
         int fila = tblConcepto.getSelectedRow();
-        System.out.println("Fila seleccionada "+tblConcepto.getSelectedRow());
         if (fila!= -1) {
             cod_con = (Integer) tblConcepto.getModel().getValueAt(tblConcepto.getSelectedRow(), 0);
-            System.out.println("Codigo "+cod_con);
             //LLAMAR A A LA VENTANA NUEVO EMPLEADO PARA EDITAR
             AbmConceptos EditConcepto = new AbmConceptos(parent, true, cod_con);
             cargarTablaConConcepto();    
@@ -266,11 +253,7 @@ public class GestorConcepto extends javax.swing.JDialog {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
         AbmConceptos concepto = new AbmConceptos(parent, true);
-//        if (ventanaNuevoEmpleado.isBotonGuardarSelecciono()) {
             cargarTablaConConcepto();
-//            ventanaNuevoEmpleado.dispose();
-//            
-//        }
         
          
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -286,47 +269,7 @@ public class GestorConcepto extends javax.swing.JDialog {
        
      }    
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GestorEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                GestorEmpleado dialog = new GestorEmpleado(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnAtras;
     private org.edisoncor.gui.button.ButtonIpod btnModificar;
@@ -340,7 +283,6 @@ public class GestorConcepto extends javax.swing.JDialog {
      * PREPERARA Y CARAGA LA TABLA EMPLEADO CON DATOS 
      */
     private void cargarTablaConConcepto() {
-//       listaEmpleado =new EmpleadoDaoImp().listarEmpleado();
        listaConcepto = new ConceptoDaoImp().listarConcepto();
        util.TablaUtil.prepararTablaConcepto(modelo, tblConcepto);
        util.TablaUtil.cargarModeloConcepto(modelo, listaConcepto, tblConcepto);

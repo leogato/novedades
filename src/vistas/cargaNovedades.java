@@ -5,7 +5,8 @@
 package vistas;
 
 import hibernateUtil.Conexion;
-import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -25,37 +27,36 @@ import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Empleado;
 import pojo.Novedad;
-import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
 import util.HoraServer;
-//import vista.novedades.prueba;
-
-
 
 /**
  *
- * @author usuario
+ * @author LEO
  */
+
+
 public class cargaNovedades extends javax.swing.JDialog {
     private DefaultTableModel modelo;
     private Empleado e = new Empleado();
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
     private Usuario usuario= new Usuario();
-    private Sucursal sucursal = new Sucursal();
     int legajo = 0;
     String auxCant;
     String auxObs;
+    String auxCon;
     String tipo;
     Date fecha;
     Date date = new Date();
     String hoy;
     DateFormat df = DateFormat.getDateInstance();
     Date ultimaCarga;
+    HoraServer hs = new HoraServer();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     JComboBox jcb = new JComboBox();
-    
+    JTextField jtf = new JTextField();
                
    public cargaNovedades(java.awt.Frame parent, boolean modal, Usuario usuario) {
         super(parent, modal);
@@ -63,41 +64,48 @@ public class cargaNovedades extends javax.swing.JDialog {
         this.usuario = usuario;
         cargarTablaNovedades();
         btnCargar.setEnabled(false);
-        hoy = FechaUtil.getFechaString11AAAAMMDD(date);
+//        hoy = FechaUtil.getFechaString11AAAAMMDD(date);
+//        hoy = hs.getFecha();
         cargo();
         llenaJComboBoxInvestigacion();
         
-        jcb.addActionListener(new java.awt.event.ActionListener() {
-            
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbFiltroActionPerformed(evt);
+        jtf.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                permitirSoloNumero(e);
             }
-            
-            private void jcbFiltroActionPerformed(ActionEvent evt) {
-                if(!isCualitiva(jcb.getSelectedItem().toString())){
-                   // bloquear las columna 4
-                    int fila= tblNovedadesUsr.getSelectedRow();
-                    tblNovedadesUsr.setColumnSelectionInterval(fila, 5);
-                    tblNovedadesUsr.getModel().isCellEditable(fila, 5);
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                permitirSoloNumero(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                permitirSoloNumero(e);
+            }
+            private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
+          // permitir solo el ingreso de numero
+                char caracter = evt.getKeyChar();
+                if(((caracter < '0') ||(caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
+                evt.consume();  // ignorar el evento de teclado
                 }
             }
-            
-            private boolean isCualitiva(String descrip) {
-                boolean b = false;
-                Concepto c = new ConceptoDaoImp().getConceptoHql(descrip);
-                tipo = c.getTipo();
-                if ("CUALITATIVA".equalsIgnoreCase(c.getTipo())) {
-                   b = true;  
-                } 
-                return b;
-            }
-            
         });
+
+
         
-        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(4);
+        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(5);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
-        HoraServer hs = new HoraServer();
+        
+        TableColumn tc2 = tblNovedadesUsr.getColumnModel().getColumn(6);
+        TableCellEditor tce2 = new DefaultCellEditor(jtf);
+        tc2.setCellEditor(tce2);
+        
+        hs = new HoraServer();
+        String hora = hs.getDate_Full();
         tblNovedadesUsr.setAutoCreateRowSorter(true);
 //        lblFecha.setText(sdf.format(date));
         lblFecha.setText(hs.getFecha());
@@ -108,13 +116,14 @@ public class cargaNovedades extends javax.swing.JDialog {
         setLocationRelativeTo(this);
         setVisible(true);
         usuario.setUltimoIngreso(new Date());
-    }
+        
+    }   
    
    
            
-    public cargaNovedades(){
-        
-    }
+//    public cargaNovedades(){
+//        
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -163,6 +172,8 @@ public class cargaNovedades extends javax.swing.JDialog {
 
         lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        tblNovedadesUsr.setBackground(new java.awt.Color(0, 0, 0));
+        tblNovedadesUsr.setForeground(new java.awt.Color(255, 255, 255));
         tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -170,8 +181,21 @@ public class cargaNovedades extends javax.swing.JDialog {
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Long.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         tblNovedadesUsr.getTableHeader().setReorderingAllowed(false);
+        tblNovedadesUsr.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tblNovedadesUsrKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblNovedadesUsr);
 
         lblEmpresa.setFont(new java.awt.Font("Bookman Old Style", 1, 18)); // NOI18N
@@ -249,13 +273,16 @@ public class cargaNovedades extends javax.swing.JDialog {
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
         try{
+            
         ArrayList nov = null;
         Session session = Conexion.getSession();
         session.beginTransaction();
-        String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+tblNovedadesUsr.getValueAt(0, 1)+"' and n.fecha = '"+lblFecha.getText()+"'";
+//        String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+tblNovedadesUsr.getValueAt(0, 1)+"' and n.fecha = '"+lblFecha.getText()+"'";
+        String sql = "from Novedad as n join fetch n.empleado as e where e.legajo = '"+tblNovedadesUsr.getValueAt(0, 1)+"' and n.fecha = '"+hs.getFecha()+"'";
         nov = (ArrayList)session.createQuery(sql).list();
         session.getTransaction().commit();
         session.close();
+            
         if (nov.isEmpty()){
             if(tblNovedadesUsr.isEditing()){
                 tblNovedadesUsr.getCellEditor().stopCellEditing();
@@ -297,6 +324,10 @@ public class cargaNovedades extends javax.swing.JDialog {
         
     }//GEN-LAST:event_btnCargarKeyPressed
 
+    private void tblNovedadesUsrKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblNovedadesUsrKeyTyped
+        permitirSoloNumero(evt);
+    }//GEN-LAST:event_tblNovedadesUsrKeyTyped
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnCargar;
@@ -310,28 +341,67 @@ public class cargaNovedades extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     
-     
+    private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
+          // permitir solo el ingreso de numero
+                char caracter = evt.getKeyChar();
+                if(((caracter < '0') ||(caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
+                evt.consume();  // ignorar el evento de teclado
+            }
+    }
+    
     private void getDatosTabla(int i){
-        auxCant = (String) tblNovedadesUsr.getValueAt(i, 5);
-        auxObs = (String) tblNovedadesUsr.getValueAt(i, 6);
+        auxCant = (String) tblNovedadesUsr.getValueAt(i, 6);
+        auxObs = (String) tblNovedadesUsr.getValueAt(i, 7);
         e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 1).toString()));
         novedad.setEmpleado(e);
-        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 4).toString()));
+        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 5).toString()));
         novedad.setConcepto(c);
-        
-        if(auxCant == null){
-            novedad.setCantidad(0);
+        auxCon = c.getTipo();
+        novedad.setQuien(usuario.getUsuario()+" "+hs.getFechaHora());
+        novedad.setEstado(false);
+        if((auxCant != null && !auxCant.equals("")) && auxCon.equals("CUANTITATIVA")){
+            novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 6).toString()));
         }else{
-            novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 5).toString()));
+            novedad.setCantidad(0);
         }
-        
-        if (auxObs == null){
+        if (auxObs == null || "".equals(auxObs)){
            novedad.setObservacion("-"); 
         }else{
-            novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 6).toString());
+            novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 7).toString());
         }
         
     }
+    
+        private void getDatosTablaNew(int i){
+            
+            auxCant = (String) tblNovedadesUsr.getValueAt(i, 6);
+            auxObs = (String) tblNovedadesUsr.getValueAt(i, 7);
+            e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 1).toString()));
+            novedad.setEmpleado(e);
+            c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 5).toString()));
+            novedad.setConcepto(c);
+            novedad.setQuien(usuario.getUsuario()+" "+hs.getFechaHora());
+            novedad.setEstado(false);
+            if(auxCant == null || "".equals(auxCant)){
+                novedad.setCantidad(0);
+            }else{
+                novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 6).toString()));
+            }
+
+            if (auxObs == null || "".equals(auxObs)){
+               novedad.setObservacion("-"); 
+            }else{
+                novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 7).toString());
+            }
+        
+        }
+        public static boolean isCuantitativa(String c){
+            if("CUANTITATIVA".equals(c)){
+                return true;
+            }else{
+                return false;
+            }
+        }
     
    public void llenaJComboBoxInvestigacion() {
         Session session = null;
@@ -364,27 +434,28 @@ public class cargaNovedades extends javax.swing.JDialog {
                 }
                 session.close();
             }
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }catch (Exception e) {
         }
    }
    
+  
    private void cargarTablaNovedades(){
         List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
         util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
         util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
+        
     }
 
     private void cargarTablaNovedadesCompleta() {
-        String fech = FechaUtil.getFechaString11AAAAMMDD(date);
-//        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
+        String fech = hs.getFechaInvert();
         List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fech, usuario.getEmpleado().getSucursal().getCodSuc());
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
+        util.TablaUtil.prepararTablaCargaRRHH(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
     }
     
     private void cargo(){//RESTRINGE LA CARGA DE NOVEDADES SI ES QUE NO HAY NOVEDADES AUN
         List<Novedad> nov;
+        hoy = hs.getFechaInvert();
         Session session = Conexion.getSession();
         session.beginTransaction();
         String sql = "from Novedad as n "
@@ -399,8 +470,9 @@ public class cargaNovedades extends javax.swing.JDialog {
             btnCargar.setEnabled(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "LOS DATOS YA FUERON CARGADOS ANTERIORMENTE, INTENTE MAÑANA NUEVAMENTE");
+            
             cargarTablaNovedadesCompleta();
         }
     }
-   
+  
 }

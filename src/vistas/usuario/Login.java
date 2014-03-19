@@ -4,16 +4,10 @@
  */
 package vistas.usuario;
 
-import hibernateUtil.Conexion;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import javax.swing.JOptionPane;
-import novedades.dao.imp.ConceptoDaoImp;
 import novedades.dao.imp.UsuarioDaoImp;
-import org.hibernate.Session;
 import pojo.Concepto;
 import pojo.Novedad;
 import pojo.Usuario;
@@ -188,7 +182,6 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
              usuario.setUltimoIngreso(new Date());
              new UsuarioDaoImp().upDateUsuario(usuario);
                 //.........
-             
              String tipo = usuario.getTipo();
              if (usuario!=null) {// si existe el  usuario y es administrador
                  if(tipo.equals(adm)){
@@ -201,7 +194,6 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                      if(!fecha_login.equals(sdf.format(fecha))){
                         BotonAceptar = true;
                         comun = true;
-//                        con = new ConceptoDaoImp().getConcepto(comun);
                         fecha_login = sdf.format(fecha);//capturo la fecha actual en una cadena
                         this.dispose();
                         setearDatos();
@@ -216,7 +208,6 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     JOptionPane.showMessageDialog(this, "Su Identificacion es Incorrecta, por favor Ingrese de nuevo", "ERROR", JOptionPane.ERROR_MESSAGE);
                     setearDatos();
                     }
-                 
             } 
          }catch(java.lang.NumberFormatException edd){
             JOptionPane.showMessageDialog(this, "No pueden estar vacios sus datos de identidad", "Error", JOptionPane.ERROR_MESSAGE);
@@ -224,7 +215,9 @@ private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
          }catch(java.lang.NullPointerException nul){
              JOptionPane.showMessageDialog(this, "Sus datos son incorrectos, intente nuevamente", "Error", JOptionPane.ERROR_MESSAGE);
              setearDatos();
-         }
+         } 
+             
+         
 //        e = new UsuarioDaoImp().getUsuarioLogin(e.getUsuario());
          
 }//GEN-LAST:event_btnLoginActionPerformed

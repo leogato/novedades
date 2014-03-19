@@ -1,5 +1,5 @@
 package pojo;
-// Generated 06/01/2014 21:48:57 by Hibernate Tools 3.2.1.GA
+// Generated 18/02/2014 21:09:57 by Hibernate Tools 3.2.1.GA
 
 
 import java.util.Date;
@@ -10,8 +10,9 @@ import java.util.Date;
 public class Usuario  implements java.io.Serializable {
 
 
-     private Integer id;
+     private int idEmp;
      private Empleado empleado;
+     private Integer legajo;
      private String usuario;
      private String clave;
      private String descripcion;
@@ -24,14 +25,18 @@ public class Usuario  implements java.io.Serializable {
     }
 
 	
-    public Usuario(String usuario, String clave, String descripcion, String tipo) {
+    public Usuario(int idEmp, Empleado empleado, String usuario, String clave, String descripcion, String tipo) {
+        this.idEmp = idEmp;
+        this.empleado = empleado;
         this.usuario = usuario;
         this.clave = clave;
         this.descripcion = descripcion;
         this.tipo = tipo;
     }
-    public Usuario(Empleado empleado, String usuario, String clave, String descripcion, String tipo, Boolean estado, Boolean cargo, Date ultimoIngreso) {
+    public Usuario(int idEmp, Empleado empleado, Integer legajo, String usuario, String clave, String descripcion, String tipo, Boolean estado, Boolean cargo, Date ultimoIngreso) {
+       this.idEmp = idEmp;
        this.empleado = empleado;
+       this.legajo = legajo;
        this.usuario = usuario;
        this.clave = clave;
        this.descripcion = descripcion;
@@ -41,12 +46,12 @@ public class Usuario  implements java.io.Serializable {
        this.ultimoIngreso = ultimoIngreso;
     }
    
-    public Integer getId() {
-        return this.id;
+    public int getIdEmp() {
+        return this.idEmp;
     }
     
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdEmp(int idEmp) {
+        this.idEmp = idEmp;
     }
     public Empleado getEmpleado() {
         return this.empleado;
@@ -54,6 +59,13 @@ public class Usuario  implements java.io.Serializable {
     
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
+    }
+    public Integer getLegajo() {
+        return this.legajo;
+    }
+    
+    public void setLegajo(Integer legajo) {
+        this.legajo = legajo;
     }
     public String getUsuario() {
         return this.usuario;

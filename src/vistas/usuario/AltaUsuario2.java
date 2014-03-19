@@ -10,17 +10,18 @@ import pojo.Empleado;
 import novedades.dao.imp.EmpleadoDaoImp;
 import javax.swing.JOptionPane;
 import novedades.dao.imp.UsuarioDaoImp;
+import org.hibernate.exception.ConstraintViolationException;
 import pojo.Usuario;
 /**
  *
  * @author Leo
  */
 public class AltaUsuario2 extends javax.swing.JDialog {
-
+    
     public static final int GESTOR_EMPLEADO =1;
-    private int legajo=0;
+    private int idEmp = 0;
     private boolean BotonGuardarSelecciono=false;
-
+    
     public boolean isBotonGuardarSelecciono() {
         return BotonGuardarSelecciono;
     }
@@ -34,23 +35,26 @@ public class AltaUsuario2 extends javax.swing.JDialog {
         initComponents();
         btnEliminar.setVisible(false);
         btnEliminar.setEnabled(false);
+        txtId.setVisible(false);
         this.setTitle("NUEVO USUARIO");
         setLocationRelativeTo(this);
         setVisible(true);
+        
         // no se realizara la carga de foto
        
         
         
     }
     
-    public AltaUsuario2(java.awt.Frame parent, boolean modal,int legajo) {
+    public AltaUsuario2(java.awt.Frame parent, boolean modal,int idEmp) {
         super(parent, modal);
         initComponents();
         this.setTitle("EDITAR EMPLEADO");
-        this.legajo = legajo;
+        this.idEmp = idEmp;
         btnEliminar.setVisible(true);
         btnBuscar.setVisible(false);
-        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
+        txtId.setVisible(false);
+        Empleado e = new EmpleadoDaoImp().getEmpleado(idEmp);
         Usuario u = new Usuario();
         u.setEmpleado(e);
         configurarParaEditar();
@@ -73,7 +77,6 @@ public class AltaUsuario2 extends javax.swing.JDialog {
         txtUsuario = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric2 = new org.edisoncor.gui.label.LabelMetric();
         labelMetric3 = new org.edisoncor.gui.label.LabelMetric();
-        txtClave = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric4 = new org.edisoncor.gui.label.LabelMetric();
         txtDescripcion = new org.edisoncor.gui.textField.TextFieldRoundIcon();
         labelMetric5 = new org.edisoncor.gui.label.LabelMetric();
@@ -84,6 +87,8 @@ public class AltaUsuario2 extends javax.swing.JDialog {
         btnGuardar = new org.edisoncor.gui.button.ButtonIpod();
         btnEliminar = new org.edisoncor.gui.button.ButtonIpod();
         btnBuscar = new org.edisoncor.gui.button.ButtonIcon();
+        txtId = new org.edisoncor.gui.textField.TextFieldRoundIcon();
+        txtClave = new org.edisoncor.gui.passwordField.PasswordFieldRoundIcon();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -96,6 +101,7 @@ public class AltaUsuario2 extends javax.swing.JDialog {
 
         txtLegajo.setBackground(new java.awt.Color(255, 255, 0));
         txtLegajo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtLegajo.setAnchoDeBorde(1.0F);
         txtLegajo.setColorDeBorde(new java.awt.Color(255, 102, 0));
         txtLegajo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -107,6 +113,7 @@ public class AltaUsuario2 extends javax.swing.JDialog {
         txtUsuario.setBackground(new java.awt.Color(102, 102, 102));
         txtUsuario.setForeground(new java.awt.Color(255, 255, 255));
         txtUsuario.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtUsuario.setAnchoDeBorde(1.0F);
         txtUsuario.setCaretColor(new java.awt.Color(255, 255, 255));
         txtUsuario.setColorDeBorde(new java.awt.Color(255, 102, 0));
         panel1.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 142, 152, -1));
@@ -117,19 +124,13 @@ public class AltaUsuario2 extends javax.swing.JDialog {
         labelMetric3.setText("CLAVE");
         panel1.add(labelMetric3, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 219, -1, -1));
 
-        txtClave.setBackground(new java.awt.Color(102, 102, 102));
-        txtClave.setForeground(new java.awt.Color(255, 255, 255));
-        txtClave.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtClave.setCaretColor(new java.awt.Color(255, 255, 255));
-        txtClave.setColorDeBorde(new java.awt.Color(255, 102, 0));
-        panel1.add(txtClave, new org.netbeans.lib.awtextra.AbsoluteConstraints(382, 218, 100, -1));
-
         labelMetric4.setText("DESCRIPCION");
         panel1.add(labelMetric4, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 181, -1, -1));
 
         txtDescripcion.setBackground(new java.awt.Color(102, 102, 102));
         txtDescripcion.setForeground(new java.awt.Color(255, 255, 255));
         txtDescripcion.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDescripcion.setAnchoDeBorde(1.0F);
         txtDescripcion.setCaretColor(new java.awt.Color(255, 255, 255));
         txtDescripcion.setColorDeBorde(new java.awt.Color(255, 102, 0));
         panel1.add(txtDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(232, 180, 250, -1));
@@ -214,7 +215,7 @@ public class AltaUsuario2 extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        panel1.add(panelShadow1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 467, -1));
+        panel1.add(panelShadow1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 467, -1));
 
         btnBuscar.setBackground(new java.awt.Color(102, 102, 102));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/binoculares.png"))); // NOI18N
@@ -225,6 +226,19 @@ public class AltaUsuario2 extends javax.swing.JDialog {
             }
         });
         panel1.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(424, 32, 58, 58));
+        panel1.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 300, -1, -1));
+
+        txtClave.setBackground(new java.awt.Color(102, 102, 102));
+        txtClave.setForeground(new java.awt.Color(255, 255, 255));
+        txtClave.setAnchoDeBorde(1.0F);
+        txtClave.setCaretColor(new java.awt.Color(255, 255, 255));
+        txtClave.setColorDeBorde(new java.awt.Color(255, 102, 0));
+        txtClave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtClaveActionPerformed(evt);
+            }
+        });
+        panel1.add(txtClave, new org.netbeans.lib.awtextra.AbsoluteConstraints(339, 220, 140, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -235,8 +249,8 @@ public class AltaUsuario2 extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 11, Short.MAX_VALUE)
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -247,12 +261,10 @@ public class AltaUsuario2 extends javax.swing.JDialog {
     }//GEN-LAST:event_txtLegajoKeyTyped
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        //        limpiarVenanaEmpleado();
-        //        setEnableVentanaInformacionEmpleado(true);
+
         int resp =JOptionPane.showConfirmDialog(rootPane,"Esta seguro de eliminar el Usuario: \n"+txtUsuario.getText()+" ?", "ELIMINAR USUARIO",JOptionPane.OK_CANCEL_OPTION);
         if (resp==JOptionPane.OK_OPTION) {
-            Usuario u = new UsuarioDaoImp().getUsuario(legajo);
-//            u.setEstado(false);
+            Usuario u = new UsuarioDaoImp().getUsuario(idEmp);
             new UsuarioDaoImp().deleteUsuario(u);
             JOptionPane.showMessageDialog(rootPane, "La Eliminacion se realizo exitosamente ", "INFORMACION", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
@@ -265,39 +277,53 @@ public class AltaUsuario2 extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (legajo==0){
-            Usuario u = new Usuario();
-            Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
-            if(validarEmpleadoNuevo()){
-                u.setEmpleado(e);
-                u = getDatosUsuario();
-                new UsuarioDaoImp().addUsuario(u);
-                JOptionPane.showMessageDialog(rootPane, "SE HA CREADO UN EMPLEADO EXITOSAMENTE","AVISO",1);
-                this.dispose();
-            }
-        }else{
-            if (validarEmpleadoActulizado()){
+        try{    
+            if (idEmp==0){
                 Usuario u = new Usuario();
-                Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
-                u.setEmpleado(e);
-                u = getDatosUsuario();
-                new UsuarioDaoImp().upDateUsuario(u);
-                JOptionPane.showMessageDialog(rootPane, "SE HA MODIFICADO EL EMPLEADO EXITOSAMENTE","AVISO",1);
-                this.dispose();
+                Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtId.getText()));
+                if(validarEmpleadoNuevo()){
+                    u.setEmpleado(e);
+                    u = getDatosUsuario();
+                    new UsuarioDaoImp().addUsuario(u);
+                    JOptionPane.showMessageDialog(rootPane, "SE HA CREADO UN USUARIO EXITOSAMENTE","AVISO",1);
+                    this.dispose();
+                }
+            }else{
+                Usuario u = new Usuario();
+                Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtId.getText()));
+                if (validarEmpleadoActulizado()){
+                    u.setEmpleado(e);
+                    u = getDatosUsuario();
+                    new UsuarioDaoImp().upDateUsuario(u);
+                    JOptionPane.showMessageDialog(rootPane, "SE HA MODIFICADO EL USUARIO EXITOSAMENTE","AVISO",1);
+                    this.dispose();
+                }
             }
+        }catch(ConstraintViolationException cve){
+            JOptionPane.showMessageDialog(rootPane, "EL USUARIO YA EXISTE!!!", "AVISO",1);
+            txtId.setText("");
+            txtUsuario.setText("");
+            System.exit(0);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         GestorEmpleado gestor = new GestorEmpleado(null, true, GestorEmpleado.VENTANA_GESTOR_ASISTENCIA);
         if (gestor.isBotonSeleccionado()) {
-            // si el usuario selecciono un empleado
-            Empleado e = new EmpleadoDaoImp().getEmpleado(gestor.getLegajo());
+            
+            // si el usuario selecciono un empleado}
+            Empleado e = new EmpleadoDaoImp().getEmpleado(gestor.getIdEmp());
             txtLegajo.setText(String.valueOf(e.getLegajo()));
             txtUsuario.setText(e.getNombre().charAt(0)+e.getApellido());
+            txtId.setVisible(false);
+            txtId.setText(String.valueOf(e.getId()));
             txtDescripcion.requestFocus();
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtClaveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.button.ButtonIpod btnAtras;
@@ -313,8 +339,9 @@ public class AltaUsuario2 extends javax.swing.JDialog {
     private org.edisoncor.gui.panel.Panel panel1;
     private org.edisoncor.gui.panel.PanelShadow panelShadow1;
     private org.edisoncor.gui.panel.PanelTranslucidoComplete2 panelTranslucidoComplete21;
-    private org.edisoncor.gui.textField.TextFieldRoundIcon txtClave;
+    private org.edisoncor.gui.passwordField.PasswordFieldRoundIcon txtClave;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtDescripcion;
+    private org.edisoncor.gui.textField.TextFieldRoundIcon txtId;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtLegajo;
     private org.edisoncor.gui.textField.TextFieldRoundIcon txtUsuario;
     // End of variables declaration//GEN-END:variables
@@ -330,9 +357,11 @@ public class AltaUsuario2 extends javax.swing.JDialog {
     }
     private void configurarParaEditar() {
 
-        Empleado e = new EmpleadoDaoImp().getEmpleado(legajo);
-        Usuario u = new UsuarioDaoImp().getUsuario(e.getLegajo());
+        Empleado e = new EmpleadoDaoImp().getEmpleado(idEmp);
+        System.out.println("ID "+e.getId());
+        Usuario u = new UsuarioDaoImp().getUsuario(e.getId());
         txtLegajo.setText(String.valueOf(e.getLegajo()));
+        txtId.setText(String.valueOf(e.getId()));
         txtUsuario.setText(u.getUsuario());
         txtDescripcion.setText(u.getDescripcion());
         txtClave.setText(u.getClave());
@@ -351,20 +380,22 @@ public class AltaUsuario2 extends javax.swing.JDialog {
     
     public Usuario getDatosUsuario(){
          Usuario usuario = new Usuario();
-         Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText()));
+         Empleado e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtId.getText()));
          usuario.setEmpleado(e);
-         usuario.setId(Integer.parseInt(txtLegajo.getText()));
+         usuario.setLegajo(Integer.parseInt(txtLegajo.getText()));
+         usuario.setIdEmp(Integer.parseInt(txtId.getText()));
          usuario.setUsuario(txtUsuario.getText());
          usuario.setDescripcion(txtDescripcion.getText());
          usuario.setClave(txtClave.getText());
          usuario.setTipo(cmbTipo.getSelectedItem().toString());
          usuario.setEstado(true);
+         
          return usuario;
      }
     
      public boolean validarEmpleadoActulizado(){
         boolean todoOk=true;
-        Empleado empOriginal = new EmpleadoDaoImp().getEmpleado(legajo); 
+        Empleado empOriginal = new EmpleadoDaoImp().getEmpleado(idEmp); 
         if (empOriginal.getLegajo() !=Integer.parseInt(txtLegajo.getText().trim())) {
              // el empleado modifico el legajo
             Empleado empLeg = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(txtLegajo.getText().trim()));  

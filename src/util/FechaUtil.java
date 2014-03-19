@@ -1,7 +1,5 @@
 package util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import static util.FechaUtil.getAnio;
 import static util.FechaUtil.getDia;
@@ -12,8 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -274,11 +270,6 @@ public class FechaUtil {
 	        // calcular la diferencia en dias
 	        long diffDays = (diff / (24 * 60 * 60 * 1000))+1;
 	 
-//	        System.out.println("En milisegundos: " + diff + " milisegundos.");
-//	        System.out.println("En segundos: " + diffSeconds + " segundos.");
-//	        System.out.println("En minutos: " + diffMinutes + " minutos.");
-//	        System.out.println("En horas: " + diffHours + " horas.");
-//	        System.out.println("En dias: " + diffDays + " dias.");
                 return diffDays;
     }
     public static int getDiasDelMes(int mes, int año){
@@ -303,8 +294,7 @@ public class FechaUtil {
             else
                 return 28;
         default:
-            throw new java.lang.IllegalArgumentException(
-            "El mes debe estar entre 0 y 11");
+            throw new java.lang.IllegalArgumentException("El mes debe estar entre 0 y 11");
         }
     }
 }

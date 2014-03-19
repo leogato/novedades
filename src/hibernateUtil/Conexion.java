@@ -124,8 +124,7 @@ private static final SessionFactory sessionFactory;
         }
     }
 
-    public static Session getSession()
-            throws HibernateException {
+    public static Session getSession() throws HibernateException {
         return sessionFactory.openSession();
     }
 

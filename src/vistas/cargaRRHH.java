@@ -5,6 +5,9 @@
 package vistas;
 
 import hibernateUtil.Conexion;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +15,7 @@ import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -26,6 +30,7 @@ import pojo.Novedad;
 import pojo.Sucursal;
 import pojo.Usuario;
 import util.FechaUtil;
+import util.HoraServer;
 
 
 
@@ -36,9 +41,9 @@ import util.FechaUtil;
 public class cargaRRHH extends javax.swing.JDialog {
     private DefaultTableModel modelo;
     private Empleado e = new Empleado();
+    private Usuario usuario = new Usuario();
     private Novedad novedad = new Novedad();
     private Concepto c= new Concepto();
-    private Usuario usuario= new Usuario();
     private Sucursal sucursal = new Sucursal();
     int legajo = 0;
     String auxCant;
@@ -48,15 +53,20 @@ public class cargaRRHH extends javax.swing.JDialog {
     Date date = new Date();
     String hoy;
     DateFormat df = DateFormat.getDateInstance();
+    HoraServer hs = new HoraServer();
     Date ultimaCarga;
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     JComboBox jcb = new JComboBox();
+    JTextField jtf = new JTextField();
+    String auxCon;
+    
     
                
-      public cargaRRHH(java.awt.Frame parent, boolean modal, Sucursal sucursal, Date f, Empresa emp) {
+      public cargaRRHH(java.awt.Frame parent, boolean modal, Sucursal sucursal, Date f, Empresa emp, Usuario usuario) {
         super(parent, modal);
         initComponents();
         auxCant = sdf.format(f);
+        this.usuario = usuario;
         this.sucursal = sucursal;
         this.fecha = f;
         
@@ -64,9 +74,16 @@ public class cargaRRHH extends javax.swing.JDialog {
 
         btnCargar.setEnabled(true);
         llenaJComboBoxInvestigacioRRHH();
-        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(4);
+//        llenaCmb();
+        soloNumeros();
+        
+        TableColumn tc = tblNovedadesUsr.getColumnModel().getColumn(5);
         TableCellEditor tce = new DefaultCellEditor(jcb);
         tc.setCellEditor(tce);
+        
+        TableColumn tc2 = tblNovedadesUsr.getColumnModel().getColumn(6);
+        TableCellEditor tce2 = new DefaultCellEditor(jtf);
+        tc2.setCellEditor(tce2);
         
         tblNovedadesUsr.setAutoCreateRowSorter(true);
         lblFecha.setText(sdf.format(f));
@@ -75,10 +92,10 @@ public class cargaRRHH extends javax.swing.JDialog {
         setLocationRelativeTo(this);
         setVisible(true);
     }
-           
-    public cargaRRHH(){
-        
-    }
+//           
+//    public cargaRRHH(){
+//        
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,6 +144,8 @@ public class cargaRRHH extends javax.swing.JDialog {
 
         lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        tblNovedadesUsr.setBackground(new java.awt.Color(0, 0, 0));
+        tblNovedadesUsr.setForeground(new java.awt.Color(255, 255, 255));
         tblNovedadesUsr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -134,7 +153,15 @@ public class cargaRRHH extends javax.swing.JDialog {
             new String [] {
                 "LEGAJO", "APELLIDO", "NOMBRE", "NOVEDAD", "CANTIDAD", "OBSERVACION"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Long.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         tblNovedadesUsr.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblNovedadesUsr);
 
@@ -214,24 +241,18 @@ public class cargaRRHH extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
-        int id;
+
         if(tblNovedadesUsr.isEditing()){
                 tblNovedadesUsr.getCellEditor().stopCellEditing();
                 for(int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-//                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
-//                    novedad = new NovedadDaoImp().getNovedad(id);
                     getDatosTabla(i);
-                    System.out.println("novedad: "+novedad.getConcepto());
                     new NovedadDaoImp().addNovedad(novedad);
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
                 this.dispose();
             }else{
                 for( int i = 0;i < tblNovedadesUsr.getRowCount();i++){
-//                    id = Integer.parseInt(tblNovedadesUsr.getValueAt(i, 0).toString());
-//                    novedad = new NovedadDaoImp().getNovedad(id);
                     getDatosTabla(i);
-                    System.out.println("novedad: "+novedad.getConcepto());
                     new NovedadDaoImp().addNovedad(novedad);
                 }
                 JOptionPane.showMessageDialog(rootPane, "SE CARGARON DATOS CORRECTAMENTE");
@@ -258,25 +279,25 @@ public class cargaRRHH extends javax.swing.JDialog {
     
      
     private void getDatosTabla(int i){
-        auxCant = (String)tblNovedadesUsr.getValueAt(i, 5);
-        auxObs = (String)tblNovedadesUsr.getValueAt(i, 6);
+        auxCant = (String)tblNovedadesUsr.getValueAt(i, 6);
+        auxObs = (String)tblNovedadesUsr.getValueAt(i, 7);
         e = new EmpleadoDaoImp().getEmpleado(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 1).toString()));
         novedad.setEmpleado(e);
-        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 4).toString()));
+        c = new ConceptoDaoImp().getConceptoHql(String.valueOf(tblNovedadesUsr.getValueAt(i, 5).toString()));
         novedad.setConcepto(c);
-        if(auxCant == null){
-            novedad.setCantidad(0);
+        novedad.setQuien(usuario.getUsuario()+" "+hs.getFechaHora());
+        auxCon = c.getTipo();
+        if((auxCant != null && !auxCant.equals("")) && auxCon.equals("CUANTITATIVA")){
+            novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 6).toString()));
         }else{
-            novedad.setCantidad(Integer.parseInt(tblNovedadesUsr.getValueAt(i, 5).toString()));
+            novedad.setCantidad(0);
         }
         if (auxObs == null){
            novedad.setObservacion("-"); 
         }else{
-            novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 6).toString());
+            novedad.setObservacion(tblNovedadesUsr.getValueAt(i, 7).toString());
         }
         novedad.setFecha(fecha);
-        System.out.println(lblFecha.getText());
-        System.out.println();
     }
     
    public void llenaJComboBoxInvestigacioRRHH() {
@@ -297,38 +318,14 @@ public class cargaRRHH extends javax.swing.JDialog {
                 
                 session.close();
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, "Error al crear Factor:" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
    }
    
-   public void cargaCantidad(){
-//       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(tblNovedadesUsr.getValueAt(0, 4).toString()));
-       Concepto con = new ConceptoDaoImp().getConcepto(Integer.parseInt(String.valueOf(tblNovedadesUsr.getValueAt(0, 4).toString().charAt(0))));
-       if(con.getCargaUser()){
-//           tblNovedadesUsr.set;
-       }
-   }
-   
-//   private void cargarTablaNovedades(){
-//        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-//        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr, tipo);
-//        util.TablaUtil.cargarModeloNovedades(modelo, listaEmpleado, tblNovedadesUsr);
-//    }
-//
-//    private void cargarTablaNovedadesCompleta() {
-//        System.out.println("CodSuc: "+usuario.getEmpleado().getSucursal().getCodSuc());
-//        String fecha = FechaUtil.getFechaString11AAAAMMDD(date);
-////        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
-//        List<Novedad> listaEmpleado = new NovedadDaoImp().listarNovedad(fecha, usuario.getEmpleado().getSucursal().getCodSuc());
-//        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
-//        util.TablaUtil.cargarNovedadesCompleta(modelo, listaEmpleado, tblNovedadesUsr);
-//    }
-    
       private void cargarTablaNovedadesRRHH() {
-//        List<Empleado> listaEmpleado = new EmpleadoDaoImp().listarEmpleado(usuario.getEmpleado().getSucursal().getEmpresa().getCodEmp(), usuario.getEmpleado().getSucursal().getCodSuc());
         String aux = FechaUtil.getFechaString11AAAAMMDD(fecha);
         List<Novedad> listaNovSuc = new NovedadDaoImp().listarNovedad(aux, sucursal.getCodSuc());
-        util.TablaUtil.prepararTablaNovedades(modelo, tblNovedadesUsr);
+        tblNovedadesUsr.setEnabled(false);
+        util.TablaUtil.prepararTablaCargaRRHH(modelo, tblNovedadesUsr);
         util.TablaUtil.cargarNovedadesCompleta(modelo, listaNovSuc, tblNovedadesUsr);
     }
       
@@ -353,9 +350,69 @@ public class cargaRRHH extends javax.swing.JDialog {
             cargarTablaNovedadesVacia(sucursal);
             btnCargar.setEnabled(true);
         }else{
+            JOptionPane.showMessageDialog(rootPane, "YA FUERON CARGADAS LAS NOVEDADES");
+            
+            
             cargarTablaNovedadesRRHH();
-            btnCargar.setEnabled(false);
+            soloNumeros();
+            TableColumn tc2 = tblNovedadesUsr.getColumnModel().getColumn(6);
+            TableCellEditor tce2 = new DefaultCellEditor(jtf);
+            tc2.setCellEditor(tce2);
+            btnCargar.setVisible(false);
         }
     }
+    
+    public void soloNumeros(){
+        jtf.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                permitirSoloNumero(e);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                permitirSoloNumero(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                permitirSoloNumero(e);
+            }
+            private void permitirSoloNumero(java.awt.event.KeyEvent evt) {
+          // permitir solo el ingreso de numero
+                char caracter = evt.getKeyChar();
+                if(((caracter < '0') ||(caracter > '9')) && (caracter != '\b' /*corresponde a BACK_SPACE*/)){
+                evt.consume();  // ignorar el evento de teclado
+                }
+            }
+        });
+    }
+    
+//    public void llenaCmb(){
+//        jcb.addActionListener(new java.awt.event.ActionListener(){
+//            public void actionPerformed(java.awt.event.ActionEvent evt){
+//                jcbFiltroActionPerformed(evt);
+//            }
+//            private void jcbFiltroActionPerformed(ActionEvent evt){
+//                if(!isCualitiva(jcb.getSelectedItem().toString())){
+//                   // bloquear las columna 5
+//                    int fila= tblNovedadesUsr.getSelectedRow();
+//                    tblNovedadesUsr.setColumnSelectionInterval(fila, 6);
+//                    tblNovedadesUsr.getModel().isCellEditable(fila, 6);
+//                }
+//            }
+//            private boolean isCualitiva(String descrip){
+//                boolean b = false;
+//                Concepto c = new ConceptoDaoImp().getConceptoHql(descrip);
+//                tipo = c.getTipo();
+//                if ("CUALITATIVA".equalsIgnoreCase(c.getTipo())){
+//                   b = true;  
+//                } 
+//                return b;
+//            }
+//            
+//        });
+    }
    
-}
+//}
